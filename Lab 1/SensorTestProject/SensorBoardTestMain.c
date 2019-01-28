@@ -75,6 +75,7 @@
 #include "board.h"
 #include "Timer.h"
 #include "ADCSWTrigger.h"
+#include "ADC.h"
 #include "inc/tm4c123gh6pm.h"
 void Timer0_Init(void);
 void Timer0_Start(void);
@@ -92,6 +93,20 @@ int main(void) {
 	ST7735_Message(0, 2, "hello", 5);
 	ST7735_Message(1, 2, "hello", -5);
 
+	return 0;
+}
+
+int main0(void) {
+	PLL_Init(Bus80MHz);    // set system clock to 80 MHz
+  Board_Init();          // switches LEDS on LaunchPad
+  ST7735_InitR(INITR_REDTAB);
+	SYSCTL_RCGCGPIO_R |= 0x20;            // activate port F
+  
+	
+	ST7735_FillScreen(0);
+	ST7735_Message(0, 2, "hello", 5);
+	ST7735_Message(1, 2, "hello", -5);
+	
 }
 
 int main1(void){ int i;   // sensor board test main

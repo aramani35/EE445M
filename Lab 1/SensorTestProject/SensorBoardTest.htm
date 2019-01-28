@@ -3,7 +3,7 @@
 <title>Static Call Graph - [.\SensorBoardTest.axf]</title></head>
 <body><HR>
 <H1>Static Call Graph for image .\SensorBoardTest.axf</H1><HR>
-<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060750: Last Updated: Fri Jan 25 13:10:05 2019
+<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5.03 [Build 76]: Last Updated: Mon Jan 28 10:31:46 2019
 <BR><P>
 <H3>Maximum Stack Usage =        192 bytes + Unknown(Functions without stacksize, Cycles, Untraceable Function Pointers)</H3><H3>
 Call chain for Maximum Stack Depth:</H3>
@@ -597,11 +597,11 @@ Global Symbols
 
 <P><STRONG><a name="[9e]"></a>__scatterload_rt2</STRONG> (Thumb, 0 bytes, Stack size 0 bytes, init.o(.text), UNUSED)
 
-<P><STRONG><a name="[94]"></a>ADC_In</STRONG> (Thumb, 38 bytes, Stack size 0 bytes, adc.o(i.ADC_In))
+<P><STRONG><a name="[94]"></a>ADC_In</STRONG> (Thumb, 50 bytes, Stack size 0 bytes, adc.o(i.ADC_In))
 <BR><BR>[Called By]<UL><LI><a href="#[21]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Timer2A_Handler
 </UL>
 
-<P><STRONG><a name="[97]"></a>Board_Init</STRONG> (Thumb, 80 bytes, Stack size 0 bytes, board.o(i.Board_Init))
+<P><STRONG><a name="[97]"></a>Board_Init</STRONG> (Thumb, 78 bytes, Stack size 0 bytes, board.o(i.Board_Init))
 <BR><BR>[Called By]<UL><LI><a href="#[7c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
 </UL>
 
@@ -612,11 +612,11 @@ Global Symbols
 <LI><a href="#[8c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;commandList
 </UL>
 
-<P><STRONG><a name="[96]"></a>PLL_Init</STRONG> (Thumb, 120 bytes, Stack size 0 bytes, pll.o(i.PLL_Init))
+<P><STRONG><a name="[96]"></a>PLL_Init</STRONG> (Thumb, 118 bytes, Stack size 0 bytes, pll.o(i.PLL_Init))
 <BR><BR>[Called By]<UL><LI><a href="#[7c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
 </UL>
 
-<P><STRONG><a name="[82]"></a>ST7735_DrawCharS</STRONG> (Thumb, 236 bytes, Stack size 48 bytes, st7735.o(i.ST7735_DrawCharS))
+<P><STRONG><a name="[82]"></a>ST7735_DrawCharS</STRONG> (Thumb, 232 bytes, Stack size 48 bytes, st7735.o(i.ST7735_DrawCharS))
 <BR><BR>[Stack]<UL><LI>Max Depth = 104<LI>Call Chain = ST7735_DrawCharS &rArr; ST7735_FillRect &rArr; setAddrWindow
 </UL>
 <BR>[Calls]<UL><LI><a href="#[84]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ST7735_FillRect
@@ -677,7 +677,7 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[7c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
 </UL>
 
-<P><STRONG><a name="[8f]"></a>ST7735_Message</STRONG> (Thumb, 68 bytes, Stack size 24 bytes, st7735.o(i.ST7735_Message))
+<P><STRONG><a name="[8f]"></a>ST7735_Message</STRONG> (Thumb, 88 bytes, Stack size 24 bytes, st7735.o(i.ST7735_Message))
 <BR><BR>[Stack]<UL><LI>Max Depth = 184<LI>Call Chain = ST7735_Message &rArr; ST7735_OutString &rArr; ST7735_OutChar &rArr; ST7735_DrawString &rArr; ST7735_DrawCharS &rArr; ST7735_FillRect &rArr; setAddrWindow
 </UL>
 <BR>[Calls]<UL><LI><a href="#[8e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ST7735_SetCursor
@@ -778,7 +778,7 @@ Local Symbols
 <LI><a href="#[8b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;commonInit
 </UL>
 
-<P><STRONG><a name="[8b]"></a>commonInit</STRONG> (Thumb, 342 bytes, Stack size 8 bytes, st7735.o(i.commonInit))
+<P><STRONG><a name="[8b]"></a>commonInit</STRONG> (Thumb, 340 bytes, Stack size 8 bytes, st7735.o(i.commonInit))
 <BR><BR>[Stack]<UL><LI>Max Depth = 40<LI>Call Chain = commonInit &rArr; commandList &rArr; Delay1ms
 </UL>
 <BR>[Calls]<UL><LI><a href="#[95]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Delay1ms
@@ -811,7 +811,7 @@ Local Symbols
 <LI><a href="#[8c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;commandList
 </UL>
 
-<P><STRONG><a name="[88]"></a>writedata</STRONG> (Thumb, 26 bytes, Stack size 0 bytes, st7735.o(i.writedata))
+<P><STRONG><a name="[88]"></a>writedata</STRONG> (Thumb, 24 bytes, Stack size 0 bytes, st7735.o(i.writedata))
 <BR><BR>[Called By]<UL><LI><a href="#[8a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ST7735_InitR
 <LI><a href="#[84]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ST7735_FillRect
 <LI><a href="#[85]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;setAddrWindow

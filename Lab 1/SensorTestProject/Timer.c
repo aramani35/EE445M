@@ -39,6 +39,7 @@
 
 #include <stdint.h>
 #include "inc/tm4c123gh6pm.h"
+#include "Timer.h"
 // TIMER0 is Trigger PB7, echo PB6
 #define TRIGGER0    (*((volatile uint32_t *)0x40005200))
 #define TRIGGER0HIGH 0x80

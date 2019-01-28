@@ -106,6 +106,15 @@ void Timer1_StartPing(void);
 // Output: 0 if not ready, pulse width in 12.5ns time if ready
 uint32_t Timer1_Read(void);
 
+//------------Timer2_Init------------
+// Initialize Timer3A in edge time mode to request interrupts on
+// the both edges of PB2 (T3CCP0).  The interrupt service routine
+// acknowledges the interrupt records the time.
+// PB3 GPIO output
+// Input: none
+// Output: none
+void Timer2_Init(uint32_t period);
+
 //------------Timer3_Init------------
 // Initialize Timer3A in edge time mode to request interrupts on
 // the both edges of PB2 (T3CCP0).  The interrupt service routine

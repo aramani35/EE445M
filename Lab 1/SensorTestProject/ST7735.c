@@ -1692,6 +1692,9 @@ void Output_Color(uint32_t newColor){ // Set color of future output
 }
 
 void ST7735_Message(int device, int line, char *string, int32_t value) {
+	if (device != 0 || device != 1) return;
+	if (line < 0 || line > 7) return;
+	
 	if (device == 0) ST7735_SetCursor(0, line);
 	else { ST7735_SetCursor(0, line+8); }
 	
