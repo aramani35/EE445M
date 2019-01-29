@@ -76,7 +76,9 @@
 #include "Timer.h"
 #include "ADCSWTrigger.h"
 #include "ADC.h"
+#include "UART.h"
 #include "inc/tm4c123gh6pm.h"
+
 void Timer0_Init(void);
 void Timer0_Start(void);
 void EnableInterrupts(void);
@@ -85,7 +87,54 @@ void DelayWait10ms(uint32_t n);
 
 uint32_t PingType,IRdata[4],Cycle0,Cycle1,Cycle2,Cycle3;
 
-int main(void) {
+//---------------------OutCRLF---------------------
+// Output a CR,LF to UART to go to a new line
+// Input: none
+// Output: none
+void OutCRLF(void){
+	char i;
+  char string[20];  // global to assist in debugging
+  uint32_t n;
+
+  PLL_Init(Bus50MHz);       // set system clock to 50 MHz
+  UART_Init();              // initialize UART
+  OutCRLF();
+  for(i='A'; i<='Z'; i=i+1){// print the uppercase alphabet
+    UART_OutChar(i);
+  }
+  OutCRLF();
+  UART_OutChar(' ');
+  for(i='a'; i<='z'; i=i+1){// print the lowercase alphabet
+    UART_OutChar(i);
+  }
+  OutCRLF();
+  UART_OutChar('-');
+  UART_OutChar('-');
+  UART_OutChar('>');
+  while(1){
+    UART_OutString("InString: ");
+    UART_InString(string,19);
+    UART_OutString(" OutString="); UART_OutString(string); OutCRLF();
+
+    UART_OutString("InUDec: ");  n=UART_InUDec();
+    UART_OutString(" OutUDec="); UART_OutUDec(n); OutCRLF();
+
+    UART_OutString("InUHex: ");  n=UART_InUHex();
+    UART_OutString(" OutUHex="); UART_OutUHex(n); OutCRLF();
+
+  }
+}
+
+int main(void){
+	PLL_Init(Bus80MHz);    // set system clock to 80 MHz
+  Board_Init();          // switches LEDS on LaunchPad
+
+	
+	
+	return 1;
+}
+
+int main01(void) {
 	PLL_Init(Bus80MHz);    // set system clock to 80 MHz
   Board_Init();          // switches LEDS on LaunchPad
   ST7735_InitR(INITR_REDTAB);
@@ -94,7 +143,6 @@ int main(void) {
 	ST7735_Message(1, 2, "hello", -5);
 	int buf[10];
 	ADC_Collect(2, 1000, buf, 9);
-	int x = 0;
 	while(ADC_Status() == 1){}
 	return 0;
 }
@@ -110,6 +158,7 @@ int main0(void) {
 	ST7735_Message(0, 2, "hello", 5);
 	ST7735_Message(1, 2, "hello", -5);
 	
+	return 0;
 }
 
 int main1(void){ int i;   // sensor board test main
