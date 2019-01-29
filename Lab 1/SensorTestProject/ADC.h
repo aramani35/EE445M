@@ -86,7 +86,7 @@ int ADC_In(void);
 int ADC_Open(uint32_t channelNum);
 
 //------------ADC_Collect------------
-int ADC_Collect(uint32_t channelNum, uint32_t fs, uint16_t buffer[], uint32_t numberOfSamples);
+void ADC_Collect(uint32_t channelNum, uint32_t fs, int* data_buffer, uint32_t numberOfSamples);
 
 //------------ADC_Collect------------
 int ADC_Status(void);

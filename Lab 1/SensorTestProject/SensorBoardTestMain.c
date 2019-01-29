@@ -92,7 +92,10 @@ int main(void) {
 	ST7735_FillScreen(0);
 	ST7735_Message(0, 2, "hello", 5);
 	ST7735_Message(1, 2, "hello", -5);
-
+	int buf[10];
+	ADC_Collect(2, 1000, buf, 9);
+	int x = 0;
+	while(ADC_Status() == 1){}
 	return 0;
 }
 
