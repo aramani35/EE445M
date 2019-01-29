@@ -36,7 +36,8 @@ int ADC_Open(uint32_t channelNum) {
 void ADC_Collect(uint32_t channelNum, uint32_t fs,
 	int* data_buffer, uint32_t numberOfSamples){
 	status = 1;
-	ADC0_InitSWTriggerSeq3(channelNum);
+	ADC_Open(channelNum);
+	DisableInterrupts();
 	Timer2_Init(fs);
 	
 	sampleCounter = 0;
@@ -53,10 +54,6 @@ void Timer2A_Handler(void){
 		sampleCounter++;
 	}
 	
-	
-//	if (sampleCounter < sampleSize) {
-//		DATA[sampleCounter++] = ADC_In();
-//	}
 	else {
 		status = false;
 		sampleCounter = 0;
