@@ -32,6 +32,7 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include <string.h>
+#include <math.h>
 #include "cmdline.h"
 #include "ADC.h"
 #include "ST7735.h"
@@ -163,7 +164,6 @@ CmdLineProcess(char *pcCmdLine)
         // Search through the command table until a null command string is
         // found, which marks the end of the table.
         //
-				int count = 0;
         while(psCmdEntry->pcCmd)
         {
             //
@@ -179,9 +179,6 @@ CmdLineProcess(char *pcCmdLine)
             //
             // Not found, so advance to the next entry.
             //
-						OutCRLF();
-						UART_OutUDec(count);
-						count++;
             psCmdEntry++;
         }
 
@@ -194,8 +191,56 @@ CmdLineProcess(char *pcCmdLine)
     return(CMDLINE_BAD_CMD);
 }
 
-int lcdCall(int numArgs, char* args[]) {
+// parses two digit number
+uint8_t parseNumber(char* num) {
+	uint8_t length = strlen(num);
+	if (length == 1)
+		return (num[0] - 48);
+	else if (length == 2)
+		return((num[0] - 48)*10 + (num[1] - 48));
+	else {
+		OutCRLF();
+		UART_OutString("Invalid Number. Defaulting to 1.");
+	}
 	
+	return 1;
+}
+
+int lcdCall(int numArgs, char* args[]) {
+	if (numArgs < 4) {
+		OutCRLF();
+		UART_OutString("Incorrect Format. Try 'lcd screenNum lineNum text-to-send'");
+		return -1;
+	}
+	// first arg is which screen to show on
+	uint8_t screenNum = parseNumber(args[1]);
+	if (screenNum != 0 && screenNum != 1) {
+		UART_OutString("Device num must be 0 or 1.");
+		return -1;
+	}
+		
+	// second arg is which line to start on
+	uint8_t lineNum = parseNumber(args[2]);
+	if (lineNum > 7) {
+		UART_OutString("Device num must be between 0 and 7.");
+		return -1;
+	}
+	
+	// other args are message to send
+	char message[100];
+	int pos = 0;
+	for (int i = 3; i < numArgs; i++) {
+		int sizeOfWord = strlen(args[i]);
+		for (int j = 0; j < sizeOfWord; j++) {
+			message[pos] = args[i][j];
+			pos++;
+		}
+		message[pos] = ' ';
+		pos++;
+	}
+	message[pos] = '\0';
+	
+	ST7735_Message(screenNum, lineNum, message, 0);
 	return 1;
 }
 
@@ -206,13 +251,13 @@ int adcCall(int numArgs, char* args[]) {
 	 *							  - data_buffer = buf in cmdline.c => numArgs = 5
 	 *							 ADC_Status(void) => numArgs = 2	
 	*/
-	OutCRLF();
 	
 	if (numArgs != 2 && numArgs != 3 && numArgs != 5) {
 		UART_OutString("Incorrect number of arguments");
 		return -1;
 	}
 	
+	// Command must be one of :ADC_In, ADC_Status
 	if (numArgs == 2) {
 		if (!strcmp(args[1], "in")) {
 			OutCRLF();
@@ -221,18 +266,65 @@ int adcCall(int numArgs, char* args[]) {
 		}
 		else if (!strcmp(args[1], "status")) {
 			OutCRLF();
-			UART_OutString("Status");
-			return ADC_Status();
+			UART_OutString("ADC Status: ");
+			int status = ADC_Status();
+			UART_OutUDec(status);
+			return status;
 		}
 		else {
 			UART_OutString("Invalid command");
 			return -1;
 		}
 	}
-	// First arg is "adc" so ignore
-	for (int i = 0; i < numArgs; i++) {
-		UART_OutString(args[i]);
+	// Command must be: ADC_Open
+	else if (numArgs == 3) {
+		if (!strcmp(args[1], "open")) {
+			uint8_t channelNum = parseNumber(args[2]);
+			
+			OutCRLF();
+			if (channelNum > 12) {
+				UART_OutString("Invalid Channel");
+				return -1;
+			}
+			else {
+				
+				UART_OutString("Channel ");
+				UART_OutUDec(channelNum);
+				UART_OutString(" is being opened.");
+				ADC_Open(channelNum);
+			}
+		}
+
+	}
+	// Command must be: ADC_Collect
+	else if (numArgs == 5) {
 		OutCRLF();
+		uint8_t channelNum = parseNumber(args[2]);
+		// fs vals: 0 = 10Hz, 1 = 100Hz, 2 = 1000Hz, 3 = 10000Hz, 4 = 100000Hz
+		// default fs = 1Hz
+		uint8_t sampleMode = parseNumber(args[3]);
+		uint32_t fs = 80000000;
+		if (sampleMode < 5)
+			fs = 8 * pow((double) 10, sampleMode + 1);
+		else
+			UART_OutString("Mode must be between 0 and 4. Defaulting to 1Hz sample rate.");
+		// 2-digit val between 0 and 100
+		uint8_t numSamples = parseNumber(args[4]);
+		int buf[100];
+		
+		UART_OutString("Collecting ");
+		UART_OutUDec(numSamples);
+		UART_OutString(" samples on channel ");
+		UART_OutUDec(channelNum);
+		UART_OutString(" with a period of ");
+		UART_OutUDec(fs);
+		
+		ADC_Collect(channelNum, fs, buf, numSamples);
+	}
+	
+	else {
+		UART_OutString("Invalid ADC Call");
+		return -1;
 	}
 	return 1;
 }
@@ -242,22 +334,15 @@ int timerCall(int numArgs, char* args[]) {
 	return 1;
 }
 
-int osCall(int numArgs, char* args[]) {
-	
-	return 1;
-}
-
 // Used for UART commands
 char infoADC[] = "Send commands to the ADC";
 char infoLCD[] = "Send commands to the LCD";
 char infoTimer[] = "Look up timer info";
-char infoOS[] = "Check up on OS";
 
 tCmdLineEntry g_psCmdTable[] = {
     { "lcd", lcdCall, infoADC },
     { "adc", adcCall, infoLCD },
 		{ "timer", timerCall, infoTimer },
-    { "os", osCall, infoOS }
 };
 
 //*****************************************************************************
