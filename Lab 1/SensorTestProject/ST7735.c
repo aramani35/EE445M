@@ -1692,6 +1692,7 @@ void Output_Color(uint32_t newColor){ // Set color of future output
 }
 
 void ST7735_Message(int device, int line, char *string, int32_t value) {
+	// check if inputs are valid
 	if (device != 0 || device != 1) return;
 	if (line < 0 || line > 7) return;
 	

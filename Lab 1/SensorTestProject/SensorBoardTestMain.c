@@ -77,6 +77,7 @@
 #include "ADCSWTrigger.h"
 #include "ADC.h"
 #include "UART.h"
+#include "cmdline.h"
 #include "inc/tm4c123gh6pm.h"
 
 void Timer0_Init(void);
@@ -87,18 +88,32 @@ void DelayWait10ms(uint32_t n);
 
 uint32_t PingType,IRdata[4],Cycle0,Cycle1,Cycle2,Cycle3;
 
-//---------------------OutCRLF---------------------
-// Output a CR,LF to UART to go to a new line
-// Input: none
-// Output: none
-void OutCRLF(void){
+int main(void) {
 	char i;
   char string[20];  // global to assist in debugging
   uint32_t n;
-
+	
   PLL_Init(Bus50MHz);       // set system clock to 50 MHz
   UART_Init();              // initialize UART
   OutCRLF();
+	while(1) {
+		OutCRLF();
+		UART_OutString("Please enter a command: ");
+		UART_InString(string, 19);
+		n = CmdLineProcess(string);
+		UART_OutUDec(n);
+	}
+}
+
+int main03(void){
+	char i;
+  char string[20];  // global to assist in debugging
+  uint32_t n;
+	
+  PLL_Init(Bus50MHz);       // set system clock to 50 MHz
+  UART_Init();              // initialize UART
+  OutCRLF();
+	UART_OutString("This is working properly\n");
   for(i='A'; i<='Z'; i=i+1){// print the uppercase alphabet
     UART_OutChar(i);
   }
@@ -123,15 +138,7 @@ void OutCRLF(void){
     UART_OutString(" OutUHex="); UART_OutUHex(n); OutCRLF();
 
   }
-}
-
-int main(void){
-	PLL_Init(Bus80MHz);    // set system clock to 80 MHz
-  Board_Init();          // switches LEDS on LaunchPad
-
 	
-	
-	return 1;
 }
 
 int main01(void) {
