@@ -36,6 +36,7 @@
 #include "cmdline.h"
 #include "ADC.h"
 #include "ST7735.h"
+#include "OS.h"
 #include "UART.h"
 
 //*****************************************************************************
@@ -191,7 +192,9 @@ CmdLineProcess(char *pcCmdLine)
     return(CMDLINE_BAD_CMD);
 }
 
-// parses two digit number
+// ----------parseNumber----------
+// Parse 1-2 character string and converts to 
+// two digit number
 uint8_t parseNumber(char* num) {
 	uint8_t length = strlen(num);
 	if (length == 1)
@@ -206,10 +209,14 @@ uint8_t parseNumber(char* num) {
 	return 1;
 }
 
+// ----------lcdCall----------
+// Used for showing messages on lcd screen through
+// commands from UART
+// return -1 on failure, 1 on success
 int lcdCall(int numArgs, char* args[]) {
 	if (numArgs < 4) {
 		OutCRLF();
-		UART_OutString("Incorrect Format. Try 'lcd screenNum lineNum text-to-send'");
+		UART_OutString("Incorrect Format. Try 'lcd screenNum lineNum text to send'");
 		return -1;
 	}
 	// first arg is which screen to show on
@@ -244,6 +251,10 @@ int lcdCall(int numArgs, char* args[]) {
 	return 1;
 }
 
+// ----------adcCall----------
+// Used for getting information related to the ADC channels and
+// collecting data from them
+// returns -1 on failure, return value of ADC function otherwise
 int adcCall(int numArgs, char* args[]) {
 	/* ADC commands: ADC_In(void) => numArgs = 2 
 	 *               ADC_Open(uint32_t channelNum) => numArgs = 3
@@ -257,7 +268,7 @@ int adcCall(int numArgs, char* args[]) {
 		return -1;
 	}
 	
-	// Command must be one of :ADC_In, ADC_Status
+	// Command must be either ADC_In or ADC_Status
 	if (numArgs == 2) {
 		if (!strcmp(args[1], "in")) {
 			OutCRLF();
@@ -291,7 +302,7 @@ int adcCall(int numArgs, char* args[]) {
 				UART_OutString("Channel ");
 				UART_OutUDec(channelNum);
 				UART_OutString(" is being opened.");
-				ADC_Open(channelNum);
+				return ADC_Open(channelNum);
 			}
 		}
 
@@ -319,30 +330,48 @@ int adcCall(int numArgs, char* args[]) {
 		UART_OutString(" with a period of ");
 		UART_OutUDec(fs);
 		
-		ADC_Collect(channelNum, fs, buf, numSamples);
+		return ADC_Collect(channelNum, fs, buf, numSamples);
 	}
 	
-	else {
-		UART_OutString("Invalid ADC Call");
-		return -1;
-	}
 	return 1;
 }
 
-int timerCall(int numArgs, char* args[]) {
+// ----------osCall----------
+// Used for getting information about os tasks
+// returns -1 on failure, 1 on success
+int osCall(int numArgs, char* args[]) {
+	OutCRLF();
+	if (numArgs != 2) {
+		UART_OutString("OS commands are either 'os clear' or 'os read'");
+		return -1;
+	}
 	
+	else {
+		if (!strcmp(args[2], "clear")) {
+			OS_ClearPeriodicTime();
+			UART_OutString("OS counter has been cleared.");
+		}
+		else if (!strcmp(args[2], "read")) {
+			UART_OutString("OS count: ");
+			UART_OutUDec(OS_ReadPeriodicTime());
+		}
+		else {
+			UART_OutString("Invalid OS Call");
+			return -1;
+		}
+	}
 	return 1;
 }
 
 // Used for UART commands
 char infoADC[] = "Send commands to the ADC";
 char infoLCD[] = "Send commands to the LCD";
-char infoTimer[] = "Look up timer info";
+char infoOS[] = "Look up timer info";
 
 tCmdLineEntry g_psCmdTable[] = {
     { "lcd", lcdCall, infoADC },
     { "adc", adcCall, infoLCD },
-		{ "timer", timerCall, infoTimer },
+		{ "os", osCall, infoOS },
 };
 
 //*****************************************************************************

@@ -12,7 +12,8 @@ int32_t sampleSize = 0;
 int* DATA;	// bufer that stores data
 bool status = false;	// false means ADC is not running / complete, true represents ADC is still running
 
-
+// ----------ADC_In----------
+// Takes data in from specifed adc channel
 int ADC_In(void){  
 	uint32_t result;
 	

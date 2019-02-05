@@ -73,24 +73,28 @@ void ADC0_InitSWTriggerSeq3(uint32_t channelNum);
 // SS3 interrupts: enabled but not promoted to controller
 void ADC0_InitAllTriggerSeq3(uint32_t channelNum);
 
-//------------ADC0_InSeq3------------
+// ------------ADC0_InSeq3------------
 // Busy-wait Analog to digital conversion
 // Input: none
 // Output: 12-bit result of ADC conversion
 uint32_t ADC0_InSeq3(void);
 
-//------------ADC_In------------
+// ----------ADC_In----------
+// Takes data in from specifed adc channel
 int ADC_In(void);
 
-//------------ADC_Open------------
+// ----------ADC_Open----------
+// Opens ADC on specified channel
 int ADC_Open(uint32_t channelNum);
 
-//------------ADC_Collect------------
+// ------------ADC_Collect------------
+// Collect samples from specified channel at specified rate
 int ADC_Collect(uint32_t channelNum, uint32_t fs, int* data_buffer, uint32_t numberOfSamples);
 
-//------------ADC_Collect------------
+// ----------ADC_Status----------
+// Returns whether ADC is running or not (1 if yes, 0 if no)
 int ADC_Status(void);
 
-//------------ADC0Seq3_Handler------------
+// ------------ADC0Seq3_Handler------------
 void ADC0Seq3_Handler(void);
 

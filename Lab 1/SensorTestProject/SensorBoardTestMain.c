@@ -89,9 +89,7 @@ void DelayWait10ms(uint32_t n);
 uint32_t PingType,IRdata[4],Cycle0,Cycle1,Cycle2,Cycle3;
 
 int main(void) {
-	char i;
   char string[20];  // global to assist in debugging
-  uint32_t n;
 	
   PLL_Init(Bus50MHz);       // set system clock to 50 MHz
   UART_Init();              // initialize UART
@@ -100,8 +98,7 @@ int main(void) {
 		OutCRLF();
 		UART_OutString("Please enter a command: ");
 		UART_InString(string, 19);
-		n = CmdLineProcess(string);
-		UART_OutUDec(n);
+		CmdLineProcess(string);
 	}
 }
 
@@ -154,7 +151,7 @@ int main01(void) {
 	return 0;
 }
 
-int main0(void) {
+int main0001(void) {
 	PLL_Init(Bus80MHz);    // set system clock to 80 MHz
   Board_Init();          // switches LEDS on LaunchPad
   ST7735_InitR(INITR_REDTAB);

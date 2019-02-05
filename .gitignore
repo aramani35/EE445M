@@ -1,6 +1,11 @@
-.DS_Store
-.axf
-.bin
-.o
-.d
-.uvproj
+*.DS_Store
+*.axf
+*.bin
+*.o
+*.d
+*.uvproj
+*.uvgui
+*.uvgui.Abhishek
+*.uvgui_Abhishek.bak
+*.uvopt
+*.bak
