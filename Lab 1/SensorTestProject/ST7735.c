@@ -1693,14 +1693,13 @@ void Output_Color(uint32_t newColor){ // Set color of future output
 
 void ST7735_Message(int device, int line, char *string, int32_t value) {
 	// check if inputs are valid
-	if (device != 0 || device != 1) return;
-	if (line < 0 || line > 7) return;
+	if (device != 0 && device != 1) return;
+	if (line < 0 || line > 3) return;
 	
-	if (device == 0) ST7735_SetCursor(0, line);
-	else { ST7735_SetCursor(0, line+8); }
+	if (device == 0) ST7735_SetCursor(0, line*2);
+	else { ST7735_SetCursor(0, (line+2)+8); }
 	
 	ST7735_OutString(string);
-	ST7735_OutChar(' ');
 	if (value < 0) {
 		value*=-1;
 		ST7735_OutChar('-');
