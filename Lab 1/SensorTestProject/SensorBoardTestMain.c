@@ -77,6 +77,7 @@
 #include "ADCSWTrigger.h"
 #include "ADC.h"
 #include "UART.h"
+#include "OS.h"
 #include "cmdline.h"
 #include "inc/tm4c123gh6pm.h"
 
@@ -88,12 +89,19 @@ void DelayWait10ms(uint32_t n);
 
 uint32_t PingType,IRdata[4],Cycle0,Cycle1,Cycle2,Cycle3;
 
+void dummy(void) {}
+
 int main(void) {
   char string[20];  // global to assist in debugging
 	
-  PLL_Init(Bus50MHz);       // set system clock to 50 MHz
+  PLL_Init(Bus80MHz);       // set system clock to 50 MHz
+	Board_Init();
+	ST7735_InitR(INITR_REDTAB);
+	SYSCTL_RCGCGPIO_R |= 0x20;            // activate port F
   UART_Init();              // initialize UART
   OutCRLF();
+	
+	OS_AddPeriodicThread(dummy, 25000000, 2);
 	while(1) {
 		OutCRLF();
 		UART_OutString("Please enter a command: ");
@@ -108,6 +116,7 @@ int main03(void){
   uint32_t n;
 	
   PLL_Init(Bus50MHz);       // set system clock to 50 MHz
+	Board_Init();
   UART_Init();              // initialize UART
   OutCRLF();
 	UART_OutString("This is working properly\n");
@@ -155,10 +164,8 @@ int main0001(void) {
 	PLL_Init(Bus80MHz);    // set system clock to 80 MHz
   Board_Init();          // switches LEDS on LaunchPad
   ST7735_InitR(INITR_REDTAB);
-	SYSCTL_RCGCGPIO_R |= 0x20;            // activate port F
   
-	
-	ST7735_FillScreen(0);
+	//ST7735_OutString("hello");
 	ST7735_Message(0, 2, "hello", 5);
 	ST7735_Message(1, 2, "hello", -5);
 	

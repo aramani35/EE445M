@@ -272,8 +272,9 @@ int adcCall(int numArgs, char* args[]) {
 	if (numArgs == 2) {
 		if (!strcmp(args[1], "in")) {
 			OutCRLF();
-			UART_OutString("In");
-			return ADC_In();
+			UART_OutString("In: ");
+			UART_OutUDec(ADC_In());
+			return 2;
 		}
 		else if (!strcmp(args[1], "status")) {
 			OutCRLF();
@@ -347,11 +348,11 @@ int osCall(int numArgs, char* args[]) {
 	}
 	
 	else {
-		if (!strcmp(args[2], "clear")) {
+		if (!strcmp(args[1], "clear")) {
 			OS_ClearPeriodicTime();
 			UART_OutString("OS counter has been cleared.");
 		}
-		else if (!strcmp(args[2], "read")) {
+		else if (!strncmp(args[1], "read", 4)) {
 			UART_OutString("OS count: ");
 			UART_OutUDec(OS_ReadPeriodicTime());
 		}
