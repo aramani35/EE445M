@@ -192,6 +192,8 @@ CmdLineProcess(char *pcCmdLine)
     return(CMDLINE_BAD_CMD);
 }
 
+/* ----------START OF MODIFED CODE---------- */
+
 // ----------parseNumber----------
 // Parse 1-2 character string and converts to 
 // two digit number
@@ -272,7 +274,7 @@ int adcCall(int numArgs, char* args[]) {
 	if (numArgs == 2) {
 		if (!strcmp(args[1], "in")) {
 			OutCRLF();
-			UART_OutString("In: ");
+			UART_OutString("ADC Val: ");
 			UART_OutUDec(ADC_In());
 			return 2;
 		}
@@ -330,8 +332,28 @@ int adcCall(int numArgs, char* args[]) {
 		UART_OutUDec(channelNum);
 		UART_OutString(" with a period of ");
 		UART_OutUDec(fs);
+		OutCRLF();
 		
-		return ADC_Collect(channelNum, fs, buf, numSamples);
+		ADC_Collect(channelNum, fs, buf, numSamples);
+		
+		UART_OutString("Printing every 5th sample ...");
+		OutCRLF();
+		
+		int factor;
+		if (numSamples > 20) factor = 5;
+		else factor = 1;
+		
+		for (uint8_t i = 0; i < numSamples; i+=factor) {
+			UART_OutString("Sample #");
+			UART_OutUDec(i);
+			UART_OutString(": ");
+			UART_OutUDec(buf[i]);
+			OutCRLF();
+		}
+		
+		UART_OutString("... Done");
+		OutCRLF();
+		return 1;
 	}
 	
 	return 1;

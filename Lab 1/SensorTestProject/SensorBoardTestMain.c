@@ -99,7 +99,6 @@ int main(void) {
 	ST7735_InitR(INITR_REDTAB);
 	SYSCTL_RCGCGPIO_R |= 0x20;            // activate port F
   UART_Init();              // initialize UART
-  OutCRLF();
 	
 	OS_AddPeriodicThread(dummy, 25000000, 2);
 	while(1) {
