@@ -4,6 +4,8 @@
 // Executes a software task at a periodic rate
 
 
+#undef _OS_ASSEMBLY_
+
 #include <stdint.h>
 #include "../inc/tm4c123gh6pm.h"
 #include "OS.h"
