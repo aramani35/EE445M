@@ -10,12 +10,28 @@
 #include "../inc/tm4c123gh6pm.h"
 #include "OS.h"
 
+#define NVIC_ST_CTRL_R          (*((volatile uint32_t *)0xE000E010))
+#define NVIC_ST_CTRL_CLK_SRC    0x00000004  // Clock Source
+#define NVIC_ST_CTRL_INTEN      0x00000002  // Interrupt enable
+#define NVIC_ST_CTRL_ENABLE     0x00000001  // Counter mode
+#define NVIC_ST_RELOAD_R        (*((volatile uint32_t *)0xE000E014))
+#define NVIC_ST_CURRENT_R       (*((volatile uint32_t *)0xE000E018))
+#define NVIC_INT_CTRL_R         (*((volatile uint32_t *)0xE000ED04))
+#define NVIC_INT_CTRL_PENDSTSET 0x04000000  // Set pending SysTick interrupt
+#define NVIC_SYS_PRI3_R         (*((volatile uint32_t *)0xE000ED20))  // Sys. Handlers 12 to 15 Priority
+
+// function definitions in osasm.s
+void OS_DisableInterrupts(void); // Disable interrupts
+void OS_EnableInterrupts(void);  // Enable interrupts
 int32_t StartCritical(void);
 void EndCritical(int32_t primask);
+void StartOS(void);
+
+#define NUMTHREADS  3        // maximum number of threads
+#define STACKSIZE   100      // number of 32-bit words in stack
+
 
 #define PF1         (*((volatile uint32_t *)0x40025008))
-#define NUMTHREADS 30
-#define STACKSIZE   100      // number of 32-bit words in stack
 static uint32_t num_threads = 0;
 
 
@@ -40,6 +56,24 @@ int32_t Stacks[NUMTHREADS][STACKSIZE];
 
 void (*PeriodicTask)(void);   // user function
 uint32_t OS_counter = 0;
+
+
+// ******** OS_Init ************
+// initialize operating system, disable interrupts until OS_Launch
+// initialize OS controlled I/O: systick, 50 MHz PLL
+// input:  none
+// output: none
+void OS_Init(void){
+  OS_DisableInterrupts();
+//  PLL_Init(Bus50MHz);         // set processor clock to 50 MHz
+  NVIC_ST_CTRL_R = 0;         // disable SysTick during setup
+  NVIC_ST_CURRENT_R = 0;      // any write to current clears it
+  NVIC_SYS_PRI3_R =(NVIC_SYS_PRI3_R&0x00FFFFFF)|0xE0000000; // priority 7
+	for (int i = 0; i < NUMTHREADS; i++) {
+		TCBs[i].used = 1;
+	}
+}
+
 
 // ***************** Timer5_Init ****************
 // Activate Timer5 interrupts to run user task periodically
@@ -110,6 +144,27 @@ void SetInitialStack(int i){
   Stacks[i][STACKSIZE-16] = 0x04040404;  // R4
 }
 
+
+//******** OS_AddThread ***************
+// add three foregound threads to the scheduler
+// Inputs: three pointers to a void/void foreground tasks
+// Outputs: 1 if successful, 0 if this thread can not be added
+int OS_AddThreads(void(*task0)(void),
+                 void(*task1)(void),
+                 void(*task2)(void)){ int32_t status;
+  status = StartCritical();
+  TCBs[0].next = &TCBs[1]; // 0 points to 1
+  TCBs[1].next = &TCBs[2]; // 1 points to 2
+  TCBs[2].next = &TCBs[0]; // 2 points to 0
+  SetInitialStack(0); Stacks[0][STACKSIZE-2] = (int32_t)(task0); // PC
+  SetInitialStack(1); Stacks[1][STACKSIZE-2] = (int32_t)(task1); // PC
+  SetInitialStack(2); Stacks[2][STACKSIZE-2] = (int32_t)(task2); // PC
+  runPT = &TCBs[0];       // thread 0 will run first
+  EndCritical(status);
+  return 1;               // successful
+}
+
+
 // 1 = free 
 // 0 = busy
 int add_thread() {
@@ -178,10 +233,11 @@ int OS_AddThread(void(*task)(void),
 //	}
 //	
 	int32_t status, thread, prev;
+	thread = 0;
 	 
 	status = StartCritical();
 	if(num_threads == 0) {
-		add_thread();
+		thread = add_thread();
 		TCBs[0].next = &TCBs[0]; // 0 points to 0
 		runPT = &TCBs[0];     // thread 0 will run first
 	}
@@ -191,7 +247,7 @@ int OS_AddThread(void(*task)(void),
 		TCBs[thread].next = TCBs[prev].next;
 		TCBs[prev].next = &TCBs[thread];
 	}
-  TCBs[thread].used = 1;
+  TCBs[thread].used = 0;
 	TCBs[thread].id = thread;
 
 	SetInitialStack(thread); 
@@ -220,8 +276,15 @@ void Sustick_handler(void) {
 	ContextSwitch();
 }
 
-void OS_launch(void){
-//	StartOS;
+///******** OS_Launch ***************
+// start the scheduler, enable interrupts
+// Inputs: number of 20ns clock cycles for each time slice
+//         (maximum of 24 bits)
+// Outputs: none (does not return)
+void OS_Launch(unsigned long theTimeSlice){
+  NVIC_ST_RELOAD_R = theTimeSlice - 1; // reload value
+  NVIC_ST_CTRL_R = 0x00000007; // enable, core clock and interrupt arm
+  StartOS();                   // start on the first task
 }
 
 
@@ -241,7 +304,7 @@ uint32_t OS_ReadPeriodicTime(void){
 	return OS_counter;
 }
 
-void OS_Init(void){} 
+
 
 // ******** OS_InitSemaphore ************
 // initialize semaphore 
@@ -433,13 +496,4 @@ void OS_ClearMsTime(void){}
 // It is ok to make the resolution to match the first call to OS_AddPeriodicThread
 unsigned long OS_MsTime(void){return 0;}
 
-//******** OS_Launch *************** 
-// start the scheduler, enable interrupts
-// Inputs: number of 12.5ns clock cycles for each time slice
-//         you may select the units of this parameter
-// Outputs: none (does not return)
-// In Lab 2, you can ignore the theTimeSlice field
-// In Lab 3, you should implement the user-defined TimeSlice field
-// It is ok to limit the range of theTimeSlice to match the 24-bit SysTick
-void OS_Launch(unsigned long theTimeSlice){}
 

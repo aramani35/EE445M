@@ -28,11 +28,11 @@
         REQUIRE8
         PRESERVE8
 
-        EXTERN  RunPt            ; currently running thread
+        EXTERN  runPT            ; currently running thread
         EXPORT  OS_DisableInterrupts
         EXPORT  OS_EnableInterrupts
         EXPORT  StartOS
-        EXPORT  Context_Switch
+        EXPORT  SysTick_Handler
 
 
 OS_DisableInterrupts
@@ -45,21 +45,21 @@ OS_EnableInterrupts
         BX      LR
 
 
-Context_Switch                 ; 1) Saves R0-R3,R12,LR,PC,PSR
+SysTick_Handler                ; 1) Saves R0-R3,R12,LR,PC,PSR
     CPSID   I                  ; 2) Prevent interrupt during switch
     PUSH    {R4-R11}           ; 3) Save remaining regs r4-11
-    LDR     R0, =RunPt         ; 4) R0=pointer to RunPt, old thread
+    LDR     R0, =runPT         ; 4) R0=pointer to RunPt, old thread
     LDR     R1, [R0]           ;    R1 = RunPt
     STR     SP, [R1]           ; 5) Save SP into TCB
-    LDR     R1, [R1,#4]        ; 6) R1 = RunPt->next				replace 6) with call to C function (scheduler)
-    STR     R1, [R0]           ;    RunPt = R1						PUSH {R0, LR} => BL OS_Scheduler => POP {R0, LR} => LDR R1, [R0]
+    LDR     R1, [R1,#4]        ; 6) R1 = RunPt->next
+    STR     R1, [R0]           ;    RunPt = R1
     LDR     SP, [R1]           ; 7) new thread SP; SP = RunPt->sp;
     POP     {R4-R11}           ; 8) restore regs r4-11
     CPSIE   I                  ; 9) tasks run with interrupts enabled
     BX      LR                 ; 10) restore R0-R3,R12,LR,PC,PSR
 
 StartOS
-    LDR     R0, =RunPt         ; currently running thread
+    LDR     R0, =runPT         ; currently running thread
     LDR     R2, [R0]           ; R2 = value of RunPt
     LDR     SP, [R2]           ; new thread SP; SP = RunPt->stackPointer;
     POP     {R4-R11}           ; restore regs r4-11

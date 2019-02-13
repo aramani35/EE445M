@@ -391,7 +391,7 @@ void Thread3(void){
   }
 }
 
-int Testmain1(void){  // Testmain1
+int main(void){  // Testmain1
   OS_Init();          // initialize, disable interrupts
   PortE_Init();       // profile user threads
   NumCreated = 0 ;
@@ -432,7 +432,7 @@ void Thread3b(void){
     Count3++;
   }
 }
-int main(void){  // Testmain2
+int testmain2(void){  // Testmain2
   OS_Init();           // initialize, disable interrupts
   PortE_Init();       // profile user threads
   NumCreated = 0 ;

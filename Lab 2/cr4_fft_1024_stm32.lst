@@ -2422,10 +2422,11 @@ xbe73,0x0192
 xbf38,0x00c9
   630 000011E0         
   631 000011E0                 END
-Command Line: --debug --xref --cpu=Cortex-M4 --apcs=interwork --depend=.\cr4_ff
-t_1024_stm32.d -o.\cr4_fft_1024_stm32.o -IC:\Keil\ARM\RV31\INC -IC:\Keil\ARM\CM
-SIS\Include -IC:\Keil\ARM\Inc\Luminary --predefine="__MICROLIB SETA 1" --list=.
-\cr4_fft_1024_stm32.lst cr4_fft_1024_stm32.s
+Command Line: --debug --xref --diag_suppress=9931 --cpu=Cortex-M4 --apcs=interw
+ork --depend=.\cr4_fft_1024_stm32.d -o.\cr4_fft_1024_stm32.o -IC:\Keil_v5\ARM\R
+V31\INC -IC:\Keil_v5\ARM\CMSIS\Include -IC:\Keil_v5\ARM\INC\Luminary --predefin
+e="__MICROLIB SETA 1" --predefine="__UVISION_VERSION SETA 526" --list=.\cr4_fft
+_1024_stm32.lst cr4_fft_1024_stm32.s
 
 
 
@@ -2501,13 +2502,13 @@ Symbol: NPT
    Definitions
       At line 46 in file cr4_fft_1024_stm32.s
    Uses
-      At line 136 in macro xþAOPT
+      At line 136 in macro  vw	OPT
       at line 228 in file cr4_fft_1024_stm32.s
-      At line 139 in macro xþAOPT
+      At line 139 in macro  vw	OPT
       at line 228 in file cr4_fft_1024_stm32.s
-      At line 142 in macro xþAOPT
+      At line 142 in macro  vw	OPT
       at line 228 in file cr4_fft_1024_stm32.s
-      At line 145 in macro xþAOPT
+      At line 145 in macro  vw	OPT
       at line 228 in file cr4_fft_1024_stm32.s
 
 1 symbol
@@ -2526,4 +2527,4 @@ Symbol: TableFFT
       None
 Comment: TableFFT unused
 1 symbol
-359 symbols in table
+360 symbols in table
