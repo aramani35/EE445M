@@ -37,9 +37,9 @@ static uint32_t num_threads = 0;
 
 struct TCB {
 	int32_t *savedSP;
-	unsigned used;
 	struct TCB *next;
   struct TCB *prev;
+	unsigned used;
 	int16_t id;
 	uint16_t sleep;
 	uint8_t priority;
@@ -244,7 +244,7 @@ int OS_AddThread(void(*task)(void),
 	else {
 		thread = add_thread();
 		prev = find_prev(thread);
-		TCBs[thread].next = TCBs[prev].next;
+		TCBs[thread].next = &TCBs[0];//TCBs[prev].next;
 		TCBs[prev].next = &TCBs[thread];
 	}
   TCBs[thread].used = 0;
@@ -254,8 +254,8 @@ int OS_AddThread(void(*task)(void),
 	Stacks[thread][STACKSIZE-2] = (int32_t)(task); // PC
 	num_threads++;
 
-	SetInitialStack(thread);		//initialize stack
-	Stacks[num_threads][STACKSIZE-2] = (int32_t)(task); //  set PC for Task
+//	SetInitialStack(thread);		//initialize stack
+//	Stacks[num_threads][STACKSIZE-2] = (int32_t)(task); //  set PC for Task
 	EndCritical(status);
 
 	return 0;
@@ -402,7 +402,10 @@ void OS_Kill(void){}
 // Same function as OS_Sleep(0)
 // input:  none
 // output: none
-void OS_Suspend(void){}
+void OS_Suspend(void){
+  NVIC_ST_CURRENT_R = 0x00000000;
+	NVIC_INT_CTRL_R = 0x04000000;
+}
  
 // ******** OS_Fifo_Init ************
 // Initialize the Fifo to be empty
