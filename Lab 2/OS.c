@@ -310,7 +310,9 @@ uint32_t OS_ReadPeriodicTime(void){
 // initialize semaphore 
 // input:  pointer to a semaphore
 // output: none
-void OS_InitSemaphore(Sema4Type *semaPt, long value){} 
+void OS_InitSemaphore(Sema4Type *semaPt, long value) {
+	semaPt->Value = value;
+} 
 
 // ******** OS_Wait ************
 // decrement semaphore 
@@ -318,7 +320,16 @@ void OS_InitSemaphore(Sema4Type *semaPt, long value){}
 // Lab3 block if less than zero
 // input:  pointer to a counting semaphore
 // output: none
-void OS_Wait(Sema4Type *semaPt){}  
+void OS_Wait(Sema4Type *semaPt) {
+	OS_DisableInterrupts();
+	while (semaPt->Value <= 0) {
+		OS_EnableInterrupts();
+		OS_DisableInterrupts();
+	}
+	
+	semaPt->Value -= 1;
+	OS_EnableInterrupts();
+}  
 
 // ******** OS_Signal ************
 // increment semaphore 
@@ -326,21 +337,38 @@ void OS_Wait(Sema4Type *semaPt){}
 // Lab3 wakeup blocked thread if appropriate 
 // input:  pointer to a counting semaphore
 // output: none
-void OS_Signal(Sema4Type *semaPt){} 
+void OS_Signal(Sema4Type *semaPt) {
+	OS_DisableInterrupts();
+	semaPt->Value += 1;
+	OS_EnableInterrupts();
+} 
 
 // ******** OS_bWait ************
 // Lab2 spinlock, set to 0
 // Lab3 block if less than zero
 // input:  pointer to a binary semaphore
 // output: none
-void OS_bWait(Sema4Type *semaPt){}  
+void OS_bWait(Sema4Type *semaPt) {
+	OS_DisableInterrupts();
+	while (semaPt->Value <= 0) {
+		OS_EnableInterrupts();
+		OS_DisableInterrupts();
+	}
+	
+	semaPt->Value = 1;
+	OS_EnableInterrupts();
+}  
 
 // ******** OS_bSignal ************
 // Lab2 spinlock, set to 1
 // Lab3 wakeup blocked thread if appropriate 
 // input:  pointer to a binary semaphore
 // output: none
-void OS_bSignal(Sema4Type *semaPt){} 
+void OS_bSignal(Sema4Type *semaPt) {
+	OS_DisableInterrupts();
+	semaPt->Value += 1;
+	OS_EnableInterrupts();
+} 
 	
 
 

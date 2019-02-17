@@ -30,6 +30,7 @@
 #include "ST7735.h"
 #include "ADC.h"
 #include "UART.h"
+#include "board.h"
 #include <string.h> 
 #define Lab2 1
 #define Lab3 0
@@ -365,10 +366,15 @@ unsigned long Count2;   // number of times thread2 loops
 unsigned long Count3;   // number of times thread3 loops
 unsigned long Count4;   // number of times thread4 loops
 unsigned long Count5;   // number of times thread5 loops
+
+#define PF1         (*((volatile uint32_t *)0x40025008))
+#define PF2 				(*((volatile unsigned long *)0x40025010))
+	
 void Thread1(void){
   Count1 = 0;          
   for(;;){
-    PE0 ^= 0x01;       // heartbeat
+    // PE0 ^= 0x01;       // heartbeat
+	PF1 ^= 0x02;
     Count1++;
     OS_Suspend();      // cooperative multitasking
   }
@@ -376,7 +382,8 @@ void Thread1(void){
 void Thread2(void){
   Count2 = 0;          
   for(;;){
-    PE1 ^= 0x02;       // heartbeat
+    // PE1 ^= 0x02;       // heartbeat
+	PF2 ^= 0x04;
     Count2++;
     OS_Suspend();      // cooperative multitasking
   }
@@ -394,7 +401,8 @@ void Thread3(void){
 int main(void){  // Testmain1
   OS_Init();          // initialize, disable interrupts
   PortE_Init();       // profile user threads
-  NumCreated = 0 ;
+	Board_Init();
+  NumCreated = 0;
   NumCreated += OS_AddThread(&Thread1,128,1); 
   NumCreated += OS_AddThread(&Thread2,128,2); 
   NumCreated += OS_AddThread(&Thread3,128,3); 
