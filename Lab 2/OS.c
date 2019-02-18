@@ -247,7 +247,7 @@ int OS_AddThread(void(*task)(void),
 		TCBs[thread].next = &TCBs[0];//TCBs[prev].next;
 		TCBs[prev].next = &TCBs[thread];
 	}
-  TCBs[thread].used = 0;
+	TCBs[thread].used = 0;
 	TCBs[thread].id = thread;
 
 	SetInitialStack(thread); 
@@ -272,8 +272,13 @@ void OS_Yield(void){
 	ContextSwitch();
 }
 
-void Sustick_handler(void) {
-	ContextSwitch();
+
+
+#define PE1  (*((volatile unsigned long *)0x40024008))
+void SysTick_Handler(void) {
+	PE1 ^= 0x02;
+	NVIC_INT_CTRL_R = 0x10000000;
+	PE1 ^= 0x02;
 }
 
 ///******** OS_Launch ***************
@@ -431,8 +436,8 @@ void OS_Kill(void){}
 // input:  none
 // output: none
 void OS_Suspend(void){
-  NVIC_ST_CURRENT_R = 0x00000000;
-	NVIC_INT_CTRL_R = 0x04000000;
+//  NVIC_ST_CURRENT_R = 0x00000000;
+	NVIC_INT_CTRL_R = 0x10000000;
 }
  
 // ******** OS_Fifo_Init ************

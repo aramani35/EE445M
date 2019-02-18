@@ -367,14 +367,11 @@ unsigned long Count3;   // number of times thread3 loops
 unsigned long Count4;   // number of times thread4 loops
 unsigned long Count5;   // number of times thread5 loops
 
-#define PF1         (*((volatile uint32_t *)0x40025008))
-#define PF2 				(*((volatile unsigned long *)0x40025010))
 	
 void Thread1(void){
   Count1 = 0;          
   for(;;){
-    // PE0 ^= 0x01;       // heartbeat
-	PF1 ^= 0x02;
+    PE0 ^= 0x01;       // heartbeat
     Count1++;
     OS_Suspend();      // cooperative multitasking
   }
@@ -382,8 +379,7 @@ void Thread1(void){
 void Thread2(void){
   Count2 = 0;          
   for(;;){
-    // PE1 ^= 0x02;       // heartbeat
-	PF2 ^= 0x04;
+    PE1 ^= 0x02;       // heartbeat
     Count2++;
     OS_Suspend();      // cooperative multitasking
   }
@@ -398,10 +394,9 @@ void Thread3(void){
   }
 }
 
-int main(void){  // Testmain1
+int main1(void){  // Testmain1
   OS_Init();          // initialize, disable interrupts
   PortE_Init();       // profile user threads
-	Board_Init();
   NumCreated = 0;
   NumCreated += OS_AddThread(&Thread1,128,1); 
   NumCreated += OS_AddThread(&Thread2,128,2); 
@@ -440,7 +435,7 @@ void Thread3b(void){
     Count3++;
   }
 }
-int testmain2(void){  // Testmain2
+int main2(void){  // Testmain2
   OS_Init();           // initialize, disable interrupts
   PortE_Init();       // profile user threads
   NumCreated = 0 ;
@@ -807,7 +802,7 @@ void Thread8(void){       // only thread running
     PE0 ^= 0x01;      // debugging profile  
   }
 }
-int Testmain7(void){       // Testmain7
+int main(void){       // Testmain7
   PortE_Init();
   OS_Init();           // initialize, disable interrupts
   NumCreated = 0 ;
