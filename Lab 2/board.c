@@ -74,6 +74,8 @@ void Board_Init(void){
   GPIO_PORTF_DEN_R = 0x1F;       // 7) enable digital I/O on PF0 and PF4
 }
 
+
+
 //------------Board_Input------------
 // Read and return the status of the switches.
 // Input: none

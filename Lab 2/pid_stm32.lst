@@ -126,16 +126,16 @@ ARM Macro Assembler    Page 2
    73 00000040                 END
               00000000 
               00000000 
-Command Line: --debug --xref --cpu=Cortex-M4 --apcs=interwork --depend=.\pid_st
-m32.d -o.\pid_stm32.o -IC:\Keil\ARM\RV31\INC -IC:\Keil\ARM\CMSIS\Include -IC:\K
+Command Line: --debug --xref --diag_suppress=9931 --cpu=Cortex-M4 --apcs=interw
+ork --depend=.\pid_stm32.d -o.\pid_stm32.o -IC:\Keil_v5\ARM\RV31\INC -IC:\Keil_
 
 
 
 ARM Macro Assembler    Page 3 
 
 
-eil\ARM\Inc\Luminary --predefine="__MICROLIB SETA 1" --list=.\pid_stm32.lst PID
-_stm32.s
+v5\ARM\CMSIS\Include -IC:\Keil_v5\ARM\INC\Luminary --predefine="__MICROLIB SETA
+ 1" --predefine="__UVISION_VERSION SETA 526" --list=.\pid_stm32.lst PID_stm32.s
 
 
 
@@ -183,4 +183,4 @@ Symbol: PrevError
       At line 51 in file PID_stm32.s
 Comment: PrevError used once
 2 symbols
-346 symbols in table
+347 symbols in table

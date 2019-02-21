@@ -394,9 +394,12 @@ void Thread3(void){
   }
 }
 
-int main1(void){  // Testmain1
+#define PF1                     (*((volatile uint32_t *)0x40025008))
+
+int Testmain1(void){  // Testmain1
   OS_Init();          // initialize, disable interrupts
   PortE_Init();       // profile user threads
+//	Board_Init();
   NumCreated = 0;
   NumCreated += OS_AddThread(&Thread1,128,1); 
   NumCreated += OS_AddThread(&Thread2,128,2); 
@@ -435,10 +438,16 @@ void Thread3b(void){
     Count3++;
   }
 }
-int main2(void){  // Testmain2
+void taskTest(void){
+  PF1 ^= 0x02;
+}
+
+int main(void){  // Testmain2
   OS_Init();           // initialize, disable interrupts
   PortE_Init();       // profile user threads
+	Board_Init();
   NumCreated = 0 ;
+	OS_AddSW1Task(&taskTest,2);
   NumCreated += OS_AddThread(&Thread1b,128,1); 
   NumCreated += OS_AddThread(&Thread2b,128,2); 
   NumCreated += OS_AddThread(&Thread3b,128,3); 
@@ -482,7 +491,6 @@ void Thread2c(void){
     Count2++;   // Count2 + Count5 should equal Count1
   }
 }
-
 void Thread3c(void){
   Count3 = 0;          
   for(;;){
@@ -497,6 +505,9 @@ void Thread4c(void){ int i;
   OS_Kill();
   Count4 = 0;
 }
+
+
+
 void BackgroundThread5c(void){   // called when Select button pushed
   NumCreated += OS_AddThread(&Thread4c,128,3); 
 }
@@ -506,10 +517,11 @@ int Testmain3(void){   // Testmain3
   OS_Init();           // initialize, disable interrupts
 // Count2 + Count5 should equal Count1
   NumCreated = 0 ;
+
   OS_AddSW1Task(&BackgroundThread5c,2);
   NumCreated += OS_AddThread(&Thread2c,128,2); 
   NumCreated += OS_AddThread(&Thread3c,128,3); 
-  NumCreated += OS_AddThread(&Thread4c,128,3); 
+  NumCreated += OS_AddThread(&Thread4c,128,3);  
   OS_Launch(TIME_2MS); // doesn't return, interrupts enabled in here
   return 0;            // this never executes
 }
@@ -802,7 +814,7 @@ void Thread8(void){       // only thread running
     PE0 ^= 0x01;      // debugging profile  
   }
 }
-int main(void){       // Testmain7
+int Testmain7(void){       // Testmain7
   PortE_Init();
   OS_Init();           // initialize, disable interrupts
   NumCreated = 0 ;

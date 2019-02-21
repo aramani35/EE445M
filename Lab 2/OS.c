@@ -9,6 +9,8 @@
 #include <stdint.h>
 #include "../inc/tm4c123gh6pm.h"
 #include "OS.h"
+#include "board.h"
+#include "EdgeTriggered.h"
 
 #define NVIC_ST_CTRL_R          (*((volatile uint32_t *)0xE000E010))
 #define NVIC_ST_CTRL_CLK_SRC    0x00000004  // Clock Source
@@ -32,7 +34,10 @@ void StartOS(void);
 
 
 #define PF1         (*((volatile uint32_t *)0x40025008))
+#define PF4                     (*((volatile uint32_t *)0x40025040))
+
 static uint32_t num_threads = 0;
+volatile static unsigned long Last;      // previous
 
 
 struct TCB {
@@ -55,6 +60,8 @@ int32_t Stacks[NUMTHREADS][STACKSIZE];
 
 
 void (*PeriodicTask)(void);   // user function
+void (*SWOneTask)(void);      // SW1 task to execute
+
 uint32_t OS_counter = 0;
 
 
@@ -64,8 +71,10 @@ uint32_t OS_counter = 0;
 // input:  none
 // output: none
 void OS_Init(void){
+	Last = 1;
   OS_DisableInterrupts();
-//  PLL_Init(Bus50MHz);         // set processor clock to 50 MHz
+//	Timer5_Init();              // periodic timer fro time keeping
+//  PLL_Init(Bus50MHz);       // set processor clock to 50 MHz
   NVIC_ST_CTRL_R = 0;         // disable SysTick during setup
   NVIC_ST_CURRENT_R = 0;      // any write to current clears it
   NVIC_SYS_PRI3_R =(NVIC_SYS_PRI3_R&0x00FFFFFF)|0xE0000000; // priority 7
@@ -98,13 +107,13 @@ int OS_AddPeriodicThread(void(*task)(void), unsigned long period, unsigned long 
 	return 0;
 }
 
-void Timer5A_Handler(void){
-	PF1 = 0x2;                         // Signal for entering the interrupt handler
-  TIMER5_ICR_R = TIMER_ICR_TATOCINT; // Acknowledge timer0A timeout
-	OS_counter++;                      // increment global counter
-  (*PeriodicTask)();                 // Execute periodic task
-	PF1 = 0x0;                         // Signal for exiting the interrupt handler
-}
+//void Timer5A_Handler(void){
+//	PF1 = 0x2;                         // Signal for entering the interrupt handler
+//  TIMER5_ICR_R = TIMER_ICR_TATOCINT; // Acknowledge timer0A timeout
+//	OS_counter++;                      // increment global counter
+//  (*PeriodicTask)();                 // Execute periodic task
+//	PF1 = 0x0;                         // Signal for exiting the interrupt handler
+//}
 
 //long* OS_initStack(long *sp, void(*task)(void)){
 //	*(sp)   = (long)task;
@@ -273,13 +282,13 @@ void OS_Yield(void){
 }
 
 
-
-#define PE1  (*((volatile unsigned long *)0x40024008))
-void SysTick_Handler(void) {
-	PE1 ^= 0x02;
-	NVIC_INT_CTRL_R = 0x10000000;
-	PE1 ^= 0x02;
-}
+// for testmain7
+//#define PE1  (*((volatile unsigned long *)0x40024008))
+//void SysTick_Handler(void) {
+//	PE1 ^= 0x02;
+//	NVIC_INT_CTRL_R = 0x10000000;
+//	PE1 ^= 0x02;
+//}
 
 ///******** OS_Launch ***************
 // start the scheduler, enable interrupts
@@ -360,7 +369,7 @@ void OS_bWait(Sema4Type *semaPt) {
 		OS_DisableInterrupts();
 	}
 	
-	semaPt->Value = 1;
+	semaPt->Value = 0;
 	OS_EnableInterrupts();
 }  
 
@@ -371,7 +380,7 @@ void OS_bWait(Sema4Type *semaPt) {
 // output: none
 void OS_bSignal(Sema4Type *semaPt) {
 	OS_DisableInterrupts();
-	semaPt->Value += 1;
+	semaPt->Value = 1;
 	OS_EnableInterrupts();
 } 
 	
@@ -383,6 +392,35 @@ void OS_bSignal(Sema4Type *semaPt) {
 // Outputs: Thread ID, number greater than zero 
 unsigned long OS_Id(void){return 0;}
 
+static void GPIOArm(void){
+  GPIO_PORTF_ICR_R = 0x10;      // (e) clear flag4
+  GPIO_PORTF_IM_R |= 0x10;      // (f) arm interrupt on PF4 *** No IME bit as mentioned in Book ***
+  NVIC_PRI7_R = (NVIC_PRI7_R&0xFF00FFFF)|0x00A00000; // (g) priority 5
+  NVIC_EN0_R = 0x40000000;      // (h) enable interrupt 30 in NVIC  
+}
+
+void Timer5A_Handler(void){
+  TIMER5_IMR_R = 0x00000000;    // disarm timeout interrupt
+  Last = 1;  // switch state
+  GPIOArm();   // start GPIO
+}
+
+
+
+void GPIOPortF_Handler(void){
+//  GPIO_PORTF_ICR_R = 0x10;      // acknowledge flag4
+//	GPIO_PORTF_IM_R &= ~0x01;
+//  SWOneTask();
+//	GPIO_PORTF_IM_R &= ~0x10;
+//	GPIO_PORTF_IM_R &= ~0x10;     // disarm interrupt on PF4 
+	
+	GPIO_PORTF_IM_R &= ~0x10;     // disarm interrupt on PF4 
+  if(Last){    // 0x10 means it was previously released
+    (*SWOneTask)();  // execute user task
+		Last = 0;
+  }
+  Timer5Arm(); // start one shot
+}
 
 //******** OS_AddSW1Task *************** 
 // add a background task to run whenever the SW1 (PF4) button is pushed
@@ -397,7 +435,11 @@ unsigned long OS_Id(void){return 0;}
 // In lab 2, the priority field can be ignored
 // In lab 3, there will be up to four background threads, and this priority field 
 //           determines the relative priority of these four threads
-int OS_AddSW1Task(void(*task)(void), unsigned long priority){return 0;}
+int OS_AddSW1Task(void(*task)(void), unsigned long priority){
+  SWOneTask = task;
+	EdgeCounter_PF4_Init();
+	return 1;
+}
 
 //******** OS_AddSW2Task *************** 
 // add a background task to run whenever the SW2 (PF0) button is pushed
