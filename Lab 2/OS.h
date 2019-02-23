@@ -11,6 +11,9 @@
 // You are free to change the syntax/organization of this file
 // You are required to implement the spirit of this OS
 
+#include <stdint.h>
+#include "../inc/tm4c123gh6pm.h"
+
  
 #ifndef __OS_H
 #define __OS_H  1
@@ -20,6 +23,20 @@
 #define TIME_2MS    (2*TIME_1MS)  
 #define TIME_500US  (TIME_1MS/2)  
 #define TIME_250US  (TIME_1MS/5)  
+
+
+struct TCB {
+	int32_t *savedSP;
+	struct TCB *next;
+    struct TCB *prev;
+	unsigned used;
+	int16_t id;
+	uint16_t sleep;
+	uint8_t priority;
+	uint8_t blocked;
+};
+typedef struct TCB TCBtype;
+
 
 // feel free to change the type of semaphore, there are lots of good solutions
 struct  Sema4{
@@ -271,3 +288,5 @@ void OS_Launch(unsigned long theTimeSlice);
 void OS_ClearPeriodicTime(void);
 
 uint32_t OS_ReadPeriodicTime(void);
+
+void OS_pendSVTrigger(void);

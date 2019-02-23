@@ -11,6 +11,7 @@
 #include "OS.h"
 #include "board.h"
 #include "EdgeTriggered.h"
+#include "LinkedList.h"
 
 #define NVIC_ST_CTRL_R          (*((volatile uint32_t *)0xE000E010))
 #define NVIC_ST_CTRL_CLK_SRC    0x00000004  // Clock Source
@@ -23,34 +24,24 @@
 #define NVIC_SYS_PRI3_R         (*((volatile uint32_t *)0xE000ED20))  // Sys. Handlers 12 to 15 Priority
 
 // function definitions in osasm.s
-void OS_DisableInterrupts(void); // Disable interrupts
-void OS_EnableInterrupts(void);  // Enable interrupts
+void OS_DisableInterrupts(void);// Disable interrupts
+void OS_EnableInterrupts(void); // Enable interrupts
 int32_t StartCritical(void);
 void EndCritical(int32_t primask);
 void StartOS(void);
+void (*PeriodicTask)(void);     // user function
+void (*SWOneTask)(void);        // SW1 task to execute
 
-#define NUMTHREADS  3        // maximum number of threads
-#define STACKSIZE   100      // number of 32-bit words in stack
 
-
-#define PF1         (*((volatile uint32_t *)0x40025008))
+#define NUMTHREADS  3           // maximum number of threads
+#define STACKSIZE   100         // number of 32-bit words in stack
+#define PF1                     (*((volatile uint32_t *)0x40025008))
 #define PF4                     (*((volatile uint32_t *)0x40025040))
 
 static uint32_t num_threads = 0;
-volatile static unsigned long Last;      // previous
+volatile static unsigned long Last; // previous
 
 
-struct TCB {
-	int32_t *savedSP;
-	struct TCB *next;
-  struct TCB *prev;
-	unsigned used;
-	int16_t id;
-	uint16_t sleep;
-	uint8_t priority;
-	uint8_t blocked;
-};
-typedef struct TCB TCBtype;
 
 TCBtype *runPT = 0;
 TCBtype TCBs[NUMTHREADS];
@@ -58,9 +49,11 @@ unsigned int numTasks = 0;
 int16_t CurrentID;
 int32_t Stacks[NUMTHREADS][STACKSIZE];
 
+TCBtype *head_sleep;           // head of sleeping thread list
+TCBtype *tail_sleep;           // tail of sleeping thread list
 
-void (*PeriodicTask)(void);   // user function
-void (*SWOneTask)(void);      // SW1 task to execute
+
+
 
 uint32_t OS_counter = 0;
 
@@ -456,19 +449,37 @@ int OS_AddSW1Task(void(*task)(void), unsigned long priority){
 //           determines the relative priority of these four threads
 int OS_AddSW2Task(void(*task)(void), unsigned long priority){return 0;}
 
+
+
+void OS_pendSVTrigger(void){
+	NVIC_INT_CTRL_R = 0x10000000; //Trigger PendSV
+}
+
+
 // ******** OS_Sleep ************
 // place this thread into a dormant state
 // input:  number of msec to sleep
 // output: none
 // You are free to select the time resolution for this function
 // OS_Sleep(0) implements cooperative multitasking
-void OS_Sleep(unsigned long sleepTime){} 
+void OS_Sleep(unsigned long sleepTime){
+  long status = StartCritical();
+	TCBtype *sleeping_thread = runPT;
+	sleeping_thread->sleep = sleepTime;
+	unlink(sleeping_thread, num_threads);
+	addToList(sleeping_thread, &head_sleep, &tail_sleep);
+	EndCritical(status);
+} 
 
 // ******** OS_Kill ************
 // kill the currently running thread, release its TCB and stack
 // input:  none
 // output: none
-void OS_Kill(void){} 
+void OS_Kill(void){
+    long status = StartCritical();
+	unlink(runPT, num_threads);
+	EndCritical(status);
+} 
 
 // ******** OS_Suspend ************
 // suspend execution of currently running thread
@@ -573,5 +584,4 @@ void OS_ClearMsTime(void){}
 // You are free to select the time resolution for this function
 // It is ok to make the resolution to match the first call to OS_AddPeriodicThread
 unsigned long OS_MsTime(void){return 0;}
-
 

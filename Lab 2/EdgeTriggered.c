@@ -19,7 +19,7 @@
 // Output: none
 void EdgeCounter_PF4_Init(void){                          
   SYSCTL_RCGCGPIO_R |= 0x00000020; // (a) activate clock for port F
-	int delay = 0;
+  int delay = 0;
   GPIO_PORTF_DIR_R &= ~0x10;    // (c) make PF4 in (built-in button)
   GPIO_PORTF_AFSEL_R &= ~0x10;  //     disable alt funct on PF4
   GPIO_PORTF_DEN_R |= 0x10;     //     enable digital I/O on PF4   
@@ -37,7 +37,7 @@ void EdgeCounter_PF4_Init(void){
 
 void Timer5Arm(void){
   SYSCTL_RCGCTIMER_R |= 0x20;      // 0) activate timer5                    // wait for completion
-	int delay = 0;
+  int delay = 0;
   TIMER5_CTL_R &= ~0x00000001;     // 1) disable timer5A during setup
   TIMER5_CFG_R = 0x00000000;       // 2) configure for 32-bit timer mode
   TIMER5_TAMR_R = 0x00000001;      // 3) 1-SHOT mode
