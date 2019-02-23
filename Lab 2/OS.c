@@ -37,6 +37,7 @@ void (*SWOneTask)(void);        // SW1 task to execute
 #define STACKSIZE   100         // number of 32-bit words in stack
 #define PF1                     (*((volatile uint32_t *)0x40025008))
 #define PF4                     (*((volatile uint32_t *)0x40025040))
+#define PE1                     (*((volatile unsigned long *)0x40024008))
 
 static uint32_t num_threads = 0;
 volatile static unsigned long Last; // previous
@@ -51,10 +52,6 @@ int32_t Stacks[NUMTHREADS][STACKSIZE];
 
 TCBtype *head_sleep;           // head of sleeping thread list
 TCBtype *tail_sleep;           // tail of sleeping thread list
-
-
-
-
 uint32_t OS_counter = 0;
 
 
@@ -65,13 +62,13 @@ uint32_t OS_counter = 0;
 // output: none
 void OS_Init(void){
 	Last = 1;
-  OS_DisableInterrupts();
-//	Timer5_Init();              // periodic timer fro time keeping
-//  PLL_Init(Bus50MHz);       // set processor clock to 50 MHz
-  NVIC_ST_CTRL_R = 0;         // disable SysTick during setup
-  NVIC_ST_CURRENT_R = 0;      // any write to current clears it
-  NVIC_SYS_PRI3_R =(NVIC_SYS_PRI3_R&0x00FFFFFF)|0xE0000000; // priority 7
-	for (int i = 0; i < NUMTHREADS; i++) {
+    OS_DisableInterrupts();
+    NVIC_ST_CTRL_R = 0;                     // disable SysTick during setup
+    NVIC_ST_CURRENT_R = 0;                  // any write to current clears it
+    NVIC_SYS_PRI3_R =(NVIC_SYS_PRI3_R&0x00FFFFFF)|0xC0000000; // SysTick priority 6
+    NVIC_SYS_PRI3_R =(NVIC_SYS_PRI3_R&0xFF00FFFF)|0x00E00000; // PendSV priority 7
+
+	for (int i = 0; i < NUMTHREADS; i++){   // initialize all the threads as free
 		TCBs[i].used = 1;
 	}
 }
@@ -108,24 +105,6 @@ int OS_AddPeriodicThread(void(*task)(void), unsigned long period, unsigned long 
 //	PF1 = 0x0;                         // Signal for exiting the interrupt handler
 //}
 
-//long* OS_initStack(long *sp, void(*task)(void)){
-//	*(sp)   = (long)task;
-//	*(--sp) = (long)0x12121212L;
-//  *(--sp) = (long)0x11111111L;
-//  *(--sp) = (long)0x10101010L;
-//  *(--sp) = (long)0x09090909L;
-//  *(--sp) = (long)0x08080808L;
-//  *(--sp) = (long)0x07070707L;
-//  *(--sp) = (long)0x06060606L;
-//  *(--sp) = (long)0x05050505L;
-//  *(--sp) = (long)0x04040404L;
-//  *(--sp) = (long)0x03030303L;
-//  *(--sp) = (long)0x02020202L;
-//  *(--sp) = (long)0x01010101L;
-//  *(--sp) = (long)0x00000000L;
-
-//	return sp;
-//}
 
 void SetInitialStack(int i){
   TCBs[i].savedSP = &Stacks[i][STACKSIZE-16]; // thread stack pointer
@@ -161,9 +140,9 @@ int OS_AddThreads(void(*task0)(void),
   SetInitialStack(0); Stacks[0][STACKSIZE-2] = (int32_t)(task0); // PC
   SetInitialStack(1); Stacks[1][STACKSIZE-2] = (int32_t)(task1); // PC
   SetInitialStack(2); Stacks[2][STACKSIZE-2] = (int32_t)(task2); // PC
-  runPT = &TCBs[0];       // thread 0 will run first
+  runPT = &TCBs[0];        // thread 0 will run first
   EndCritical(status);
-  return 1;               // successful
+  return 1;                // successful
 }
 
 
@@ -184,7 +163,7 @@ int add_thread() {
 
 
 int find_prev(int thread) {
-  // loop through all threads in forward direction 
+    // loop through all threads in forward direction 
 	// to find one that is busy/alive   
 	for (int i = (thread+NUMTHREADS-1)%NUMTHREADS; i != thread; i = (i+NUMTHREADS-1)%NUMTHREADS ) {
 		if (!TCBs[i].used) 
@@ -275,13 +254,11 @@ void OS_Yield(void){
 }
 
 
-// for testmain7
-//#define PE1  (*((volatile unsigned long *)0x40024008))
-//void SysTick_Handler(void) {
-//	PE1 ^= 0x02;
-//	NVIC_INT_CTRL_R = 0x10000000;
-//	PE1 ^= 0x02;
-//}
+void SysTick_Handler(void) {
+	PE1 ^= 0x02;
+	NVIC_INT_CTRL_R = NVIC_INT_CTRL_PEND_SV;  //0x10000000 Trigger PendSV
+	PE1 ^= 0x02;
+}
 
 ///******** OS_Launch ***************
 // start the scheduler, enable interrupts
@@ -429,7 +406,7 @@ void GPIOPortF_Handler(void){
 // In lab 3, there will be up to four background threads, and this priority field 
 //           determines the relative priority of these four threads
 int OS_AddSW1Task(void(*task)(void), unsigned long priority){
-  SWOneTask = task;
+    SWOneTask = task;
 	EdgeCounter_PF4_Init();
 	return 1;
 }
@@ -452,7 +429,7 @@ int OS_AddSW2Task(void(*task)(void), unsigned long priority){return 0;}
 
 
 void OS_pendSVTrigger(void){
-	NVIC_INT_CTRL_R = 0x10000000; //Trigger PendSV
+	NVIC_INT_CTRL_R = NVIC_INT_CTRL_PEND_SV; //0x10000000 Trigger PendSV
 }
 
 
