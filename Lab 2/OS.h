@@ -31,7 +31,7 @@ struct TCB {
     struct TCB *prev;
 	unsigned used;
 	int16_t id;
-	uint16_t sleep;
+	uint16_t sleepCT;
 	uint8_t priority;
 	uint8_t blocked;
 };

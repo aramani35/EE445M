@@ -442,7 +442,7 @@ void taskTest(void){
   PF1 ^= 0x02;
 }
 
-int main(void){  // Testmain2
+int Testmain2(void){  // Testmain2
   OS_Init();           // initialize, disable interrupts
   PortE_Init();       // profile user threads
 	Board_Init();
@@ -512,7 +512,7 @@ void BackgroundThread5c(void){   // called when Select button pushed
   NumCreated += OS_AddThread(&Thread4c,128,3); 
 }
       
-int Testmain3(void){   // Testmain3
+int main(void){   // Testmain3
   Count4 = 0;          
   OS_Init();           // initialize, disable interrupts
 // Count2 + Count5 should equal Count1
