@@ -54,6 +54,9 @@ int32_t Stacks[NUMTHREADS][STACKSIZE];
 
 TCBtype *head_sleep;           // head of sleeping thread list
 TCBtype *tail_sleep;           // tail of sleeping thread list
+TCBtype *head_kill;           // head of kill thread list
+TCBtype *tail_kill;           // tail of kill thread list
+
 uint32_t OS_counter = 0;
 
 
@@ -248,13 +251,14 @@ int find_next(int thread) {
 int OS_AddThread(void(*task)(void), 
    unsigned long stackSize, unsigned long priority){
 
-	int32_t status, thread, prev;
+	int32_t status, thread, prev, prev1;
 	thread = 0;
 	 
 	status = StartCritical();
 	if(num_threads == 0) {
 		thread = add_thread();
 		TCBs[0].next = &TCBs[0];    // 0 points to 0
+        TCBs[0].prev = &TCBs[0];
 		runPT = &TCBs[0];           // thread 0 will run first
 	}
 	else {
@@ -263,9 +267,13 @@ int OS_AddThread(void(*task)(void),
             return 0;
 		prev = find_prev(thread);
 		TCBs[thread].next = &TCBs[0];
+        TCBs[thread].prev = &TCBs[prev];
 		TCBs[prev].next = &TCBs[thread];
+        prev1 = find_prev(prev);
+        TCBs[prev].prev = &TCBs[prev1]; 
 	}
 	TCBs[thread].used = 0;
+    TCBs[thread].sleep_state = 0;
     TCBs[thread].sleepCT = 0;
 	TCBs[thread].id = thread;
 
@@ -463,9 +471,9 @@ int OS_AddSW2Task(void(*task)(void), unsigned long priority){return 0;}
 
 
 void OS_pendSVTrigger(void){
-    NVIC_ST_CURRENT_R = 0;
-    NVIC_INT_CTRL_R = 0x04000000;
-//	NVIC_INT_CTRL_R = NVIC_INT_CTRL_PEND_SV; //0x10000000 Trigger PendSV
+//    NVIC_ST_CURRENT_R = 0;
+//    NVIC_INT_CTRL_R = 0x04000000;
+	NVIC_INT_CTRL_R = NVIC_INT_CTRL_PEND_SV; //0x10000000 Trigger PendSV
 }
 
 
@@ -478,8 +486,9 @@ void OS_pendSVTrigger(void){
 void OS_Sleep(unsigned long sleepTime){
     long status = StartCritical();
 	TCBtype *sleeping_thread = runPT;
-    runPT = runPT->next;
+//    runPT = runPT->prev;
 	sleeping_thread->sleepCT = sleepTime;
+    sleeping_thread->sleep_state = 1;
 	unlinkThread(sleeping_thread, num_threads);
 	addToList(sleeping_thread, &head_sleep, &tail_sleep);
 	EndCritical(status);
@@ -496,6 +505,7 @@ void OS_Kill(void){
     runPT->used = 1;                  // set thread to free/not busy
 //    OS_pendSVTrigger();
 	unlinkThread(runPT, num_threads);
+    addToList(runPT, &head_kill, &tail_kill);
 	EndCritical(status);
 //    OS_pendSVTrigger();                         // thread is asleep so switch threads 
 
@@ -618,11 +628,29 @@ void SysTick_Handler(void) {
 //        }
 //    }
     
-    TCBtype *node = head_sleep;
+    TCBtype *node = head_kill;
+    while(head_kill){
+        if(node->next->used == 1){
+            head_kill = node->next;
+            node->next = 0;
+        }
+        else{
+            head_kill = 0;
+            node->next = 0;
+        }
+    }
+    
+    node = head_sleep;
 	while(node){
-		TCBtype *next_node = node->next;
 		node->sleepCT--;
-		if(node->sleepCT == 0){
+        if(node->next->sleep_state == 0) {
+            node->next = 0;
+            break;
+        }
+        TCBtype *next_node = node->next;
+		
+		if(node->sleepCT <= 0){
+            node->sleep_state = 0;
 			removeFromList(node, &head_sleep, &tail_sleep);
 			linkThread(runPT, node, num_threads);
 		}

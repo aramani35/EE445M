@@ -32,6 +32,7 @@ struct TCB {
 	unsigned used;
 	int16_t id;
 	uint16_t sleepCT;
+    uint8_t sleep_state;
 	uint8_t priority;
 	uint8_t blocked;
 };
