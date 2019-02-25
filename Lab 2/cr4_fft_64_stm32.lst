@@ -722,17 +722,13 @@ Symbol: NPT
    Definitions
       At line 46 in file cr4_fft_64_stm32.s
    Uses
-      At line 135 in macro È^
-OPT
+      At line 135 in macro COPT
       at line 223 in file cr4_fft_64_stm32.s
-      At line 137 in macro È^
-OPT
+      At line 137 in macro COPT
       at line 223 in file cr4_fft_64_stm32.s
-      At line 139 in macro È^
-OPT
+      At line 139 in macro COPT
       at line 223 in file cr4_fft_64_stm32.s
-      At line 141 in macro È^
-OPT
+      At line 141 in macro COPT
       at line 223 in file cr4_fft_64_stm32.s
 
 1 symbol

@@ -511,6 +511,11 @@
               <FileType>5</FileType>
               <FilePath>.\EdgeTriggered.h</FilePath>
             </File>
+            <File>
+              <FileName>LinkedList.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\LinkedList.c</FilePath>
+            </File>
           </Files>
         </Group>
       </Groups>

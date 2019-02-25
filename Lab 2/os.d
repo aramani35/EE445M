@@ -4,3 +4,5 @@
 .\os.o: OS.h
 .\os.o: board.h
 .\os.o: EdgeTriggered.h
+.\os.o: LinkedList.h
+.\os.o: PLL.h

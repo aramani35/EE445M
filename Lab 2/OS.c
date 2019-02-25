@@ -107,7 +107,7 @@ void OS_Init(void){
     Timer4A_Init();
     NVIC_ST_CTRL_R = 0;                     // disable SysTick during setup
     NVIC_ST_CURRENT_R = 0;                  // any write to current clears it
-    NVIC_SYS_PRI3_R =(NVIC_SYS_PRI3_R&0x00FFFFFF)|0xC0000000; // SysTick priority 6
+    NVIC_SYS_PRI3_R =(NVIC_SYS_PRI3_R&0x00FFFFFF)|0xE0000000; // SysTick priority 6
     NVIC_SYS_PRI3_R =(NVIC_SYS_PRI3_R&0xFF00FFFF)|0x00E00000; // PendSV priority 7
 
 	for (int i = 0; i < NUMTHREADS; i++){   // initialize all the threads as free
@@ -251,36 +251,72 @@ int find_next(int thread) {
 int OS_AddThread(void(*task)(void), 
    unsigned long stackSize, unsigned long priority){
 
-	int32_t status, thread, prev, prev1;
-	thread = 0;
-	 
-	status = StartCritical();
-	if(num_threads == 0) {
-		thread = add_thread();
+//	int32_t status, thread, prev, prev1;
+//	thread = 0;
+//	 
+//	status = StartCritical();
+//	if(num_threads == 0) {
+//		thread = add_thread();
+//		TCBs[0].next = &TCBs[0];    // 0 points to 0
+//        TCBs[0].prev = &TCBs[0];
+//		runPT = &TCBs[0];           // thread 0 will run first
+//	}
+//	else {
+//		thread = add_thread();
+//        if(thread == -1)            // if no threads avaible, return
+//            return 0;
+//        
+//        
+//        
+//		prev = find_prev(thread);
+//		TCBs[thread].next = &TCBs[0];
+//        TCBs[thread].prev = &TCBs[prev];
+//		TCBs[prev].next = &TCBs[thread];
+//        prev1 = find_prev(prev);
+//        TCBs[prev].prev = &TCBs[prev1]; 
+//	}
+//	TCBs[thread].used = 0;
+//    TCBs[thread].sleep_state = 0;
+//    TCBs[thread].sleepCT = 0;
+//	TCBs[thread].id = thread;
+
+//	SetInitialStack(thread); 
+//	Stacks[thread][STACKSIZE-2] = (int32_t)(task); // PC
+//	num_threads++;
+//    
+//	EndCritical(status);
+
+
+long status = StartCritical();
+	TCBtype *unusedThread;
+	int numThread;
+	for(numThread = 0; numThread < NUMTHREADS; numThread++){
+		if(TCBs[numThread].used == 1){
+			break;
+		}
+	}
+	if(numThread == NUMTHREADS){
+		EndCritical(status);
+		return 0;
+	}
+	unusedThread = &TCBs[numThread];
+	unusedThread->id = CurrentID;	//Current ID is incremented forever for different IDs
+	unusedThread->sleepCT = 0;
+    unusedThread->sleep_state = 0;
+    unusedThread->used = 0;
+    if(num_threads == 0) {
+        add_thread();
 		TCBs[0].next = &TCBs[0];    // 0 points to 0
         TCBs[0].prev = &TCBs[0];
-		runPT = &TCBs[0];           // thread 0 will run first
-	}
-	else {
-		thread = add_thread();
-        if(thread == -1)            // if no threads avaible, return
-            return 0;
-		prev = find_prev(thread);
-		TCBs[thread].next = &TCBs[0];
-        TCBs[thread].prev = &TCBs[prev];
-		TCBs[prev].next = &TCBs[thread];
-        prev1 = find_prev(prev);
-        TCBs[prev].prev = &TCBs[prev1]; 
-	}
-	TCBs[thread].used = 0;
-    TCBs[thread].sleep_state = 0;
-    TCBs[thread].sleepCT = 0;
-	TCBs[thread].id = thread;
-
-	SetInitialStack(thread); 
-	Stacks[thread][STACKSIZE-2] = (int32_t)(task); // PC
-	num_threads++;
-    
+		runPT = &TCBs[0];
+    }
+    else {
+        linkThread(runPT, unusedThread, num_threads);
+    }
+    num_threads++;
+	SetInitialStack(numThread);		//initialize stack
+	Stacks[numThread][STACKSIZE-2] = (int32_t)(task); //  set PC for Task
+	CurrentID+=1;
 	EndCritical(status);
 	return 1;
 }
@@ -489,6 +525,7 @@ void OS_Sleep(unsigned long sleepTime){
 //    runPT = runPT->prev;
 	sleeping_thread->sleepCT = sleepTime;
     sleeping_thread->sleep_state = 1;
+    num_threads--;
 	unlinkThread(sleeping_thread, num_threads);
 	addToList(sleeping_thread, &head_sleep, &tail_sleep);
 	EndCritical(status);
@@ -504,6 +541,7 @@ void OS_Kill(void){
     long status = StartCritical();
     runPT->used = 1;                  // set thread to free/not busy
 //    OS_pendSVTrigger();
+    num_threads--;
 	unlinkThread(runPT, num_threads);
     addToList(runPT, &head_kill, &tail_kill);
 	EndCritical(status);
@@ -616,17 +654,6 @@ void OS_ClearMsTime(void){}
 unsigned long OS_MsTime(void){return 0;}
 
 void SysTick_Handler(void) {
-//	PE1 ^= 0x02;
-//    while(num_threads == 0);	//spin until a thread is added
-    
-//    TCBtype *node = head_sleep;
-//    while(node){
-//        node->sleepCT--;
-//        if(node->sleepCT == 0){
-//            removeFromList(node, &head_sleep, &tail_sleep);
-//            linkThread(runPT, node, num_threads);
-//        }
-//    }
     
     TCBtype *node = head_kill;
     while(head_kill){
@@ -652,6 +679,7 @@ void SysTick_Handler(void) {
 		if(node->sleepCT <= 0){
             node->sleep_state = 0;
 			removeFromList(node, &head_sleep, &tail_sleep);
+            num_threads++;
 			linkThread(runPT, node, num_threads);
 		}
 		node = next_node;

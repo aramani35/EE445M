@@ -7,4 +7,5 @@
 .\cmdline.o: ADC.h
 .\cmdline.o: ST7735.h
 .\cmdline.o: OS.h
+.\cmdline.o: ..\../inc/tm4c123gh6pm.h
 .\cmdline.o: UART.h

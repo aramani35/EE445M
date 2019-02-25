@@ -501,6 +501,16 @@
               <FileType>2</FileType>
               <FilePath>.\OSasm.s</FilePath>
             </File>
+            <File>
+              <FileName>EdgeTriggered.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\EdgeTriggered.c</FilePath>
+            </File>
+            <File>
+              <FileName>EdgeTriggered.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\EdgeTriggered.h</FilePath>
+            </File>
           </Files>
         </Group>
       </Groups>
