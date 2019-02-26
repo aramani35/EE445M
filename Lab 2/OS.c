@@ -463,11 +463,14 @@ void GPIOPortF_Handler(void){
 //	GPIO_PORTF_IM_R &= ~0x10;     // disarm interrupt on PF4 
 	
 	GPIO_PORTF_IM_R &= ~0x10;     // disarm interrupt on PF4 
-  if(Last){    // 0x10 means it was previously released
+    if(Last){    // 0x10 means it was previously released
     (*SWOneTask)();  // execute user task
-		Last = 0;
-  }
-  Timer5Arm(); // start one shot
+        Last = 0;
+    }
+    OS_DisableInterrupts();
+    Timer5Arm(); // start one shot
+	OS_EnableInterrupts();
+    
 }
 
 //******** OS_AddSW1Task *************** 
@@ -669,20 +672,22 @@ void SysTick_Handler(void) {
     
     node = head_sleep;
 	while(node){
+        if(node->next != 0 && node->next->sleep_state == 0) {
+                node->next = 0;
+            }
+
 		node->sleepCT--;
-        if(node->next->sleep_state == 0) {
-            node->next = 0;
-            break;
-        }
         TCBtype *next_node = node->next;
-		
-		if(node->sleepCT <= 0){
+
+            
+        if(node->sleepCT <= 0){
             node->sleep_state = 0;
-			removeFromList(node, &head_sleep, &tail_sleep);
+            removeFromList(node, &head_sleep, &tail_sleep);
             num_threads++;
-			linkThread(runPT, node, num_threads);
-		}
-		node = next_node;
+            linkThread(runPT, node, num_threads);
+        } 
+        node = next_node;
+
 	}
 	NVIC_INT_CTRL_R = NVIC_INT_CTRL_PEND_SV;  //0x10000000 Trigger PendSV
 //	PE1 ^= 0x02;

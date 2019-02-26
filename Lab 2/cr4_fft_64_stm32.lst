@@ -642,11 +642,10 @@ xac61,0x187e
 xb4be,0x0c7c
   303 000002CE         
   304 000002CE                 END
-Command Line: --debug --xref --diag_suppress=9931 --cpu=Cortex-M4 --apcs=interw
-ork --depend=.\cr4_fft_64_stm32.d -o.\cr4_fft_64_stm32.o -IC:\Keil_v5\ARM\RV31\
-INC -IC:\Keil_v5\ARM\CMSIS\Include -IC:\Keil_v5\ARM\INC\Luminary --predefine="_
-_MICROLIB SETA 1" --predefine="__UVISION_VERSION SETA 526" --list=.\cr4_fft_64_
-stm32.lst cr4_fft_64_stm32.s
+Command Line: --debug --xref --cpu=Cortex-M4 --apcs=interwork --depend=.\cr4_ff
+t_64_stm32.d -o.\cr4_fft_64_stm32.o -IC:\Keil\ARM\RV31\INC -IC:\Keil\ARM\CMSIS\
+Include -IC:\Keil\ARM\Inc\Luminary --predefine="__MICROLIB SETA 1" --list=.\cr4
+_fft_64_stm32.lst cr4_fft_64_stm32.s
 
 
 
@@ -722,13 +721,13 @@ Symbol: NPT
    Definitions
       At line 46 in file cr4_fft_64_stm32.s
    Uses
-      At line 135 in macro COPT
+      At line 135 in macro BUTFLY4ZERO_OPT
       at line 223 in file cr4_fft_64_stm32.s
-      At line 137 in macro COPT
+      At line 137 in macro BUTFLY4ZERO_OPT
       at line 223 in file cr4_fft_64_stm32.s
-      At line 139 in macro COPT
+      At line 139 in macro BUTFLY4ZERO_OPT
       at line 223 in file cr4_fft_64_stm32.s
-      At line 141 in macro COPT
+      At line 141 in macro BUTFLY4ZERO_OPT
       at line 223 in file cr4_fft_64_stm32.s
 
 1 symbol
@@ -747,4 +746,4 @@ Symbol: TableFFT
       None
 Comment: TableFFT unused
 1 symbol
-360 symbols in table
+359 symbols in table

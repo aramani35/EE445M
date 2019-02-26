@@ -41,7 +41,7 @@ void Timer5Arm(void){
   TIMER5_CTL_R &= ~0x00000001;     // 1) disable timer5A during setup
   TIMER5_CFG_R = 0x00000000;       // 2) configure for 32-bit timer mode
   TIMER5_TAMR_R = 0x00000001;      // 3) 1-SHOT mode
-  TIMER5_TAILR_R = (160000-1);     // 4) 10ms reload value
+  TIMER5_TAILR_R = (500000-1);     // 4) 10ms reload value
   TIMER5_TAPR_R = 0;               // 5) bus clock resolution
   TIMER5_ICR_R = 0x00000001;       // 6) clear timer5A timeout flag
   TIMER5_IMR_R |= 0x00000001;      // 7) arm timeout interrupt

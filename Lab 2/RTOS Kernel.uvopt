@@ -151,25 +151,9 @@
         <Bp>
           <Number>0</Number>
           <Type>0</Type>
-          <LineNumber>14</LineNumber>
+          <LineNumber>577</LineNumber>
           <EnabledFlag>1</EnabledFlag>
-          <Address>3830</Address>
-          <ByteObject>0</ByteObject>
-          <HtxType>0</HtxType>
-          <ManyObjects>0</ManyObjects>
-          <SizeOfObject>0</SizeOfObject>
-          <BreakByAccess>0</BreakByAccess>
-          <BreakIfRCount>1</BreakIfRCount>
-          <Filename>.\LinkedList.c</Filename>
-          <ExecCommand></ExecCommand>
-          <Expression>\\SensorBoardTest\LinkedList.c\14</Expression>
-        </Bp>
-        <Bp>
-          <Number>1</Number>
-          <Type>0</Type>
-          <LineNumber>505</LineNumber>
-          <EnabledFlag>1</EnabledFlag>
-          <Address>2828</Address>
+          <Address>2766</Address>
           <ByteObject>0</ByteObject>
           <HtxType>0</HtxType>
           <ManyObjects>0</ManyObjects>
@@ -178,7 +162,7 @@
           <BreakIfRCount>1</BreakIfRCount>
           <Filename>.\Lab2.c</Filename>
           <ExecCommand></ExecCommand>
-          <Expression>\\SensorBoardTest\Lab2.c\505</Expression>
+          <Expression>\\SensorBoardTest\Lab2.c\577</Expression>
         </Bp>
       </Breakpoint>
       <WatchWindow1>
