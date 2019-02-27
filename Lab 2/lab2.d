@@ -8,3 +8,4 @@
 .\lab2.o: UART.h
 .\lab2.o: board.h
 .\lab2.o: C:\Keil\ARM\ARMCC\bin\..\include\string.h
+.\lab2.o: cmdline.h

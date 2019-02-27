@@ -32,6 +32,7 @@
 #include "UART.h"
 #include "board.h"
 #include <string.h> 
+#include "cmdline.h"
 #define Lab2 1
 #define Lab3 0
 //*********Prototype for FFT in cr4_fft_64_stm32.s, STMicroelectronics
@@ -317,10 +318,20 @@ void Interpreter(void);    // just a prototype, link to your interpreter
 // 2) print debugging parameters 
 //    i.e., x[], y[] 
 //--------------end of Task 5-----------------------------
+void Interpreter(void) {
+    char string[80];  // global to assist in debugging
+    UART_Init();              // initialize UART
 
-
+	
+   while(1) {
+		OutCRLF();
+		UART_OutString("Please enter a command: ");
+		UART_InString(string, 19);
+		CmdLineProcess(string);
+	}
+}
 //*******************final user main DEMONTRATE THIS TO TA**********
-int realmain(void){ 
+int main(void){    // realmain
   OS_Init();           // initialize, disable interrupts
   PortE_Init();
   DataLost = 0;        // lost data between producer and consumer
@@ -341,7 +352,9 @@ int realmain(void){
 
   NumCreated = 0 ;
 // create initial foreground threads
-  NumCreated += OS_AddThread(&Interpreter,128,2); 
+  NumCreated += OS_AddThread(&Interpreter,128,2);
+//  NumCreated += OS_AddThread(&Display,128,0); 
+  
   NumCreated += OS_AddThread(&Consumer,128,1); 
   NumCreated += OS_AddThread(&PID,128,3);  // Lab 3, make this lowest priority
  
@@ -579,7 +592,7 @@ void Thread4d(void){ int i;
 void BackgroundThread5d(void){   // called when Select button pushed
   NumCreated += OS_AddThread(&Thread4d,128,3); 
 }
-int main(void){   // Testmain4
+int Testmain4(void){   // Testmain4
   Count4 = 0;          
   OS_Init();           // initialize, disable interrupts
   NumCreated = 0 ;
@@ -830,4 +843,4 @@ int Testmain7(void){       // Testmain7
 }
 
 void Jitter() {}
-void Interpreter() {}
+

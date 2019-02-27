@@ -141,3 +141,4 @@ void ADC_In3210(uint32_t data[4]);
 // Output: distance in 1mm
 uint32_t ADC2millimeter(uint32_t adcSample);
 
+int ADC0_InitSWTriggerSeq2(uint32_t channelNum, uint32_t fs);

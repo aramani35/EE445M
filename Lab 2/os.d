@@ -6,3 +6,4 @@
 .\os.o: EdgeTriggered.h
 .\os.o: LinkedList.h
 .\os.o: PLL.h
+.\os.o: ST7735.h
