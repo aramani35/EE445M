@@ -340,7 +340,7 @@ int main(void){    // realmain
 
 //********initialize communication channels
   OS_MailBox_Init();
-  OS_Fifo_Init(128);    // ***note*** 4 is not big enough*****
+  OS_Fifo_Init(4);    // ***note*** 4 is not big enough*****
 
 //*******attach background tasks***********
   OS_AddSW1Task(&SW1Push,2);
@@ -523,7 +523,7 @@ void Thread4c(void){ int i;
 
 void BackgroundThread5c(void){   // called when Select button pushed
     NumCreated += OS_AddThread(&Thread4c,128,3); 
-    PF1 ^= 0x02;
+    // PF1 ^= 0x02;
 }
       
 int Testmain3(void){   // Testmain3

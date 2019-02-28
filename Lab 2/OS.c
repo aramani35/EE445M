@@ -138,7 +138,7 @@ void OS_Init(void){
     OS_InitSemaphore(&SW1sem, 0);
     EdgeCounter_PF4_Init();
     Timer4A_Init();
-    Timer5_Init();
+    // Timer5_Init();
     WTimer4A_Init();
    	WTimer5A_Init();
     NVIC_ST_CTRL_R = 0;                     // disable SysTick during setup
