@@ -37,7 +37,7 @@ void (*SWOneTask)(void);        // SW1 task to execute
 
 //#define TIMESLICE
 #define OSFIFOSIZE  250
-#define NUMTHREADS  30           // maximum number of threads
+#define NUMTHREADS  50           // maximum number of threads
 #define STACKSIZE   100         // number of 32-bit words in stack
 #define PF1                     (*((volatile uint32_t *)0x40025008))
 #define PF4                     (*((volatile uint32_t *)0x40025040))
@@ -46,10 +46,11 @@ void (*SWOneTask)(void);        // SW1 task to execute
 
 static uint32_t num_threads = 0;
 volatile static unsigned long Last; // previous
+volatile static unsigned long Release; // previous
 int delay;
 
-
-
+void SW1Task(void);
+Sema4Type SW1sem;
 TCBtype *runPT = 0;
 TCBtype TCBs[NUMTHREADS];
 unsigned int numTasks = 0;
@@ -130,11 +131,14 @@ void Timer4A_Init(void){          //Periodic Task 1
 // output: none
 void OS_Init(void){
 	Last = 1;
+    Release = 1;
     OS_DisableInterrupts();
     PLL_Init(Bus80MHz);
     Output_Init();
+    OS_InitSemaphore(&SW1sem, 0);
     EdgeCounter_PF4_Init();
     Timer4A_Init();
+    Timer5_Init();
     WTimer4A_Init();
    	WTimer5A_Init();
     NVIC_ST_CTRL_R = 0;                     // disable SysTick during setup
@@ -144,7 +148,9 @@ void OS_Init(void){
 
 	for (int i = 0; i < NUMTHREADS; i++){   // initialize all the threads as free
 		TCBs[i].used = 1;
-	}
+	} 
+    OS_AddThread(&SW1Task,128, 3);
+
 }
 
 
@@ -475,7 +481,7 @@ void OS_bSignal(Sema4Type *semaPt) {
 unsigned long OS_Id(void){return 0;}
 
 static void GPIOArm(void){
-  GPIO_PORTF_ICR_R = 0x10;      // (e) clear flag4
+//  GPIO_PORTF_ICR_R = 0x10;      // (e) clear flag4
   GPIO_PORTF_IM_R |= 0x10;      // (f) arm interrupt on PF4 *** No IME bit as mentioned in Book ***
   NVIC_PRI7_R = (NVIC_PRI7_R&0xFF00FFFF)|0x00A00000; // (g) priority 5
   NVIC_EN0_R = 0x40000000;      // (h) enable interrupt 30 in NVIC  
@@ -483,29 +489,103 @@ static void GPIOArm(void){
 
 void Timer5A_Handler(void){
   TIMER5_IMR_R = 0x00000000;    // disarm timeout interrupt
-  Last = 1;  // switch state
+  TIMER5_CTL_R &= ~0x00000001;
+//  Last = 1;  // switch state
+  Last = PF4;
   GPIOArm();   // start GPIO
 }
 
 
 
-void GPIOPortF_Handler(void){
-//  GPIO_PORTF_ICR_R = 0x10;      // acknowledge flag4
-//	GPIO_PORTF_IM_R &= ~0x01;
-//  SWOneTask();
-//	GPIO_PORTF_IM_R &= ~0x10;
+//void GPIOPortF_Handler(void){
 //	GPIO_PORTF_IM_R &= ~0x10;     // disarm interrupt on PF4 
-	
-	GPIO_PORTF_IM_R &= ~0x10;     // disarm interrupt on PF4 
-    if(Last){    // 0x10 means it was previously released
-    (*SWOneTask)();  // execute user task
-        Last = 0;
+//    GPIO_PORTF_ICR_R = 0x10;      // (e) clear flag4
+
+//    if(Last&&Release == 1){    // 0x10 means it was previously released
+//    (*SWOneTask)();  // execute user task
+//        Last = 0;
+//        Release = 0;
+//    }
+//    else{
+//        Release = 1;
+//    }
+//    OS_DisableInterrupts();
+//    Timer5Arm(); // start one shot
+//	OS_EnableInterrupts();
+//    
+//}
+
+
+
+
+
+//-------------------------try2-------------------------
+uint32_t LastPF4, LastPF0;
+//void static DebouncePF4(void) {
+//  OS_Sleep(5);      //foreground sleep, must run within 5ms
+//  LastPF4 = GPIO_PORTF_DATA_R & 0x10;
+//  GPIO_PORTF_ICR_R = 0x10;
+//  GPIO_PORTF_IM_R |= 0x10;
+//  OS_Kill(); 
+//}
+
+//void static DebouncePF0(void) {
+//  OS_Sleep(2);      //foreground sleep, must run within 5ms
+//  LastPF0 = GPIO_PORTF_DATA_R & 0x01;
+//  GPIO_PORTF_ICR_R = 0x01;
+//  GPIO_PORTF_IM_R |= 0x01;
+//  OS_Kill(); 
+//}
+
+//void GPIOPortF_Handler(void) {  // called on touch of either SW1 or SW2
+////  if(GPIO_PORTF_RIS_R&0x01) {   // SW2 touch
+////    if (LastPF0) {
+////      //(*SWTwoTask)();
+////    }
+////    GPIO_PORTF_IM_R &= ~0x01;
+////    OS_AddThread(&DebouncePF0, 128, 2);
+////  }
+//  if(GPIO_PORTF_RIS_R&0x10) {   // SW1 touch
+//		if (LastPF4) { (*SWOneTask)(); }
+//    GPIO_PORTF_IM_R &= ~0x10;
+//    OS_AddThread(&DebouncePF4, 128 ,2);
+//  }
+//}
+volatile int sw1Last;
+//----------------------------------try3-----------
+
+void SW1Task(void){
+    sw1Last = GPIO_PORTF_DATA_R&0x10;
+    while(1){
+        OS_Wait(&SW1sem);
+        if(sw1Last){
+            (*SWOneTask)();
+        }
+        OS_Sleep(10);
+        sw1Last = GPIO_PORTF_DATA_R&0x10;
+        GPIO_PORTF_IM_R |= 0x10;            // rearm PF4 interrupt
+        GPIO_PORTF_ICR_R = 0x10;            // acknowledge flag4
     }
-    OS_DisableInterrupts();
-    Timer5Arm(); // start one shot
-	OS_EnableInterrupts();
-    
 }
+
+//int OS_AddSW1Task(void(*task)(void), unsigned long priority){
+//    switchTaskPriority = priority;
+//    SwitchTask = task;
+//    return 0;
+//}
+
+void GPIOPortF_Handler(void){
+    if(GPIO_PORTF_RIS_R&0x10){
+        GPIO_PORTF_ICR_R = 0x10;            // acknowledge flag4
+        OS_Signal(&SW1sem);
+        GPIO_PORTF_IM_R &= ~0x10;            // Disarm PF4 interrupt
+    }
+}
+
+
+
+
+
 
 //******** OS_AddSW1Task *************** 
 // add a background task to run whenever the SW1 (PF4) button is pushed
@@ -522,6 +602,7 @@ void GPIOPortF_Handler(void){
 //           determines the relative priority of these four threads
 int OS_AddSW1Task(void(*task)(void), unsigned long priority){
     SWOneTask = task;
+    LastPF4 = GPIO_PORTF_DATA_R & 0x10;
     GPIO_PORTF_IM_R |= 0x10;      // (f) arm interrupt on PF4
 	return 1;
 }
@@ -601,6 +682,7 @@ void OS_Suspend(void){
  
 // Two-pointer implementation of the receive FIFO
 // can hold 0 to RXFIFOSIZE-1 elements
+uint32_t fifolimit = OSFIFOSIZE;
 uint16_t static OS_Fifo [OSFIFOSIZE];
 volatile uint16_t *OSPutPt, *OSGetPt;
 Sema4Type FifoAvailable;
@@ -616,6 +698,7 @@ Sema4Type FifoAvailable;
 //    e.g., must be a power of 2,4,8,16,32,64,128
 void OS_Fifo_Init(unsigned long size) {
     long sr = StartCritical();          // make atomic
+	fifolimit = size;
     OS_InitSemaphore(&FifoAvailable, 0);// Empty
     OSPutPt = OSGetPt = &OS_Fifo[0];    // Empty
     EndCritical(sr); 	
@@ -635,7 +718,7 @@ int OS_Fifo_Put(unsigned long data) {
     uint16_t volatile *nextOSPutPt; 
 
     nextOSPutPt = OSPutPt + 1;        
-    if(nextOSPutPt == &OS_Fifo[OSFIFOSIZE]){ 
+    if(nextOSPutPt == &OS_Fifo[fifolimit]){ 
         nextOSPutPt = &OS_Fifo[0];      // wrap
     }                                     
     if(nextOSPutPt == OSGetPt ){      
@@ -662,7 +745,7 @@ unsigned long OS_Fifo_Get(void) {
         return 0;                                                          
   
 	uint16_t data = *(OSGetPt++);            
-    if(OSGetPt == &OS_Fifo[OSFIFOSIZE]){    // Reset pointer to the front 
+    if(OSGetPt == &OS_Fifo[fifolimit]){    // Reset pointer to the front 
         OSGetPt = &OS_Fifo[0];              //if end of list reached
     }                                     
 	return(data); 
@@ -679,7 +762,7 @@ unsigned long OS_Fifo_Get(void) {
 //          zero or less than zero if a call to OS_Fifo_Get will spin or block
 long OS_Fifo_Size(void) { 
 	if( OSPutPt < OSGetPt )
-		return ((unsigned short)(OSPutPt-OSGetPt+(OSFIFOSIZE*sizeof(uint16_t)))/sizeof(uint16_t));                                      
+		return ((unsigned short)(OSPutPt-OSGetPt+(fifolimit*sizeof(uint16_t)))/sizeof(uint16_t));                                      
     return ((unsigned short)(OSPutPt-OSGetPt)/sizeof(uint16_t)); 
 }
 

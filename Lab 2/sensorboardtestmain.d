@@ -1,1 +1,0 @@
-.\sensorboardtestmain.o: SensorBoardTestMain.c
