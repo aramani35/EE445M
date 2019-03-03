@@ -49,6 +49,14 @@ void (*SWTwoTask)(void);        // SW2 task to execute
 static uint32_t num_threads = 0;
 volatile static unsigned long Last; // previous
 volatile static unsigned long Release; // previous
+uint32_t Periodic1TaskPeriod;
+uint32_t Periodic2TaskPeriod;
+unsigned long MaxJitter;              // largest time jitter between interrupts in usec for task 1
+unsigned long MaxJitter2;             // largest time jitter between interrupts in usec for task 2
+#define JITTERSIZE 64
+unsigned long const JitterSize=JITTERSIZE;
+unsigned long JitterHistogram[JITTERSIZE]={0,};
+unsigned long JitterHistogram2[JITTERSIZE]={0,};
 int delay;
 uint8_t periodic_threads_count = 0;
 void SW1Task(void);
@@ -68,7 +76,7 @@ TCBtype *tail_sleep;           // tail of sleeping thread list
 TCBtype *head_kill;           // head of kill thread list
 TCBtype *tail_kill;           // tail of kill thread list
 
-uint32_t OS_counter = 0;
+uint32_t OS_counter1 = 0;
 uint32_t OS_counter2 = 0;
 
 //Register 4: Interrupt 0-31 Set Enable (EN0), offset 0x100
@@ -150,6 +158,8 @@ void OS_Init(void){
 	Last = 1;
     Release = 1;
     OS_DisableInterrupts();
+    MaxJitter = 0;
+    MaxJitter2 = 0;
     PLL_Init(Bus80MHz);
     Output_Init();
     OS_InitSemaphore(&SW1sem, 0);
@@ -186,9 +196,10 @@ int OS_AddPeriodicThread(void(*task)(void), unsigned long period, unsigned long 
 	}
     else if(periodic_threads_count== 0){
         periodic_threads_count++;
-        OS_counter = 0;
+        OS_counter1 = 0;
         Periodic1Task = task;          // user function
         TIMER4_TAILR_R = (period)-1;    // start value for trigger
+        Periodic1TaskPeriod = period;
         NVIC_PRI17_R = (NVIC_PRI17_R&0xFF00FFFF)| (priority << 21); //set priority
         NVIC_EN2_R = 1<<6;              // enable interrupt 70 in NVIC
         TIMER4_CTL_R |= 0x00000001;   // enable timer2A 32-b, periodic, no interrupts
@@ -200,6 +211,7 @@ int OS_AddPeriodicThread(void(*task)(void), unsigned long period, unsigned long 
         OS_counter2 = 0;
         Periodic2Task = task;          // user function
         TIMER5_TAILR_R = (period-1);       // 4) reload value
+        Periodic2TaskPeriod = period;
         NVIC_PRI23_R = (NVIC_PRI23_R&0xFFFFFF00)|(priority << 5); // 8) priority 2
         NVIC_EN2_R |= 0x10000000;        // 9) enable interrupt 19 in NVIC
         // vector number 108, interrupt number 92
@@ -209,21 +221,79 @@ int OS_AddPeriodicThread(void(*task)(void), unsigned long period, unsigned long 
     }
 }
 
+
+void Jitter(void){
+    ST7735_Message(0,0,"Jitter 0.1us=",MaxJitter);
+	ST7735_Message(0,1,"Jitter 0.1us=",MaxJitter2);
+}
+
+
+// Periodic task 1
+    // increments OS_counter1
+    // calculates jiiter
+    // omplements periodic task 1
 void Timer4A_Handler(){
 	//PF1 ^= 0x02;
 	//PF1 ^= 0x02;
 	TIMER4_ICR_R |= 0x01;
-	OS_counter += 1;
+    unsigned long input;  
+    unsigned static long LastTime;      // time at previous ADC sample
+    unsigned long thisTime = OS_Time(); // time at current ADC sample
+    long jitter;                        // time between measured and expected, in us
 	Periodic1Task();
+    OS_counter1++;
+	if(OS_counter1 > 1){
+        unsigned long diff = OS_TimeDifference(LastTime,thisTime);
+      if(diff>Periodic1TaskPeriod){
+        jitter = (diff-Periodic1TaskPeriod+4)/8;     // in 0.1 usec
+      }else{
+        jitter = (Periodic1TaskPeriod-diff+4)/8;     // in 0.1 usec
+      }
+      if(jitter > MaxJitter){
+        MaxJitter = jitter;             // in usec
+      }                                 // jitter should be 0
+      if(jitter >= JitterSize){
+        jitter = JITTERSIZE-1;
+      }
+      JitterHistogram[jitter]++; 
+    }
+    LastTime = thisTime;
+    
 	//PF1 ^= 0x02;
 }
 
+
+// Periodic task 2
+    // increments OS_counter2
+    // calculates jiiter
+    // omplements periodic task 2
 void Timer5A_Handler(){
 	//PF1 ^= 0x02;
 	//PF1 ^= 0x02;
 	TIMER5_ICR_R |= 0x01;
-	OS_counter2 += 1;
+    unsigned long input;  
+    unsigned static long LastTime;      // time at previous ADC sample
+    unsigned long thisTime = OS_Time(); // time at current ADC sample
+    long jitter;                        // time between measured and expected, in us
+    
 	Periodic2Task();
+    OS_counter2++;
+    if(OS_counter2 > 1){
+        unsigned long diff = OS_TimeDifference(LastTime,thisTime);
+      if(diff>Periodic1TaskPeriod){
+        jitter = (diff-Periodic2TaskPeriod+4)/8;     // in 0.1 usec
+      }else{
+        jitter = (Periodic2TaskPeriod-diff+4)/8;     // in 0.1 usec
+      }
+      if(jitter > MaxJitter2){
+        MaxJitter2 = jitter;             // in usec
+      }                                 // jitter should be 0
+      if(jitter >= JitterSize){
+        jitter = JITTERSIZE-1;
+      }
+      JitterHistogram2[jitter]++; 
+    }
+    LastTime = thisTime;
 	//PF1 ^= 0x02;
 }
 
@@ -369,7 +439,7 @@ void OS_Launch(unsigned long theTimeSlice){
 // Inputs:  none
 // Outputs: none
 void OS_ClearPeriodicTime(void){
-	OS_counter = 0;
+	OS_counter1 = 0;
 }
 
 // ***************** OS_ReadPeriodicTime ****************
@@ -377,7 +447,7 @@ void OS_ClearPeriodicTime(void){
 // Inputs:  none
 // Outputs: none
 uint32_t OS_ReadPeriodicTime(void){
-	return OS_counter;
+	return OS_counter1;
 }
 
 
