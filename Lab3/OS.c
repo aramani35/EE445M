@@ -64,6 +64,7 @@ void SW2Task(void);
 Sema4Type SW1sem;
 Sema4Type SW2sem;
 TCBtype *runPT = 0;
+TCBtype *nextPT = 0;
 TCBtype TCBs[NUMTHREADS];
 unsigned int numTasks = 0;
 int16_t CurrentID;
@@ -543,7 +544,14 @@ unsigned long OS_Id(void){
 }
 
 
-
+void portFDisable(void){
+    GPIO_PORTF_IM_R &= ~0x10;            // Disarm PF4 interrupt
+    GPIO_PORTF_IM_R &= ~0x01;            // Disarm PF0 interrupt
+}
+void portFEnable(void){
+    GPIO_PORTF_IM_R &= 0x10;            // Arm PF4 interrupt
+    GPIO_PORTF_IM_R &= 0x01;            // Arm PF0 interrupt
+}
 //-------------------------try2-------------------------
 volatile int sw1Last;
 volatile int sw2Last;
@@ -858,6 +866,15 @@ unsigned long OS_MsTime(void){
     return OS_ms_count;
 }
 
+
+void OS_SelectNextThread(void){
+    // uses nextPT to cycle through threads
+    for(int i=0; i<num_threads; i++){
+        if(nextPT->priority < runPT->priority)
+            break;
+    }
+    
+}
 
 void SysTick_Handler(void) {
     

@@ -29,6 +29,7 @@
         PRESERVE8
 
         EXTERN  runPT            ; currently running thread
+		EXTERN  nextPT
         EXPORT  OS_DisableInterrupts
         EXPORT  OS_EnableInterrupts
         EXPORT  StartOS
@@ -58,6 +59,60 @@ PendSV_Handler                ; 1) Saves R0-R3,R12,LR,PC,PSR
     POP     {R4-R11}           ; 8) restore regs r4-11
     CPSIE   I                  ; 9) tasks run with interrupts enabled
     BX      LR                 ; 10) restore R0-R3,R12,LR,PC,PSR
+
+
+;switch using chosen NextPt
+;PendSV_Handler
+;	CPSID I
+;	PUSH {LR}
+;	POP {LR}
+;	PUSH {R4 - R11}
+;	LDR R0, =RunPt
+;	LDR R1, [R0]
+;	STR SP, [R1]
+;	LDR R1, =nextPT
+;	LDR R2, [R1]
+;	STR R2, [R0]
+;	LDR SP, [R2]
+;	POP {R4 - R11}
+;	CPSIE I
+;	BX LR
+
+
+;SysTick_Handler
+;    CPSID   I                  ; Prevent interruption during context switch
+;    PUSH    {R4-R11}           ; Save remaining regs r4-11 
+;    LDR     R0, =RunPt         ; R0=pointer to RunPt, old thread
+;    LDR     R1, [R0]		   ; RunPt->stackPointer = SP;
+;    STR     SP, [R1]           ; save SP of process being switched out
+;    LDR     R1, =NodePt
+;    LDR     R2, [R1]           ; NodePt
+;    LDR     R2, [R2]           ; next to run
+;    STR     R2, [R1]           ; NodePt= NodePt->Next;
+;    LDR     R3, [R2,#4]        ; RunPt = &sys[NodePt->Thread];// which thread
+;    STR     R3, [R0]
+;   
+;    LDR     R2, [R2,#8]		   ; NodePt->TimeSlice
+;    SUB     R2, #50            ; subtract off time to run this ISR
+;    LDR     R1, =NVIC_ST_RELOAD
+;    STR     R2, [R1]           ; how long to run next thread
+;    LDR     R1, =NVIC_ST_CURRENT
+;    STR     R2, [R1]           ; write to current, clears it
+
+;    LDR     SP, [R3]           ; new thread SP; SP = RunPt->stackPointer;
+;    POP     {R4-R11}           ; restore regs r4-11 
+
+;    CPSIE   I				   ; tasks run with I=0
+;    BX      LR                 ; Exception return will restore remaining context   
+;    
+
+
+
+
+
+
+
+
 
 ;SysTick_Handler                ; 1) Saves R0-R3,R12,LR,PC,PSR
     ;CPSID   I                  ; 2) Prevent interrupt during switch
