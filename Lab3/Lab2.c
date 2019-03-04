@@ -33,8 +33,8 @@
 #include "board.h"
 #include <string.h> 
 #include "cmdline.h"
-#define Lab2 1
-#define Lab3 0
+#define Lab2 0
+#define Lab3 1
 //*********Prototype for FFT in cr4_fft_64_stm32.s, STMicroelectronics
 void cr4_fft_64_stm32(void *pssOUT, void *pssIN, unsigned short Nbin);
 //*********Prototype for PID in PID_stm32.s, STMicroelectronics
@@ -842,5 +842,4 @@ int Testmain7(void){       // Testmain7
   return 0;             // this never executes
 }
 
-void Jitter() {}
 
