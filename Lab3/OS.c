@@ -458,6 +458,8 @@ uint32_t OS_ReadPeriodicTime(void){
 // output: none
 void OS_InitSemaphore(Sema4Type *semaPt, long value) {
 	semaPt->Value = value;
+	semaPt->head_blocked_list = 0;
+	semaPt->tail_blocked_list = 0;
 } 
 
 // ******** OS_Wait ************
@@ -468,13 +470,12 @@ void OS_InitSemaphore(Sema4Type *semaPt, long value) {
 // output: none
 void OS_Wait(Sema4Type *semaPt) {
 	OS_DisableInterrupts();
-	while (semaPt->Value <= 0) {
-		OS_EnableInterrupts();
-//        OS_Suspend();       // run thread switcher
-		OS_DisableInterrupts();
-	}
 	
 	semaPt->Value -= 1;
+	unlinkThread(runPT, num_threads);
+	addToList(runPT, &(semaPt->head_blocked_list), &(semaPt->tail_blocked_list));
+	num_threads--;
+	
 	OS_EnableInterrupts();
 }
 
@@ -487,7 +488,13 @@ void OS_Wait(Sema4Type *semaPt) {
 void OS_Signal(Sema4Type *semaPt) {
 	long status;
     status = StartCritical();
+	
 	semaPt->Value += 1;
+	TCBtype *node = semaPt->head_blocked_list;
+	removeFromList(node, &(semaPt->head_blocked_list), &(semaPt->tail_blocked_list));
+	num_threads++;
+	linkThread(runPT, node, num_threads);
+	
 	EndCritical(status);
 } 
 
@@ -498,13 +505,12 @@ void OS_Signal(Sema4Type *semaPt) {
 // output: none
 void OS_bWait(Sema4Type *semaPt) {
 	OS_DisableInterrupts();
-	while (semaPt->Value <= 0) {
-		OS_EnableInterrupts();
-        OS_pendSVTrigger();
-		OS_DisableInterrupts();
-	}
 	
 	semaPt->Value = 0;
+	unlinkThread(runPT, num_threads);
+	addToList(runPT, &(semaPt->head_blocked_list), &(semaPt->tail_blocked_list));
+	num_threads--;
+	
 	OS_EnableInterrupts();
 }  
 
@@ -514,9 +520,16 @@ void OS_bWait(Sema4Type *semaPt) {
 // input:  pointer to a binary semaphore
 // output: none
 void OS_bSignal(Sema4Type *semaPt) {
-	OS_DisableInterrupts();
+	long status;
+    status = StartCritical();
+	
 	semaPt->Value = 1;
-	OS_EnableInterrupts();
+	TCBtype *node = semaPt->head_blocked_list;
+	removeFromList(node, &(semaPt->head_blocked_list), &(semaPt->tail_blocked_list));
+	num_threads++;
+	linkThread(runPT, node, num_threads);
+	
+	EndCritical(status);
 } 
 	
 

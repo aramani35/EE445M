@@ -41,8 +41,10 @@ typedef struct TCB TCBtype;
 
 // feel free to change the type of semaphore, there are lots of good solutions
 struct  Sema4{
-  long Value;   // >0 means free, otherwise means busy        
+	long Value;   // >0 means free, otherwise means busy        
 // add other components here, if necessary to implement blocking
+	TCBtype *head_blocked_list;
+	TCBtype *tail_blocked_list;
 };
 typedef struct Sema4 Sema4Type;
 
