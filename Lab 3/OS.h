@@ -24,6 +24,7 @@
 #define TIME_500US  (TIME_1MS/2)  
 #define TIME_250US  (TIME_1MS/5)  
 
+#define NUMPRIS		8
 
 struct TCB {
 	int32_t *savedSP;
