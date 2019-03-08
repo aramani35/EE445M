@@ -331,7 +331,7 @@ void Interpreter(void) {
 	}
 }
 //*******************final user main DEMONTRATE THIS TO TA**********
-int main(void){    // realmain
+int realmain(void){    // realmain
   OS_Init();           // initialize, disable interrupts
   PortE_Init();
   DataLost = 0;        // lost data between producer and consumer
@@ -592,7 +592,7 @@ void Thread4d(void){ int i;
 void BackgroundThread5d(void){   // called when Select button pushed
   NumCreated += OS_AddThread(&Thread4d,128,3); 
 }
-int Testmain4(void){   // Testmain4
+int main(void){   // Testmain4
   Count4 = 0;          
   OS_Init();           // initialize, disable interrupts
   NumCreated = 0 ;
