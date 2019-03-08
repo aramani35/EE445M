@@ -320,7 +320,6 @@ void Interpreter(void);    // just a prototype, link to your interpreter
 //--------------end of Task 5-----------------------------
 void Interpreter(void) {
     char string[80];  // global to assist in debugging
-    UART_Init();              // initialize UART
 
 	
    while(1) {
@@ -526,7 +525,7 @@ void BackgroundThread5c(void){   // called when Select button pushed
     PF1 ^= 0x02;
 }
       
-int main(void){   // Testmain3
+int Testmain3(void){   // Testmain3
   Count4 = 0;          
   OS_Init();           // initialize, disable interrupts
   Board_Init();
@@ -704,7 +703,7 @@ void TaskB(void){       // called every pB in background
   PE2 = 0x00;      // debugging profile  
 }
 
-int Testmain5(void){       // Testmain5 Lab 3
+int main(void){       // Testmain5 Lab 3
   PortE_Init();
   OS_Init();           // initialize, disable interrupts
   NumCreated = 0 ;

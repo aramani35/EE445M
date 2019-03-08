@@ -14,6 +14,7 @@
 #include "LinkedList.h"
 #include "PLL.h"
 #include "ST7735.h"
+#include "UART.h"
 
 
 #define NVIC_ST_CTRL_R          (*((volatile uint32_t *)0xE000E010))
@@ -162,6 +163,7 @@ void OS_Init(void){
 	Last = 1;
     Release = 1;
     OS_DisableInterrupts();
+    UART_Init();              // initialize UART
     MaxJitter = 0;
     MaxJitter2 = 0;
     PLL_Init(Bus80MHz);
