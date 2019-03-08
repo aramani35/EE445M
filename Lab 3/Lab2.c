@@ -526,20 +526,20 @@ void BackgroundThread5c(void){   // called when Select button pushed
     PF1 ^= 0x02;
 }
       
-int Testmain3(void){   // Testmain3
+int main(void){   // Testmain3
   Count4 = 0;          
   OS_Init();           // initialize, disable interrupts
   Board_Init();
 // Count2 + Count5 should equal Count1
   NumCreated = 0 ;
 
-  OS_AddSW1Task(&BackgroundThread5c,2);
+//  OS_AddSW1Task(&BackgroundThread5c,2);
 //  NumCreated += OS_AddThread(&Thread4c,128,3); 
 //  NumCreated += OS_AddThread(&Thread4c,128,3); 
 
-  NumCreated += OS_AddThread(&Thread2c,128,2); 
-  NumCreated += OS_AddThread(&Thread3c,128,3); 
-  NumCreated += OS_AddThread(&Thread4c,128,3);  
+  NumCreated += OS_AddThread(&Thread2c,128,3); 
+  NumCreated += OS_AddThread(&Thread3c,128,7); 
+  NumCreated += OS_AddThread(&Thread4c,128,1);  
   OS_Launch(TIME_2MS); // doesn't return, interrupts enabled in here
   return 0;            // this never executes
 }
@@ -592,7 +592,7 @@ void Thread4d(void){ int i;
 void BackgroundThread5d(void){   // called when Select button pushed
   NumCreated += OS_AddThread(&Thread4d,128,3); 
 }
-int main(void){   // Testmain4
+int Testmain4(void){   // Testmain4
   Count4 = 0;          
   OS_Init();           // initialize, disable interrupts
   NumCreated = 0 ;
