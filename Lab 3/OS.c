@@ -60,7 +60,7 @@ unsigned long JitterHistogram[JITTERSIZE]={0,};
 unsigned long JitterHistogram2[JITTERSIZE]={0,};
 int delay;
 
-#define SPINLOCK 0
+//#define SPINLOCK 0
 static uint32_t num_threads = 0;
 uint8_t periodic_threads_count = 0;
 void SW1Task(void);
@@ -242,7 +242,6 @@ void Timer4A_Handler(){
 	//PF1 ^= 0x02;
 	//PF1 ^= 0x02;
 	TIMER4_ICR_R |= 0x01;
-    unsigned long input;  
     unsigned static long LastTime;      // time at previous ADC sample
     unsigned long thisTime = OS_Time(); // time at current ADC sample
     long jitter;                        // time between measured and expected, in us
@@ -277,7 +276,6 @@ void Timer5A_Handler(){
 	//PF1 ^= 0x02;
 	//PF1 ^= 0x02;
 	TIMER5_ICR_R |= 0x01;
-    unsigned long input;  
     unsigned static long LastTime;      // time at previous ADC sample
     unsigned long thisTime = OS_Time(); // time at current ADC sample
     long jitter;                        // time between measured and expected, in us
@@ -544,8 +542,13 @@ void OS_Wait(Sema4Type *semaPt) {
 		
 		// remove from active list, add to semaphore list
 		num_threads--;
-		unlinkThread(blockedThread, num_threads);
-		addToList(blockedThread, (&semaPt->head_blocked_list), &(semaPt->tail_blocked_list));
+        removeThreadPri(blockedThread->priority);
+        addToList(blockedThread, &(semaPt->head_blocked_list), &(semaPt->tail_blocked_list));
+
+        NVIC_ST_CURRENT_R = 0;
+        NVIC_INT_CTRL_R = 0x04000000;
+//		unlinkThread(blockedThread, num_threads);
+//		addToList(blockedThread, (&semaPt->head_blocked_list), &(semaPt->tail_blocked_list));
 	}
 	
 	#endif
@@ -566,13 +569,16 @@ void OS_Signal(Sema4Type *semaPt) {
 	semaPt->Value += 1;
 
 	#else
-	
-	semaPt->Value += 1;
-	TCBtype *unblockedThread = semaPt->head_blocked_list;
-	removeFromList(unblockedThread, &(semaPt->head_blocked_list), &(semaPt->tail_blocked_list));
-	num_threads++;
-	linkThread(runPT, unblockedThread, num_threads);	// should linke based on priority, and switch if higher priority
-	
+    semaPt->Value += 1;
+
+	if(semaPt->head_blocked_list != 0){
+        semaPt->Value += 1;
+        TCBtype *unblockedThread = semaPt->head_blocked_list;
+        removeFromList(unblockedThread, &(semaPt->head_blocked_list), &(semaPt->tail_blocked_list));
+        num_threads++;
+        OS_AddThreadPri(unblockedThread, unblockedThread->priority);
+//	linkThread(runPT, unblockedThread, num_threads);	// should linke based on priority, and switch if higher priority
+	}
 	#endif
 	EndCritical(status);
 } 
@@ -602,8 +608,14 @@ void OS_bWait(Sema4Type *semaPt) {
 		
 		// remove from active list, add to semaphore list
 		num_threads--;
-		unlinkThread(blockedThread, num_threads);
-		addToList(blockedThread, (&semaPt->head_blocked_list), &(semaPt->tail_blocked_list));
+        removeThreadPri(blockedThread->priority);
+        addToList(blockedThread, &(semaPt->head_blocked_list), &(semaPt->tail_blocked_list));
+
+        NVIC_ST_CURRENT_R = 0;
+        NVIC_INT_CTRL_R = 0x04000000;
+        
+//		unlinkThread(blockedThread, num_threads);
+//		addToList(blockedThread, (&semaPt->head_blocked_list), &(semaPt->tail_blocked_list));
 	}
 	
 	#endif
@@ -627,7 +639,9 @@ void OS_bSignal(Sema4Type *semaPt) {
 	TCBtype *unblockedThread = semaPt->head_blocked_list;
 	removeFromList(unblockedThread, &(semaPt->head_blocked_list), &(semaPt->tail_blocked_list));
 	num_threads++;
-	linkThread(runPT, unblockedThread, num_threads);	// should link based on priority, and switch if higher priority
+    OS_AddThreadPri(unblockedThread, unblockedThread->priority);
+
+//	linkThread(runPT, unblockedThread, num_threads);	// should link based on priority, and switch if higher priority
 	
 	#endif
 	EndCritical(status);
@@ -782,7 +796,7 @@ void OS_Sleep(unsigned long sleepTime){
     num_threads--;
 	removeThreadPri(sleeping_thread->priority);
 	addToList(sleeping_thread, &head_sleep, &tail_sleep);
-//	OS_pendSVTrigger(); 
+
     NVIC_ST_CURRENT_R = 0;
     NVIC_INT_CTRL_R = 0x04000000;
     EndCritical(status);
