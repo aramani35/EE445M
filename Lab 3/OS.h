@@ -296,3 +296,5 @@ uint32_t OS_ReadPeriodicTime(void);
 void OS_pendSVTrigger(void);
 
 void OS_SelectNextThread(void);
+
+int OS_AddThreadPri(TCBtype *threadPT, uint32_t priority);

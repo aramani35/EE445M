@@ -97,6 +97,46 @@ uint32_t OS_counter2 = 0;
 //Register 6: Interrupt 64-95 Set Enable (EN2), offset 0x108
 //Register 7: Interrupt 96-127 Set Enable (EN3), offset 0x10C
 
+
+void WTimer0A_Init(void){          // for sleep
+    SYSCTL_RCGCWTIMER_R |= 0x01;   //  activate WTIMER0
+    delay = 0; 
+    WTIMER0_CTL_R = (WTIMER0_CTL_R&~0x0000001F);    // disable Wtimer0A during setup
+    WTIMER0_CFG_R = 0x00000004;    // configure for 32-bit timer mode
+    WTIMER0_TAMR_R = 0x00000002;   // configure for periodic mode, default down-count settings
+    WTIMER0_TAPR_R = 0;            // prescale value for trigger
+    WTIMER0_ICR_R = 0x00000001;    // 6) clear WTIMER0A timeout flag
+    WTIMER0_TAILR_R = TIME_2MS-1;    // start value for trigger
+    NVIC_PRI23_R = (NVIC_PRI23_R&0xFF00FFFF)| (0 << 21); //set priority 
+    WTIMER0_IMR_R = (WTIMER0_IMR_R&~0x0000001F)|0x00000001;    // enable timeout interrupts
+    WTIMER0_CTL_R |= 0x00000001;   // enable Wtimer0A 32-b, periodic
+    NVIC_EN2_R = 0x40000000;              // enable interrupt 94 in NVIC
+}
+
+void WideTimer0A_Handler(){
+	WTIMER0_ICR_R |= 0x01;
+    // Decrementing sleep counter for all sleeping threads
+    TCBtype *node = head_sleep;
+    // Remove connection from sleeping list to main list 
+	while(node){
+        if((node->next != 0 && node->next->sleep_state == 0) || node->next == node) {
+                node->next = 0;
+            }
+
+		node->sleepCT--;                    // Dec sleep count
+        TCBtype *next_node = node->next;    // Load in next node
+
+            
+        if(node->sleepCT <= 0){             // Wake up thread once sleep counter = 0
+            node->sleep_state = 0;          // Turn of sleep state
+            removeFromList(node, &head_sleep, &tail_sleep); // Remove from sleep list
+            num_threads++;                                  // Increment active threads
+            OS_AddThreadPri(node, node->priority);          // Add thread back to priority list
+        } 
+        node = next_node;                   // Transistion to next node
+    }
+}
+
 void WTimer5A_Init(void){
 	SYSCTL_RCGCWTIMER_R |= 0x20;   //  activate WTIMER5
 	delay = 0;
@@ -172,6 +212,7 @@ void OS_Init(void){
     MaxJitter2 = 0;
     PLL_Init(Bus80MHz);
     Output_Init();
+    WTimer0A_Init(); // sleep
     OS_InitSemaphore(&SW1sem, 0);
     OS_InitSemaphore(&SW2sem, 0);
     EdgeCounter_PF4_Init();
@@ -187,7 +228,9 @@ void OS_Init(void){
 	for (int i = 0; i < NUMTHREADS; i++){   // initialize all the threads as free
 		TCBs[i].used = 1;
 	} 
-    OS_AddThread(&dummy1, 128, 7);
+//    OS_AddThread(&dummy1, 128, 7);
+    OS_AddThread(&SW1Task,128, 3);
+    OS_AddThread(&SW2Task,128, 3);
 
 }
 
@@ -1091,26 +1134,26 @@ void SysTick_Handler(void) {
 	}
 	
 	#else
-    // Decrementing sleep counter for all sleeping threads
-    TCBtype *node = head_sleep;
-    // Remove connection from sleeping list to main list 
-	while(node){
-        if((node->next != 0 && node->next->sleep_state == 0) || node->next == node) {
-                node->next = 0;
-            }
+//    // Decrementing sleep counter for all sleeping threads
+//    TCBtype *node = head_sleep;
+//    // Remove connection from sleeping list to main list 
+//	while(node){
+//        if((node->next != 0 && node->next->sleep_state == 0) || node->next == node) {
+//                node->next = 0;
+//            }
 
-		node->sleepCT--;                    // Dec sleep count
-        TCBtype *next_node = node->next;    // Load in next node
+//		node->sleepCT--;                    // Dec sleep count
+//        TCBtype *next_node = node->next;    // Load in next node
 
-            
-        if(node->sleepCT <= 0){             // Wake up thread once sleep counter = 0
-            node->sleep_state = 0;          // Turn of sleep state
-            removeFromList(node, &head_sleep, &tail_sleep); // Remove from sleep list
-            num_threads++;                                  // Increment active threads
-            OS_AddThreadPri(node, node->priority);          // Add thread back to priority list
-        } 
-        node = next_node;                   // Transistion to next node
-    }
+//            
+//        if(node->sleepCT <= 0){             // Wake up thread once sleep counter = 0
+//            node->sleep_state = 0;          // Turn of sleep state
+//            removeFromList(node, &head_sleep, &tail_sleep); // Remove from sleep list
+//            num_threads++;                                  // Increment active threads
+//            OS_AddThreadPri(node, node->priority);          // Add thread back to priority list
+//        } 
+//        node = next_node;                   // Transistion to next node
+//    }
 
     OS_SelectNextThread();
 		
