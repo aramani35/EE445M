@@ -60,7 +60,9 @@ unsigned long JitterHistogram[JITTERSIZE]={0,};
 unsigned long JitterHistogram2[JITTERSIZE]={0,};
 int delay;
 
-//#define SPINLOCK 
+/* DEFINES FOR CHANGING IMPLEMENTATION */
+// #define SPINLOCK 
+// #define ROUNDROBIN
 static uint32_t num_threads = 0;
 uint8_t periodic_threads_count = 0;
 void SW1Task(void);
@@ -186,8 +188,6 @@ void OS_Init(void){
 		TCBs[i].used = 1;
 	} 
     OS_AddThread(&dummy1, 128, 7);
-//    OS_AddThread(&SW1Task,128, 3);
-//    OS_AddThread(&SW2Task,128, 3);
 
 }
 
@@ -530,7 +530,6 @@ void OS_InitSemaphore(Sema4Type *semaPt, long value) {
 // input:  pointer to a counting semaphore
 // output: none
 void OS_Wait(Sema4Type *semaPt) {
-	// long status = StartCritical();
 	OS_DisableInterrupts();
 	#ifdef SPINLOCK
 	while (semaPt->Value <= 0) {
@@ -555,12 +554,9 @@ void OS_Wait(Sema4Type *semaPt) {
 
         NVIC_ST_CURRENT_R = 0;
         NVIC_INT_CTRL_R = 0x04000000;
-//		unlinkThread(blockedThread, num_threads);
-//		addToList(blockedThread, (&semaPt->head_blocked_list), &(semaPt->tail_blocked_list));
 	}
 	
 	#endif
-	// EndCritical(status);
 	OS_EnableInterrupts();
 }
 
@@ -586,7 +582,12 @@ void OS_Signal(Sema4Type *semaPt) {
         removeFromList(unblockedThread, &(semaPt->head_blocked_list), &(semaPt->tail_blocked_list));
         num_threads++;
         OS_AddThreadPri(unblockedThread, unblockedThread->priority);
-//	linkThread(runPT, unblockedThread, num_threads);	// should linke based on priority, and switch if higher priority
+		
+		if (unblockedThread->priority < runPT->priority) {
+			EndCritical(status);
+			OS_Suspend();
+			status = StartCritical();
+		}
 	}
 	#endif
 	EndCritical(status);
@@ -598,8 +599,7 @@ void OS_Signal(Sema4Type *semaPt) {
 // input:  pointer to a binary semaphore
 // output: none
 void OS_bWait(Sema4Type *semaPt) {
-	long status = StartCritical();
-	
+	OS_DisableInterrupts();
 	#ifdef SPINLOCK
 	while (semaPt->Value <= 0) {
 		OS_EnableInterrupts();
@@ -623,12 +623,10 @@ void OS_bWait(Sema4Type *semaPt) {
 
         NVIC_ST_CURRENT_R = 0;
         NVIC_INT_CTRL_R = 0x04000000;
-//		unlinkThread(blockedThread, num_threads);
-//		addToList(blockedThread, (&semaPt->head_blocked_list), &(semaPt->tail_blocked_list));
 	}
 	
 	#endif
-	EndCritical(status);
+	OS_EnableInterrupts();
 }  
 
 // ******** OS_bSignal ************
@@ -652,7 +650,12 @@ void OS_bSignal(Sema4Type *semaPt) {
         removeFromList(unblockedThread, &(semaPt->head_blocked_list), &(semaPt->tail_blocked_list));
         num_threads++;
         OS_AddThreadPri(unblockedThread, unblockedThread->priority);
-//	linkThread(runPT, unblockedThread, num_threads);	// should linke based on priority, and switch if higher priority
+		
+		if (unblockedThread->priority < runPT->priority) {
+			EndCritical(status);
+			OS_Suspend();
+			status = StartCritical();
+		}
 	}
 	#endif
 	EndCritical(status);
@@ -799,20 +802,22 @@ void OS_pendSVTrigger(void){
 //} 
 
 void OS_Sleep(unsigned long sleepTime){
+
     long status = StartCritical();
 	TCBtype *sleeping_thread = runPT;
 //    runPT = runPT->prev;
 	sleeping_thread->sleepCT = sleepTime+1;
     sleeping_thread->sleep_state = 1;
     num_threads--;
+	#ifdef ROUNDROBIN
+	unlinkThread(sleeping_thread, num_threads);
+	addToList(sleeping_thread, &head_sleep, &tail_sleep);
+	#else
 	removeThreadPri(sleeping_thread->priority);
 	addToList(sleeping_thread, &head_sleep, &tail_sleep);
-
-    NVIC_ST_CURRENT_R = 0;
-    NVIC_INT_CTRL_R = 0x04000000;
+	#endif
+	OS_Suspend();
     EndCritical(status);
-//                           // thread is asleep so switch threads 
-
 } 
 
 
@@ -820,23 +825,18 @@ void OS_Sleep(unsigned long sleepTime){
 // kill the currently running thread, release its TCB and stack
 // input:  none
 // output: none
-
-//void OS_Kill(void){
-//    long status = StartCritical();
-//    runPT->used = 1;                  // set thread to free/not busy
-//    num_threads--;
-//	unlinkThread(runPT, num_threads);
-//    addToList(runPT, &head_kill, &tail_kill);
-//	EndCritical(status);
-//} 
 void OS_Kill(void){
     long status = StartCritical();
     runPT->used = 1;                  // set thread to free/not busy
     num_threads--;
-	removeThreadPri(runPT->priority);
+	#ifdef ROUNDROBIN
+	unlinkThread(runPT, num_threads);
     addToList(runPT, &head_kill, &tail_kill);
-    NVIC_ST_CURRENT_R = 0;
-    NVIC_INT_CTRL_R = 0x04000000;
+	#else
+	removeThreadPri(runPT->priority);
+	#endif
+    addToList(runPT, &head_kill, &tail_kill);
+    OS_Suspend();
 	EndCritical(status);
 }
 
@@ -848,8 +848,12 @@ void OS_Kill(void){
 // input:  none
 // output: none
 void OS_Suspend(void){
-//  NVIC_ST_CURRENT_R = 0x00000000;
+	#ifdef ROUNDROBIN
 	NVIC_INT_CTRL_R = 0x10000000;
+	#else
+	NVIC_ST_CURRENT_R = 0;	// Clear SysTick counter
+	NVIC_INT_CTRL_R = 0x04000000; // Trigger SysTick
+	#endif
 }
  
 // Two-pointer implementation of the receive FIFO
@@ -1049,45 +1053,44 @@ void OS_SelectNextThread(void){
 	if(level == NUMPRIS) {}                 // Bad, no threads to run
 
 	nextPT = pri_lists[level];              // load nextPT with next best thread to run
-//	NVIC_INT_CTRL_R = NVIC_INT_CTRL_PEND_SV;  //0x10000000 Trigger PendSV
-    
 }
 
 
 void SysTick_Handler(void) {
+    #ifdef ROUNDROBIN
+    TCBtype *node = head_kill;
+    while(head_kill){
+        if(node->next->used == 1){
+            head_kill = node->next;
+            node->next = 0;
+        }
+        else{
+            head_kill = 0;
+            node->next = 0;
+        }
+    }
     
-//    TCBtype *node = head_kill;
-//    while(head_kill){
-//        if(node->next->used == 1){
-//            head_kill = node->next;
-//            node->next = 0;
-//        }
-//        else{
-//            head_kill = 0;
-//            node->next = 0;
-//        }
-//    }
-//    
-//    node = head_sleep;
-//	while(node){
-//        if(node->next != 0 && node->next->sleep_state == 0) {
-//                node->next = 0;
-//            }
+    node = head_sleep;
+	while(node){
+        if(node->next != 0 && node->next->sleep_state == 0) {
+                node->next = 0;
+            }
 
-//		node->sleepCT--;
-//        TCBtype *next_node = node->next;
+		node->sleepCT--;
+        TCBtype *next_node = node->next;
 
-//            
-//        if(node->sleepCT <= 0){
-//            node->sleep_state = 0;
-//            removeFromList(node, &head_sleep, &tail_sleep);
-//            num_threads++;
-//            linkThread(runPT, node, num_threads);
-//        } 
-//        node = next_node;
+            
+        if(node->sleepCT <= 0){
+            node->sleep_state = 0;
+            removeFromList(node, &head_sleep, &tail_sleep);
+            num_threads++;
+            linkThread(runPT, node, num_threads);
+        } 
+        node = next_node;
 
-//	}
-
+	}
+	
+	#else
     // Decrementing sleep counter for all sleeping threads
     TCBtype *node = head_sleep;
     // Remove connection from sleeping list to main list 
@@ -1109,35 +1112,9 @@ void SysTick_Handler(void) {
         node = next_node;                   // Transistion to next node
     }
 
-    int level = runPT->priority;            // Record current priority
-
-    if(pri_count[level] > 0) {              // If curr priotity list isn't empty, move to next thread
-		pri_lists[level] = pri_lists[level]->next;
-	}
-	
-	int pri_index = 0;                      // Init to zero
-    
-    // Loops from highest to lowest priority to find next highest priority
-	while((pri_index < NUMPRIS) && (pri_count[pri_index] == 0)) {
-		pri_index++;
-	}
-	if(pri_index == NUMPRIS) {}             // Bad, means there are no threads
-	level = pri_index;                      // Record current highest priority level
-	
-    // Loop through priority lists, to check if there are threads to run in current level
-        // else, check next level
-	while(level < NUMPRIS) {
-		for(pri_index = 0; (pri_index < pri_count[level]) && (pri_lists[level]->sleepCT); pri_index++) {
-			pri_lists[level] = pri_lists[level]->next;
-		}
-		if(pri_index == pri_count[level]) { // Move to next level if done... 
-			level++;                            // checking threads in current level
-		}
-		else { break; }                     // If we still have threads to run in...
-	}                                           // current levelm break loop
-	if(level == NUMPRIS) {}                 // Bad, no threads to run
-
-	nextPT = pri_lists[level];              // load nextPT with next best thread to run
+    OS_SelectNextThread();
+		
+	#endif
 	NVIC_INT_CTRL_R = NVIC_INT_CTRL_PEND_SV;  //0x10000000 Trigger PendSV
 //	PE1 ^= 0x02;
 }
