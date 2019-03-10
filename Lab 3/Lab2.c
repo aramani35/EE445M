@@ -703,7 +703,7 @@ void TaskB(void){       // called every pB in background
   PE2 = 0x00;      // debugging profile  
 }
 
-int main(void){       // Testmain5 Lab 3
+int Testmain5(void){       // Testmain5 Lab 3
   PortE_Init();
   OS_Init();           // initialize, disable interrupts
   NumCreated = 0 ;
@@ -790,7 +790,7 @@ static long result;
   result = m+n;
   return result;
 }
-int Testmain6(void){      // Testmain6  Lab 3
+int main(void){      // Testmain6  Lab 3
   volatile unsigned long delay;
   OS_Init();           // initialize, disable interrupts
   delay = add(3,4);
@@ -808,9 +808,9 @@ int Testmain6(void){      // Testmain6  Lab 3
   NumCreated += OS_AddThread(&Thread6,128,6);    	// idle thread to keep from crashing
   NumCreated += OS_AddThread(&OutputThread,128,2); 	// results output thread
   NumCreated += OS_AddThread(&Signal3,128,2); 	// signalling thread
-  NumCreated += OS_AddThread(&Wait1,128,2); 	// waiting thread
+  NumCreated += OS_AddThread(&Wait1,128,4); 	// waiting thread
   NumCreated += OS_AddThread(&Wait2,128,2); 	// waiting thread
-  NumCreated += OS_AddThread(&Wait3,128,2); 	// waiting thread
+  NumCreated += OS_AddThread(&Wait3,128,1); 	// waiting thread
  
   OS_Launch(TIME_1MS);  // 1ms, doesn't return, interrupts enabled in here
   return 0;             // this never executes

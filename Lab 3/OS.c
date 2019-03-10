@@ -60,7 +60,7 @@ unsigned long JitterHistogram[JITTERSIZE]={0,};
 unsigned long JitterHistogram2[JITTERSIZE]={0,};
 int delay;
 
-#define SPINLOCK 0
+//#define SPINLOCK 
 static uint32_t num_threads = 0;
 uint8_t periodic_threads_count = 0;
 void SW1Task(void);
@@ -152,7 +152,9 @@ void Timer5_Init(void){
     TIMER5_IMR_R = 0x00000001;    // enable timeout interrupts
 }
 
-
+void dummy1(void) {
+    while(1){}
+}
 
 // ******** OS_Init ************
 // initialize operating system, disable interrupts until OS_Launch
@@ -183,6 +185,7 @@ void OS_Init(void){
 	for (int i = 0; i < NUMTHREADS; i++){   // initialize all the threads as free
 		TCBs[i].used = 1;
 	} 
+    OS_AddThread(&dummy1, 128, 7);
 //    OS_AddThread(&SW1Task,128, 3);
 //    OS_AddThread(&SW2Task,128, 3);
 
@@ -379,7 +382,7 @@ int removeThreadPri(uint32_t priority) {
 		prev = 0;
 		next = 0;
 	}
-	runPT->prev = 0;
+//	runPT->prev = 0;
 	pri_lists[priority] = prev;
 	
 	return 1;
@@ -387,7 +390,7 @@ int removeThreadPri(uint32_t priority) {
 
 
 int OS_AddThreadPri(TCBtype *threadPT, uint32_t priority) {
-	TCBtype *next, *prev;
+	TCBtype *next, *prev, *curr;
 		
 	if(pri_count[priority] == 0) {
 		threadPT->prev = threadPT;
@@ -395,7 +398,12 @@ int OS_AddThreadPri(TCBtype *threadPT, uint32_t priority) {
 		pri_lists[priority] = threadPT;
 	}		
 	else {
-		prev = pri_lists[priority];
+        curr = pri_lists[priority];
+        for(int i=0; i<pri_count[priority]-1; i++){
+            curr = curr->next;
+        }
+        prev = curr;
+//		prev = pri_lists[priority];
 		next = prev->next;
 		threadPT->prev = prev;
 		threadPT->next = next;
@@ -1012,11 +1020,36 @@ unsigned long OS_MsTime(void){
 
 
 void OS_SelectNextThread(void){
-    // uses nextPT to cycle through threads
-    for(int i=0; i<num_threads; i++){
-        if(nextPT->priority < runPT->priority)
-            break;
-    }
+    int level = runPT->priority;            // Record current priority
+
+    if(pri_count[level] > 0) {              // If curr priotity list isn't empty, move to next thread
+		pri_lists[level] = pri_lists[level]->next;
+	}
+	
+	int pri_index = 0;                      // Init to zero
+    
+    // Loops from highest to lowest priority to find next highest priority
+	while((pri_index < NUMPRIS) && (pri_count[pri_index] == 0)) {
+		pri_index++;
+	}
+	if(pri_index == NUMPRIS) {}             // Bad, means there are no threads
+	level = pri_index;                      // Record current highest priority level
+	
+    // Loop through priority lists, to check if there are threads to run in current level
+        // else, check next level
+	while(level < NUMPRIS) {
+		for(pri_index = 0; (pri_index < pri_count[level]) && (pri_lists[level]->sleepCT); pri_index++) {
+			pri_lists[level] = pri_lists[level]->next;
+		}
+		if(pri_index == pri_count[level]) { // Move to next level if done... 
+			level++;                            // checking threads in current level
+		}
+		else { break; }                     // If we still have threads to run in...
+	}                                           // current levelm break loop
+	if(level == NUMPRIS) {}                 // Bad, no threads to run
+
+	nextPT = pri_lists[level];              // load nextPT with next best thread to run
+//	NVIC_INT_CTRL_R = NVIC_INT_CTRL_PEND_SV;  //0x10000000 Trigger PendSV
     
 }
 

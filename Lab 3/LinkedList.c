@@ -46,10 +46,13 @@ void addToList(TCBtype *threadPT, TCBtype **startPT, TCBtype **tailPT){
         (*tailPT)->next = threadPT;             // set current tail to new thread
         threadPT->prev  = *tailPT;              // set new thread prev to current tail to 
         *tailPT         = threadPT;             // set new tail of sleeping list
+        threadPT->next = 0;
     }
     else{
 		*startPT = threadPT;
 		*tailPT = threadPT;
+        threadPT->prev = 0;
+        threadPT->next = 0;
 	}
 }
 
