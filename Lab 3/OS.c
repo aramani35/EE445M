@@ -60,7 +60,7 @@ unsigned long JitterHistogram[JITTERSIZE]={0,};
 unsigned long JitterHistogram2[JITTERSIZE]={0,};
 int delay;
 
-//#define SPINLOCK 0
+#define SPINLOCK 0
 static uint32_t num_threads = 0;
 uint8_t periodic_threads_count = 0;
 void SW1Task(void);
@@ -522,7 +522,75 @@ void OS_InitSemaphore(Sema4Type *semaPt, long value) {
 // input:  pointer to a counting semaphore
 // output: none
 void OS_Wait(Sema4Type *semaPt) {
+	// long status = StartCritical();
 	OS_DisableInterrupts();
+	#ifdef SPINLOCK
+	while (semaPt->Value <= 0) {
+		OS_EnableInterrupts();
+//        OS_Suspend();       // run thread switcher
+		OS_DisableInterrupts();
+	}
+	
+	semaPt->Value -= 1;
+	
+	
+	#else
+	semaPt->Value -= 1;
+	if (semaPt->Value < 0) {
+		TCBtype *blockedThread = runPT;
+		blockedThread->blocked = 1;
+		
+		// remove from active list, add to semaphore list
+		num_threads--;
+        removeThreadPri(blockedThread->priority);
+        addToList(blockedThread, &(semaPt->head_blocked_list), &(semaPt->tail_blocked_list));
+
+        NVIC_ST_CURRENT_R = 0;
+        NVIC_INT_CTRL_R = 0x04000000;
+//		unlinkThread(blockedThread, num_threads);
+//		addToList(blockedThread, (&semaPt->head_blocked_list), &(semaPt->tail_blocked_list));
+	}
+	
+	#endif
+	// EndCritical(status);
+	OS_EnableInterrupts();
+}
+
+// ******** OS_Signal ************
+// increment semaphore 
+// Lab2 spinlock
+// Lab3 wakeup blocked thread if appropriate 
+// input:  pointer to a counting semaphore
+// output: none
+void OS_Signal(Sema4Type *semaPt) {
+	long status;
+    status = StartCritical();
+	
+	#ifdef SPINLOCK
+	semaPt->Value += 1;
+
+	#else
+    semaPt->Value += 1;
+
+	if(semaPt->Value <= 0){
+        //semaPt->Value += 1;
+        TCBtype *unblockedThread = semaPt->head_blocked_list;
+        removeFromList(unblockedThread, &(semaPt->head_blocked_list), &(semaPt->tail_blocked_list));
+        num_threads++;
+        OS_AddThreadPri(unblockedThread, unblockedThread->priority);
+//	linkThread(runPT, unblockedThread, num_threads);	// should linke based on priority, and switch if higher priority
+	}
+	#endif
+	EndCritical(status);
+} 
+
+// ******** OS_bWait ************
+// Lab2 spinlock, set to 0
+// Lab3 block if less than zero
+// input:  pointer to a binary semaphore
+// output: none
+void OS_bWait(Sema4Type *semaPt) {
+	long status = StartCritical();
 	
 	#ifdef SPINLOCK
 	while (semaPt->Value <= 0) {
@@ -552,74 +620,7 @@ void OS_Wait(Sema4Type *semaPt) {
 	}
 	
 	#endif
-	OS_EnableInterrupts();
-}
-
-// ******** OS_Signal ************
-// increment semaphore 
-// Lab2 spinlock
-// Lab3 wakeup blocked thread if appropriate 
-// input:  pointer to a counting semaphore
-// output: none
-void OS_Signal(Sema4Type *semaPt) {
-	long status;
-    status = StartCritical();
-	
-	#ifdef SPINLOCK
-	semaPt->Value += 1;
-
-	#else
-    semaPt->Value += 1;
-
-	if(semaPt->head_blocked_list != 0){
-        semaPt->Value += 1;
-        TCBtype *unblockedThread = semaPt->head_blocked_list;
-        removeFromList(unblockedThread, &(semaPt->head_blocked_list), &(semaPt->tail_blocked_list));
-        num_threads++;
-        OS_AddThreadPri(unblockedThread, unblockedThread->priority);
-//	linkThread(runPT, unblockedThread, num_threads);	// should linke based on priority, and switch if higher priority
-	}
-	#endif
 	EndCritical(status);
-} 
-
-// ******** OS_bWait ************
-// Lab2 spinlock, set to 0
-// Lab3 block if less than zero
-// input:  pointer to a binary semaphore
-// output: none
-void OS_bWait(Sema4Type *semaPt) {
-	OS_DisableInterrupts();
-	
-	#ifdef SPINLOCK
-	while (semaPt->Value <= 0) {
-		OS_EnableInterrupts();
-        OS_pendSVTrigger();
-		OS_DisableInterrupts();
-	}
-	
-	semaPt->Value = 0;
-	
-	#else
-	semaPt->Value -= 1;
-	if (semaPt->Value < 0) {
-		TCBtype *blockedThread = runPT;
-		blockedThread->blocked = 1;
-		
-		// remove from active list, add to semaphore list
-		num_threads--;
-        removeThreadPri(blockedThread->priority);
-        addToList(blockedThread, &(semaPt->head_blocked_list), &(semaPt->tail_blocked_list));
-
-        NVIC_ST_CURRENT_R = 0;
-        NVIC_INT_CTRL_R = 0x04000000;
-        
-//		unlinkThread(blockedThread, num_threads);
-//		addToList(blockedThread, (&semaPt->head_blocked_list), &(semaPt->tail_blocked_list));
-	}
-	
-	#endif
-	OS_EnableInterrupts();
 }  
 
 // ******** OS_bSignal ************
@@ -632,17 +633,19 @@ void OS_bSignal(Sema4Type *semaPt) {
     status = StartCritical();
 	
 	#ifdef SPINLOCK
-	semaPt->Value = 1;
-	
-	#else
 	semaPt->Value += 1;
-	TCBtype *unblockedThread = semaPt->head_blocked_list;
-	removeFromList(unblockedThread, &(semaPt->head_blocked_list), &(semaPt->tail_blocked_list));
-	num_threads++;
-    OS_AddThreadPri(unblockedThread, unblockedThread->priority);
 
-//	linkThread(runPT, unblockedThread, num_threads);	// should link based on priority, and switch if higher priority
-	
+	#else
+    semaPt->Value += 1;
+
+	if(semaPt->Value <= 0){
+        //semaPt->Value += 1;
+        TCBtype *unblockedThread = semaPt->head_blocked_list;
+        removeFromList(unblockedThread, &(semaPt->head_blocked_list), &(semaPt->tail_blocked_list));
+        num_threads++;
+        OS_AddThreadPri(unblockedThread, unblockedThread->priority);
+//	linkThread(runPT, unblockedThread, num_threads);	// should linke based on priority, and switch if higher priority
+	}
 	#endif
 	EndCritical(status);
 } 
