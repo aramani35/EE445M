@@ -63,6 +63,7 @@ int delay;
 /* DEFINES FOR CHANGING IMPLEMENTATION */
 // #define SPINLOCK 
 // #define ROUNDROBIN
+
 static uint32_t num_threads = 0;
 uint8_t periodic_threads_count = 0;
 void SW1Task(void);
@@ -106,7 +107,7 @@ void WTimer0A_Init(void){          // for sleep
     WTIMER0_TAMR_R = 0x00000002;   // configure for periodic mode, default down-count settings
     WTIMER0_TAPR_R = 0;            // prescale value for trigger
     WTIMER0_ICR_R = 0x00000001;    // 6) clear WTIMER0A timeout flag
-    WTIMER0_TAILR_R = TIME_2MS-1;    // start value for trigger
+    WTIMER0_TAILR_R = TIME_1MS-1;    // start value for trigger
     NVIC_PRI23_R = (NVIC_PRI23_R&0xFF00FFFF)| (0 << 21); //set priority 
     WTIMER0_IMR_R = (WTIMER0_IMR_R&~0x0000001F)|0x00000001;    // enable timeout interrupts
     WTIMER0_CTL_R |= 0x00000001;   // enable Wtimer0A 32-b, periodic
