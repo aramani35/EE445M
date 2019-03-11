@@ -35,6 +35,8 @@
         EXPORT  StartOS
         ;EXPORT  SysTick_Handler
 		EXPORT  PendSV_Handler
+		EXTERN 	threadRecordProfiler
+		EXTERN 	OS_Id
 
 
 OS_DisableInterrupts
@@ -65,6 +67,8 @@ OS_EnableInterrupts
 PendSV_Handler
 	CPSID I
 	PUSH {LR}
+;	BL OS_Id
+;	BL threadRecordProfiler
 	POP {LR}
 	PUSH {R4 - R11}
 	LDR R0, =runPT

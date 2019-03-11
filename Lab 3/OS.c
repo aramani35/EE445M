@@ -40,7 +40,7 @@ void (*SWTwoTask)(void);        // SW2 task to execute
 
 //#define TIMESLICE
 #define OSFIFOSIZE  250
-#define NUMTHREADS  10           // maximum number of threads
+#define NUMTHREADS  20           // maximum number of threads
 #define STACKSIZE   100         // number of 32-bit words in stack
 #define PF1                     (*((volatile uint32_t *)0x40025008))
 #define PF4                     (*((volatile uint32_t *)0x40025040))
@@ -212,6 +212,7 @@ void OS_Init(void){
     MaxJitter = 0;
     MaxJitter2 = 0;
     PLL_Init(Bus80MHz);
+    UART_Init();              // initialize UART
     Output_Init();
     WTimer0A_Init(); // sleep
     OS_InitSemaphore(&SW1sem, 0);
@@ -230,8 +231,8 @@ void OS_Init(void){
 		TCBs[i].used = 1;
 	} 
 //    OS_AddThread(&dummy1, 128, 7);
-    OS_AddThread(&SW1Task,128, 3);
-    OS_AddThread(&SW2Task,128, 3);
+//    OS_AddThread(&SW1Task,128, 1);
+//    OS_AddThread(&SW2Task,128, 1);
 
 }
 
@@ -628,9 +629,9 @@ void OS_Signal(Sema4Type *semaPt) {
         OS_AddThreadPri(unblockedThread, unblockedThread->priority);
 		
 		if (unblockedThread->priority < runPT->priority) {
-			EndCritical(status);
+//			EndCritical(status);
 			OS_Suspend();
-			status = StartCritical();
+//			status = StartCritical();
 		}
 	}
 	#endif
@@ -696,9 +697,9 @@ void OS_bSignal(Sema4Type *semaPt) {
         OS_AddThreadPri(unblockedThread, unblockedThread->priority);
 		
 		if (unblockedThread->priority < runPT->priority) {
-			EndCritical(status);
+//			EndCritical(status);
 			OS_Suspend();
-			status = StartCritical();
+//			status = StartCritical();
 		}
 	}
 	#endif
@@ -729,48 +730,91 @@ volatile int sw1Last;
 volatile int sw2Last;
 //----------------------------------try3-----------
 
-void SW1Task(void){
-    sw1Last = GPIO_PORTF_DATA_R&0x10;
-    while(1){
-        OS_Wait(&SW1sem);
-        if(sw1Last){
-            (*SWOneTask)();
-        }
-        OS_Sleep(10);
-        sw1Last = GPIO_PORTF_DATA_R&0x10;
-        GPIO_PORTF_IM_R |= 0x10;            // rearm PF4 interrupt
-        GPIO_PORTF_ICR_R = 0x10;            // acknowledge flag4
-    }
+//void SW1Task(void){
+//    sw1Last = GPIO_PORTF_DATA_R&0x10;
+//    while(1){
+//        OS_bWait(&SW1sem);
+//        if(sw1Last){
+//            //OS_AddThread(SWOneTask,128,1);
+//            (*SWOneTask)();
+//        }
+//        OS_Sleep(5);
+//        sw1Last = GPIO_PORTF_DATA_R&0x10;
+//        GPIO_PORTF_IM_R |= 0x10;            // rearm PF4 interrupt
+//        GPIO_PORTF_ICR_R = 0x10;            // acknowledge flag4
+//    }
+//}
+
+//void SW2Task(void){
+//    sw1Last = GPIO_PORTF_DATA_R&0x01;
+//    while(1){
+//        OS_bWait(&SW2sem);
+//        if(sw2Last){
+//            (*SWTwoTask)();
+////            OS_AddThread(SWTwoTask,128,1);
+//        }
+//        OS_Sleep(5);
+//        sw2Last = GPIO_PORTF_DATA_R&0x01;
+//        GPIO_PORTF_IM_R |= 0x01;            // rearm PF1 interrupt
+//        GPIO_PORTF_ICR_R = 0x01;            // acknowledge flag1
+//    }
+//}
+
+
+//void GPIOPortF_Handler(void){
+//    if(GPIO_PORTF_RIS_R&0x10){
+//        GPIO_PORTF_ICR_R = 0x10;            // acknowledge flag4
+//        OS_bSignal(&SW1sem);
+//        GPIO_PORTF_IM_R &= ~0x10;            // Disarm PF4 interrupt
+//    }
+//    else if(GPIO_PORTF_RIS_R&0x01){
+//        GPIO_PORTF_ICR_R = 0x01;            // acknowledge flag4
+//        OS_bSignal(&SW2sem);
+//        GPIO_PORTF_IM_R &= ~0x01;            // Disarm PF4 interrupt
+//    }
+//}
+
+uint32_t LastPF4, LastPF0;
+
+void static DebouncePF4(void) {
+  OS_Sleep(5);      //foreground sleep, must run within 5ms
+  LastPF4 = GPIO_PORTF_DATA_R & 0x10;
+  GPIO_PORTF_ICR_R = 0x10;
+    GPIO_PORTF_IM_R |= 0x11;
+
+//  GPIO_PORTF_IM_R |= 0x10;
+  OS_Kill(); 
 }
 
-void SW2Task(void){
-    sw1Last = GPIO_PORTF_DATA_R&0x01;
-    while(1){
-        OS_Wait(&SW2sem);
-        if(sw2Last){
-            (*SWTwoTask)();
-        }
-        OS_Sleep(10);
-        sw2Last = GPIO_PORTF_DATA_R&0x01;
-        GPIO_PORTF_IM_R |= 0x01;            // rearm PF1 interrupt
-        GPIO_PORTF_ICR_R = 0x01;            // acknowledge flag1
-    }
+void static DebouncePF0(void) {
+  OS_Sleep(5);      //foreground sleep, must run within 5ms
+  LastPF0 = GPIO_PORTF_DATA_R & 0x01;
+  GPIO_PORTF_ICR_R = 0x01;  
+  GPIO_PORTF_IM_R |= 0x11;
+
+//  GPIO_PORTF_IM_R |= 0x01;
+  OS_Kill(); 
 }
 
+void GPIOPortF_Handler(void) {  // called on touch of either SW1 or SW2
+  if(GPIO_PORTF_RIS_R&0x01) {   // SW2 touch
+    if (LastPF0) { (*SWTwoTask)(); }
+        GPIO_PORTF_IM_R &= ~0x11;
 
-void GPIOPortF_Handler(void){
-    if(GPIO_PORTF_RIS_R&0x10){
-        GPIO_PORTF_ICR_R = 0x10;            // acknowledge flag4
-        OS_Signal(&SW1sem);
-        GPIO_PORTF_IM_R &= ~0x10;            // Disarm PF4 interrupt
-    }
-    else if(GPIO_PORTF_RIS_R&0x01){
-        GPIO_PORTF_ICR_R = 0x01;            // acknowledge flag4
-        OS_Signal(&SW2sem);
-        GPIO_PORTF_IM_R &= ~0x01;            // Disarm PF4 interrupt
-    }
-    
+//    GPIO_PORTF_IM_R &= ~0x01;
+    OS_AddThread(&DebouncePF0, 128, 2);
+//    NVIC_ST_CURRENT_R = 0;
+//    NVIC_INT_CTRL_R = 0x04000000;
+  }
+  if(GPIO_PORTF_RIS_R&0x10) {   // SW1 touch
+		if (LastPF4) { (*SWOneTask)(); }
+            GPIO_PORTF_IM_R &= ~0x11;
+
+//    GPIO_PORTF_IM_R &= ~0x10;
+    OS_AddThread(&DebouncePF4, 128 ,2);
+  }
 }
+
 
 
 
@@ -791,7 +835,8 @@ int OS_AddSW1Task(void(*task)(void), unsigned long priority){
     SWOneTask = task;
     NVIC_PRI7_R = (NVIC_PRI7_R&0xFF00FFFF)|(priority << 21); // (g) priority 2
     GPIO_PORTF_IM_R |= 0x10;      // (f) arm interrupt on PF4
-	return 1;
+	LastPF4 = GPIO_PORTF_DATA_R & 0x10;
+    return 1;
 }
 
 //******** OS_AddSW2Task *************** 
@@ -811,6 +856,7 @@ int OS_AddSW2Task(void(*task)(void), unsigned long priority){
     SWTwoTask = task;
     NVIC_PRI7_R = (NVIC_PRI7_R&0xFF00FFFF)|(priority << 21); // (g) priority 2
     GPIO_PORTF_IM_R |= 0x01;      // (f) arm interrupt on PF0
+    LastPF0 = GPIO_PORTF_DATA_R & 0x01;
 	return 1;
 }
 
@@ -1180,3 +1226,35 @@ void SysTick_Handler(void) {
 	NVIC_INT_CTRL_R = NVIC_INT_CTRL_PEND_SV;  //0x10000000 Trigger PendSV
 //	PE1 ^= 0x02;
 }
+
+#define MAXPROFILE	100
+uint32_t thread_time[MAXPROFILE] = {0};
+uint32_t thread_record[MAXPROFILE] = {0};
+uint32_t record_count = 0;
+
+void threadRecordProfiler(uint32_t id){
+	if(record_count < MAXPROFILE){
+		thread_time[record_count] = OS_Time();
+		thread_record[record_count] = id; // run pointer id
+		record_count++;
+	}
+}	
+void OS_resetRecord(void){
+	record_count = 0;
+}
+void OS_clearProfile(void){
+	for(int i=0; i<MAXPROFILE; i++){
+		thread_time[i] = 0;
+		thread_record[i] = 0;
+	}
+}
+void OS_DisplayProfile(void){
+	for(int i=0; i<MAXPROFILE; i++){
+		UART_OutUDec(thread_time[i]);
+		UART_OutChar(' ');
+		UART_OutUDec(thread_record[i]);
+		UART_OutChar(CR);
+		UART_OutChar(LF);
+	}
+}
+

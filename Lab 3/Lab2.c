@@ -156,9 +156,11 @@ unsigned long input;
 #if Lab3
 extern unsigned long MaxJitter;
 #endif
+static int countbutton = 0;
 void ButtonWork(void){
 unsigned long myId = OS_Id(); 
   PE1 ^= 0x02;
+  countbutton++;
   ST7735_Message(1,0,"NumCreated =",NumCreated); 
   PE1 ^= 0x02;
   OS_Sleep(50);     // set this to sleep for 50msec
@@ -168,14 +170,18 @@ unsigned long myId = OS_Id();
   PE1 ^= 0x02;
   OS_Kill();  // done, OS does not return from a Kill
 } 
+#define PF1                     (*((volatile uint32_t *)0x40025008))
 
 //************SW1Push*************
 // Called when SW1 Button pushed
 // Adds another foreground task
 // background threads execute once and return
 void SW1Push(void){
-  if(OS_MsTime() > 20){ // debounce
-    if(OS_AddThread(&ButtonWork,100,2)){
+  if(OS_MsTime() > 10){ // debounce
+    if(OS_AddThread(&ButtonWork,100,1)){
+      PF1 ^= 0x02;
+      NVIC_ST_CURRENT_R = 0;
+      NVIC_INT_CTRL_R = 0x04000000;
       NumCreated++; 
     }
     OS_ClearMsTime();  // at least 20ms between touches
@@ -186,9 +192,10 @@ void SW1Push(void){
 // Adds another foreground task
 // background threads execute once and return
 void SW2Push(void){
-  if(OS_MsTime() > 20){ // debounce
-    if(OS_AddThread(&ButtonWork,100,2)){
-      NumCreated++; 
+  if(OS_MsTime() > 10){ // debounce
+    if(OS_AddThread(&ButtonWork,100,1)){
+      PF1 ^= 0x02;
+      NumCreated++;
     }
     OS_ClearMsTime();  // at least 20ms between touches
   }
@@ -330,9 +337,10 @@ void Interpreter(void) {
 	}
 }
 //*******************final user main DEMONTRATE THIS TO TA**********
-int realmain(void){    // realmain
+int main(void){    // realmain
   OS_Init();           // initialize, disable interrupts
   PortE_Init();
+  Board_Init();
   DataLost = 0;        // lost data between producer and consumer
   NumSamples = 0;
   MaxJitter = 0;       // in 1us units
@@ -344,17 +352,17 @@ int realmain(void){    // realmain
 //*******attach background tasks***********
   OS_AddSW1Task(&SW1Push,2);
 #if Lab3
-  OS_AddSW2Task(&SW2Push,2);  // add this line in Lab 3
+//  OS_AddSW2Task(&SW2Push,2);  // add this line in Lab 3
 #endif
   ADC_Open(4);  // sequencer 3, channel 4, PD3, sampling in DAS()
   OS_AddPeriodicThread(&DAS,PERIOD,1); // 2 kHz real time sampling of PD3
 
   NumCreated = 0 ;
 // create initial foreground threads
-  NumCreated += OS_AddThread(&Interpreter,128,2);
+//  NumCreated += OS_AddThread(&Interpreter,128,3);
 //  NumCreated += OS_AddThread(&Display,128,0); 
   
-  NumCreated += OS_AddThread(&Consumer,128,1); 
+//  NumCreated += OS_AddThread(&Consumer,128,3); 
   NumCreated += OS_AddThread(&PID,128,3);  // Lab 3, make this lowest priority
  
   OS_Launch(TIME_2MS); // doesn't return, interrupts enabled in here
@@ -790,7 +798,7 @@ static long result;
   result = m+n;
   return result;
 }
-int main(void){      // Testmain6  Lab 3
+int Testmain6(void){      // Testmain6  Lab 3
   volatile unsigned long delay;
   OS_Init();           // initialize, disable interrupts
   delay = add(3,4);
