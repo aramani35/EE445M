@@ -1066,21 +1066,45 @@ unsigned long OS_MsTime(void){
     return OS_ms_count;
 }
 
+uint32_t critical_time = 0;         // Records start of CS
+uint32_t total_critical_time = 0;   // Records total CS time
+uint32_t largest_critical_time = 0; // Records max CS time
+
+void OS_timeDisabled(void){
+	critical_time = OS_Time();
+}
+
+
+void OS_timeEnabled(void){
+	uint32_t result = OS_TimeDifference(critical_time, OS_Time());
+	 if(result > largest_critical_time)
+		 largest_critical_time = result;
+	total_critical_time += result;
+}
+
 uint32_t OS_ReadCriticalTime(void) {
-	return 1;	// return 1 on success, 0 otherwise
+	return total_critical_time;	// return 1 on success, 0 otherwise
 }
 
 uint32_t OS_ReadCriticalPercentage(void) {
-	return 1;	// return 1 on succes, 0 otherwise
+    uint32_t time = OS_Time();
+    if(time == 0 || (total_critical_time==0&& time == 0))
+        return 0;
+    return(total_critical_time/OS_Time());
 }
 
 int OS_ClearCriticalTime(void) {
+    total_critical_time = 0;
 	return 1;	// return 1 on succes, 0 otherwise
 }
 
 int OS_GetProfilerAndReset(void) {
 	return 1;	// return 1 on success, 0 otherwise
 }
+
+
+
+
 
 void OS_SelectNextThread(void){
     int level = runPT->priority;            // Record current priority
