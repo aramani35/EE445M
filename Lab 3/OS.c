@@ -1066,6 +1066,21 @@ unsigned long OS_MsTime(void){
     return OS_ms_count;
 }
 
+uint32_t OS_ReadCriticalTime(void) {
+	return 1;	// return 1 on success, 0 otherwise
+}
+
+uint32_t OS_ReadCriticalPercentage(void) {
+	return 1;	// return 1 on succes, 0 otherwise
+}
+
+int OS_ClearCriticalTime(void) {
+	return 1;	// return 1 on succes, 0 otherwise
+}
+
+int OS_GetProfilerAndReset(void) {
+	return 1;	// return 1 on success, 0 otherwise
+}
 
 void OS_SelectNextThread(void){
     int level = runPT->priority;            // Record current priority
@@ -1135,27 +1150,6 @@ void SysTick_Handler(void) {
 	}
 	
 	#else
-//    // Decrementing sleep counter for all sleeping threads
-//    TCBtype *node = head_sleep;
-//    // Remove connection from sleeping list to main list 
-//	while(node){
-//        if((node->next != 0 && node->next->sleep_state == 0) || node->next == node) {
-//                node->next = 0;
-//            }
-
-//		node->sleepCT--;                    // Dec sleep count
-//        TCBtype *next_node = node->next;    // Load in next node
-
-//            
-//        if(node->sleepCT <= 0){             // Wake up thread once sleep counter = 0
-//            node->sleep_state = 0;          // Turn of sleep state
-//            removeFromList(node, &head_sleep, &tail_sleep); // Remove from sleep list
-//            num_threads++;                                  // Increment active threads
-//            OS_AddThreadPri(node, node->priority);          // Add thread back to priority list
-//        } 
-//        node = next_node;                   // Transistion to next node
-//    }
-
     OS_SelectNextThread();
 		
 	#endif

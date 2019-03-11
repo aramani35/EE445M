@@ -350,10 +350,33 @@ int osCall(int numArgs, char* args[]) {
 	else {
 		if (!strcmp(args[1], "clear")) {
 			OS_ClearPeriodicTime();
-			UART_OutString("OS counter has been cleared.");
+			UART_OutString("OS time has been cleared.");
 		}
 		else if (!strncmp(args[1], "read", 4)) {
-			UART_OutString("OS count: ");
+			UART_OutString("OS time: ");
+			UART_OutUDec(OS_ReadPeriodicTime());
+		}
+		else if (!strncmp(args[1], "critical", 8)) {
+			if (!strncmp(args[2], "time", 4)) {
+				UART_OutString("Time w/ interrupts disabled: ");
+				UART_OutUDec(OS_ReadCriticalTime());
+			}
+			else if (!strncmp(args[2], "%", 1)) {
+				UART_OutString("& of time w/ interrupts disabled: ");
+				UART_OutUDec(OS_ReadCriticalPercentage());
+			} 
+			else if (!strncmp(args[2], "clear", 4)) {
+				UART_OutString("Clearing critical time counter");
+				UART_OutUDec(OS_ClearCriticalTime());
+			}
+			else {
+				UART_OutString("Invalid OS Call");
+				return -1;
+			}
+		}
+		else if (!strncmp(args[1], "profile", 4)) {
+			OS_GetProfilerAndReset();
+			UART_OutString("Dumping Profile Data: \n\r");
 			UART_OutUDec(OS_ReadPeriodicTime());
 		}
 		else {
@@ -372,7 +395,7 @@ char infoOS[] = "Look up timer info";
 tCmdLineEntry g_psCmdTable[] = {
     { "lcd", lcdCall, infoADC },
     { "adc", adcCall, infoLCD },
-		{ "os", osCall, infoOS },
+	{ "os", osCall, infoOS },
 };
 
 //*****************************************************************************

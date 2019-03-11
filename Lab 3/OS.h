@@ -298,3 +298,27 @@ void OS_pendSVTrigger(void);
 void OS_SelectNextThread(void);
 
 int OS_AddThreadPri(TCBtype *threadPT, uint32_t priority);
+
+/* FUNCTIONS FOR MEASURING OS */
+
+//******** OS_ReadCriticalTime *************** 
+// Returns time with interrupts disabled
+// Returns either counter or ms (not sure)
+uint32_t OS_ReadCriticalTime(void);
+
+//******** OS_ReadCriticalPercentage *************** 
+// Returns percentage of time with interrupts disabled
+// Integer to be converted to decimal fixed-point when printing
+// Returns integer Ex. 012345 = 0.12345 % in fixed point
+uint32_t OS_ReadCriticalPercentage(void);
+
+//******** OS_ClearCriticalTime *************** 
+// Clears counter for time with interrupts disabled
+// Returns 1 on success, 0 on failure
+int OS_ClearCriticalTime(void);
+
+//******** OS_GetProfilerAndReset *************** 
+// Clears profile buffer, restarts measurements, and dumps result in array
+// May need global array that will be printed in cmdline.h
+// Reader-writer semaphores may be necessary
+int OS_GetProfilerAndReset(void);
