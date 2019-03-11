@@ -168,9 +168,27 @@ void WTimer4A_Init(void){
     WTIMER4_CTL_R |= 0x00000001;   // enable Wtimer4A 64-b, periodic, no interrupts
 }
 
+uint32_t LastPF4, LastPF0;
+int PF0_button = 0;
+int PF4_button = 0;
+int pf4_go = 0;
+int pf0_go = 0;
 void WideTimer4A_Handler(void){
     WTIMER4_ICR_R |= 0x01;
     OS_ms_count++;
+    if(pf0_go){
+//        PF0_button=0;
+        LastPF0 = GPIO_PORTF_DATA_R & 0x01;
+        GPIO_PORTF_ICR_R = 0x01;
+        GPIO_PORTF_IM_R |= 0x01;
+    }
+    if(pf4_go){
+//        PF4_button=0;
+        LastPF4 = GPIO_PORTF_DATA_R & 0x10;
+        GPIO_PORTF_ICR_R = 0x10;
+        GPIO_PORTF_IM_R |= 0x10;
+    }
+        
 }
 
 void Timer4A_Init(void){          //Periodic Task 1
@@ -774,44 +792,39 @@ volatile int sw2Last;
 //    }
 //}
 
-uint32_t LastPF4, LastPF0;
+//uint32_t LastPF4, LastPF0;
 
 void static DebouncePF4(void) {
-  OS_Sleep(5);      //foreground sleep, must run within 5ms
+  OS_Sleep(1);      //foreground sleep, must run within 5ms
   LastPF4 = GPIO_PORTF_DATA_R & 0x10;
   GPIO_PORTF_ICR_R = 0x10;
-    GPIO_PORTF_IM_R |= 0x11;
-
-//  GPIO_PORTF_IM_R |= 0x10;
+  GPIO_PORTF_IM_R |= 0x10;
   OS_Kill(); 
 }
 
 void static DebouncePF0(void) {
-  OS_Sleep(5);      //foreground sleep, must run within 5ms
+  OS_Sleep(1);      //foreground sleep, must run within 5ms
   LastPF0 = GPIO_PORTF_DATA_R & 0x01;
-  GPIO_PORTF_ICR_R = 0x01;  
-  GPIO_PORTF_IM_R |= 0x11;
-
-//  GPIO_PORTF_IM_R |= 0x01;
+  GPIO_PORTF_ICR_R = 0x01;
+  GPIO_PORTF_IM_R |= 0x01;
   OS_Kill(); 
 }
 
 void GPIOPortF_Handler(void) {  // called on touch of either SW1 or SW2
   if(GPIO_PORTF_RIS_R&0x01) {   // SW2 touch
     if (LastPF0) { (*SWTwoTask)(); }
-        GPIO_PORTF_IM_R &= ~0x11;
+    GPIO_PORTF_IM_R &= ~0x01;
+    PF0_button = 1;
+//    OS_AddThread(&DebouncePF0, 128, 2);
+    OS_Suspend();
 
-//    GPIO_PORTF_IM_R &= ~0x01;
-    OS_AddThread(&DebouncePF0, 128, 2);
-//    NVIC_ST_CURRENT_R = 0;
-//    NVIC_INT_CTRL_R = 0x04000000;
   }
   if(GPIO_PORTF_RIS_R&0x10) {   // SW1 touch
-		if (LastPF4) { (*SWOneTask)(); }
-            GPIO_PORTF_IM_R &= ~0x11;
-
-//    GPIO_PORTF_IM_R &= ~0x10;
-    OS_AddThread(&DebouncePF4, 128 ,2);
+	if (LastPF4) { (*SWOneTask)(); }
+    GPIO_PORTF_IM_R &= ~0x10;
+    PF4_button = 1;
+//    OS_AddThread(&DebouncePF4, 128 ,1);
+    OS_Suspend();
   }
 }
 
@@ -836,6 +849,7 @@ int OS_AddSW1Task(void(*task)(void), unsigned long priority){
     NVIC_PRI7_R = (NVIC_PRI7_R&0xFF00FFFF)|(priority << 21); // (g) priority 2
     GPIO_PORTF_IM_R |= 0x10;      // (f) arm interrupt on PF4
 	LastPF4 = GPIO_PORTF_DATA_R & 0x10;
+    pf4_go = 1;
     return 1;
 }
 
@@ -857,6 +871,7 @@ int OS_AddSW2Task(void(*task)(void), unsigned long priority){
     NVIC_PRI7_R = (NVIC_PRI7_R&0xFF00FFFF)|(priority << 21); // (g) priority 2
     GPIO_PORTF_IM_R |= 0x01;      // (f) arm interrupt on PF0
     LastPF0 = GPIO_PORTF_DATA_R & 0x01;
+    pf0_go = 1;
 	return 1;
 }
 

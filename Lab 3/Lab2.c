@@ -177,11 +177,10 @@ unsigned long myId = OS_Id();
 // Adds another foreground task
 // background threads execute once and return
 void SW1Push(void){
+  PF1 ^= 0x02;
+
   if(OS_MsTime() > 10){ // debounce
-    if(OS_AddThread(&ButtonWork,100,1)){
-      PF1 ^= 0x02;
-      NVIC_ST_CURRENT_R = 0;
-      NVIC_INT_CTRL_R = 0x04000000;
+    if(OS_AddThread(&ButtonWork,100,0)){
       NumCreated++; 
     }
     OS_ClearMsTime();  // at least 20ms between touches
@@ -193,7 +192,7 @@ void SW1Push(void){
 // background threads execute once and return
 void SW2Push(void){
   if(OS_MsTime() > 10){ // debounce
-    if(OS_AddThread(&ButtonWork,100,1)){
+    if(OS_AddThread(&ButtonWork,100,0)){
       PF1 ^= 0x02;
       NumCreated++;
     }
@@ -350,19 +349,19 @@ int main(void){    // realmain
   OS_Fifo_Init(128);    // ***note*** 4 is not big enough*****
 
 //*******attach background tasks***********
-  OS_AddSW1Task(&SW1Push,2);
+  OS_AddSW1Task(&SW1Push,0);
 #if Lab3
-//  OS_AddSW2Task(&SW2Push,2);  // add this line in Lab 3
+  OS_AddSW2Task(&SW2Push,0);  // add this line in Lab 3
 #endif
   ADC_Open(4);  // sequencer 3, channel 4, PD3, sampling in DAS()
   OS_AddPeriodicThread(&DAS,PERIOD,1); // 2 kHz real time sampling of PD3
 
   NumCreated = 0 ;
 // create initial foreground threads
-//  NumCreated += OS_AddThread(&Interpreter,128,3);
+  NumCreated += OS_AddThread(&Interpreter,128,3);
 //  NumCreated += OS_AddThread(&Display,128,0); 
   
-//  NumCreated += OS_AddThread(&Consumer,128,3); 
+  NumCreated += OS_AddThread(&Consumer,128,3); 
   NumCreated += OS_AddThread(&PID,128,3);  // Lab 3, make this lowest priority
  
   OS_Launch(TIME_2MS); // doesn't return, interrupts enabled in here
