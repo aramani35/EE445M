@@ -644,8 +644,9 @@ void OS_Signal(Sema4Type *semaPt) {
 
 	if(semaPt->Value <= 0){
         //semaPt->Value += 1;
-        TCBtype *unblockedThread = semaPt->head_blocked_list;
-        removeFromList(unblockedThread, &(semaPt->head_blocked_list), &(semaPt->tail_blocked_list));
+//        TCBtype *unblockedThread = semaPt->head_blocked_list;
+//        removeFromList(unblockedThread, &(semaPt->head_blocked_list), &(semaPt->tail_blocked_list));
+        TCBtype *unblockedThread = removeFromBlockList(&(semaPt->head_blocked_list), &(semaPt->tail_blocked_list));
         num_threads++;
         OS_AddThreadPri(unblockedThread, unblockedThread->priority);
 		

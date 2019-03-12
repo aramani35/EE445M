@@ -85,6 +85,9 @@ TCBtype* removeFromBlockList(TCBtype **startPT, TCBtype **tailPT){
         }
         
     }
+    else{
+        threadPT = *startPT;
+    }
     
 	if(threadPT->prev)                          // check if new thread is not head
 		threadPT->prev->next = threadPT->next;
