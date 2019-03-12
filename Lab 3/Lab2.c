@@ -76,6 +76,10 @@ void PortE_Init(void){
   GPIO_PORTE_PCTL_R = ~0x0000FFFF;
   GPIO_PORTE_AMSEL_R &= ~0x0F;;      // disable analog functionality on PF
 }
+
+void OS_Sleepthread(int i){
+
+}
 //------------------Task 1--------------------------------
 // 2 kHz sampling ADC channel 1, using software start trigger
 // background thread executed at 2 kHz
@@ -161,12 +165,16 @@ void ButtonWork(void){
 unsigned long myId = OS_Id(); 
   PE1 ^= 0x02;
   countbutton++;
+  DisableInterrupts();
   ST7735_Message(1,0,"NumCreated =",NumCreated); 
   PE1 ^= 0x02;
-  OS_Sleep(50);     // set this to sleep for 50msec
+  OS_Sleepthread(50);     // set this to sleep for 50msec
   ST7735_Message(1,1,"PIDWork     =",PIDWork);
   ST7735_Message(1,2,"DataLost    =",DataLost);
   ST7735_Message(1,3,"Jitter 0.1us=",MaxJitter);
+
+  EnableInterrupts();
+
   PE1 ^= 0x02;
   OS_Kill();  // done, OS does not return from a Kill
 } 
@@ -179,7 +187,7 @@ unsigned long myId = OS_Id();
 void SW1Push(void){
   PF1 ^= 0x02;
 
-  if(OS_MsTime() > 10){ // debounce
+  if(OS_MsTime() > 30){ // debounce
     if(OS_AddThread(&ButtonWork,100,0)){
       NumCreated++; 
     }
@@ -191,7 +199,7 @@ void SW1Push(void){
 // Adds another foreground task
 // background threads execute once and return
 void SW2Push(void){
-  if(OS_MsTime() > 10){ // debounce
+  if(OS_MsTime() > 30){ // debounce
     if(OS_AddThread(&ButtonWork,100,0)){
       PF1 ^= 0x02;
       NumCreated++;

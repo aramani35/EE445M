@@ -342,13 +342,9 @@ int adcCall(int numArgs, char* args[]) {
 // returns -1 on failure, 1 on success
 int osCall(int numArgs, char* args[]) {
 	OutCRLF();
-	if (numArgs != 2) {
-		UART_OutString("OS commands are either 'os clear' or 'os read'");
-		return -1;
-	}
-	
-	else {
-		if (!strcmp(args[1], "clear")) {
+    
+    if (numArgs == 2) {
+        if (!strcmp(args[1], "clear")) {
 			OS_ClearPeriodicTime();
 			UART_OutString("OS time has been cleared.");
 		}
@@ -356,7 +352,15 @@ int osCall(int numArgs, char* args[]) {
 			UART_OutString("OS time: ");
 			UART_OutUDec(OS_ReadPeriodicTime());
 		}
-		else if (!strncmp(args[1], "critical", 8)) {
+        else{
+            UART_OutString("OS commands are either 'os clear' or 'os read'");
+            return -1;
+        }
+	}
+	
+	else if (numArgs == 3) {
+		
+		 if (!strncmp(args[1], "critical", 8)) {
 			if (!strncmp(args[2], "time", 4)) {
 				UART_OutString("Time w/ interrupts disabled: ");
 				UART_OutUDec(OS_ReadCriticalTime());
@@ -385,6 +389,50 @@ int osCall(int numArgs, char* args[]) {
 		}
 	}
 	return 1;
+    
+//	if (numArgs != 2) {
+//		UART_OutString("OS commands are either 'os clear' or 'os read'");
+//		return -1;
+//	}
+//	
+//	else {
+//		if (!strcmp(args[1], "clear")) {
+//			OS_ClearPeriodicTime();
+//			UART_OutString("OS time has been cleared.");
+//		}
+//		else if (!strncmp(args[1], "read", 4)) {
+//			UART_OutString("OS time: ");
+//			UART_OutUDec(OS_ReadPeriodicTime());
+//		}
+//		else if (!strncmp(args[1], "critical", 8)) {
+//			if (!strncmp(args[2], "time", 4)) {
+//				UART_OutString("Time w/ interrupts disabled: ");
+//				UART_OutUDec(OS_ReadCriticalTime());
+//			}
+//			else if (!strncmp(args[2], "%", 1)) {
+//				UART_OutString("& of time w/ interrupts disabled: ");
+//				UART_OutUDec(OS_ReadCriticalPercentage());
+//			} 
+//			else if (!strncmp(args[2], "clear", 4)) {
+//				UART_OutString("Clearing critical time counter");
+//				UART_OutUDec(OS_ClearCriticalTime());
+//			}
+//			else {
+//				UART_OutString("Invalid OS Call");
+//				return -1;
+//			}
+//		}
+//		else if (!strncmp(args[1], "profile", 4)) {
+//			OS_GetProfilerAndReset();
+//			UART_OutString("Dumping Profile Data: \n\r");
+//			UART_OutUDec(OS_ReadPeriodicTime());
+//		}
+//		else {
+//			UART_OutString("Invalid OS Call");
+//			return -1;
+//		}
+//	}
+//	return 1;
 }
 
 // Used for UART commands

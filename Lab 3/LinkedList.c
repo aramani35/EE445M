@@ -67,3 +67,34 @@ void removeFromList(TCBtype *threadPT, TCBtype **startPT, TCBtype **tailPT){
 	else
 		*tailPT = threadPT->prev;               // else update new tail
 }
+
+
+TCBtype* removeFromBlockList(TCBtype **startPT, TCBtype **tailPT){
+    int max_pri = 100;
+    TCBtype *threadPT = 0;
+    TCBtype *curr = *startPT;
+    if(curr != *tailPT) {
+        while(1){
+            if(curr == *tailPT)
+                break;
+            if(curr->priority < max_pri) {
+                max_pri = curr->priority;
+                threadPT = curr;
+            }
+            curr = curr->next;
+        }
+        
+    }
+    
+	if(threadPT->prev)                          // check if new thread is not head
+		threadPT->prev->next = threadPT->next;
+	else
+		*startPT = threadPT->next;              // else update new head
+   
+	if(threadPT->next)                          // check if new thread is not tail
+		threadPT->next->prev = threadPT->prev;
+	else
+		*tailPT = threadPT->prev;               // else update new tail
+    
+    return threadPT;
+}

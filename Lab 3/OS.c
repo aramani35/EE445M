@@ -173,16 +173,17 @@ int PF0_button = 0;
 int PF4_button = 0;
 int pf4_go = 0;
 int pf0_go = 0;
+int butt_count = 0;
 void WideTimer4A_Handler(void){
     WTIMER4_ICR_R |= 0x01;
     OS_ms_count++;
-    if(pf0_go){
-//        PF0_button=0;
+    if(pf0_go){//& PF0_button){
+        PF0_button=0;
         LastPF0 = GPIO_PORTF_DATA_R & 0x01;
         GPIO_PORTF_ICR_R = 0x01;
         GPIO_PORTF_IM_R |= 0x01;
-    }
-    if(pf4_go){
+    //}
+//    if(pf4_go){//&PF4_button){
 //        PF4_button=0;
         LastPF4 = GPIO_PORTF_DATA_R & 0x10;
         GPIO_PORTF_ICR_R = 0x10;
@@ -222,6 +223,7 @@ void dummy1(void) {
 // initialize OS controlled I/O: systick, 50 MHz PLL
 // input:  none
 // output: none
+int start = 0;
 void OS_Init(void){
 	Last = 1;
     Release = 1;
@@ -248,6 +250,7 @@ void OS_Init(void){
 	for (int i = 0; i < NUMTHREADS; i++){   // initialize all the threads as free
 		TCBs[i].used = 1;
 	} 
+    start = 1;
 //    OS_AddThread(&dummy1, 128, 7);
 //    OS_AddThread(&SW1Task,128, 1);
 //    OS_AddThread(&SW2Task,128, 1);
@@ -350,7 +353,7 @@ void Timer5A_Handler(){
     OS_counter2++;
     if(OS_counter2 > 1){
         unsigned long diff = OS_TimeDifference(LastTime,thisTime);
-      if(diff>Periodic1TaskPeriod){
+      if(diff>Periodic2TaskPeriod){
         jitter = (diff-Periodic2TaskPeriod+4)/8;     // in 0.1 usec
       }else{
         jitter = (Periodic2TaskPeriod-diff+4)/8;     // in 0.1 usec
@@ -811,9 +814,13 @@ void static DebouncePF0(void) {
 }
 
 void GPIOPortF_Handler(void) {  // called on touch of either SW1 or SW2
+// hhhhhhere
   if(GPIO_PORTF_RIS_R&0x01) {   // SW2 touch
     if (LastPF0) { (*SWTwoTask)(); }
-    GPIO_PORTF_IM_R &= ~0x01;
+//    GPIO_PORTF_IM_R &= ~0x01;
+//    GPIO_PORTF_IM_R &= ~0x10;
+    GPIO_PORTF_ICR_R = 0x01;
+
     PF0_button = 1;
 //    OS_AddThread(&DebouncePF0, 128, 2);
     OS_Suspend();
@@ -821,7 +828,9 @@ void GPIOPortF_Handler(void) {  // called on touch of either SW1 or SW2
   }
   if(GPIO_PORTF_RIS_R&0x10) {   // SW1 touch
 	if (LastPF4) { (*SWOneTask)(); }
-    GPIO_PORTF_IM_R &= ~0x10;
+//    GPIO_PORTF_IM_R &= ~0x10;
+//    GPIO_PORTF_IM_R &= ~0x01;
+    GPIO_PORTF_ICR_R = 0x10;
     PF4_button = 1;
 //    OS_AddThread(&DebouncePF4, 128 ,1);
     OS_Suspend();
@@ -1090,7 +1099,7 @@ unsigned long OS_MailBox_Recv(void){
 // It is ok to change the resolution and precision of this function as long as 
 //   this function and OS_TimeDifference have the same resolution and precision 
 unsigned long OS_Time(void){ 
-    return WTIMER5_TAR_R;
+    return WTIMER5_TAILR_R - WTIMER5_TAR_R;
 }
 
 // ******** OS_TimeDifference ************
@@ -1131,16 +1140,20 @@ uint32_t critical_time = 0;         // Records start of CS
 uint32_t total_critical_time = 0;   // Records total CS time
 uint32_t largest_critical_time = 0; // Records max CS time
 
+
 void OS_timeDisabled(void){
-	critical_time = OS_Time();
+    if(start == 1)
+        critical_time = OS_Time();
 }
 
 
 void OS_timeEnabled(void){
-	uint32_t result = OS_TimeDifference(critical_time, OS_Time());
-	 if(result > largest_critical_time)
-		 largest_critical_time = result;
-	total_critical_time += result;
+    if(start == 1){
+        uint32_t result = OS_TimeDifference(critical_time, OS_Time());
+        if(result > largest_critical_time)
+             largest_critical_time = result;
+        total_critical_time += result;
+    }
 }
 
 uint32_t OS_ReadCriticalTime(void) {

@@ -8,3 +8,5 @@ void unlinkThread(TCBtype *threadPT, int threads);
 void addToList(TCBtype *threadPT, TCBtype **startPT, TCBtype **tailPT);
 
 void removeFromList(TCBtype *threadPT, TCBtype **startPT, TCBtype **tailPT);
+
+TCBtype* removeFromBlockList(TCBtype **startPT, TCBtype **tailPT);
