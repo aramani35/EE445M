@@ -75,12 +75,12 @@ TCBtype* removeFromBlockList(TCBtype **startPT, TCBtype **tailPT){
     TCBtype *curr = *startPT;
     if(curr != *tailPT) {
         while(1){
-            if(curr == *tailPT)
-                break;
             if(curr->priority < max_pri) {
                 max_pri = curr->priority;
                 threadPT = curr;
             }
+            if(curr == *tailPT)
+                break;
             curr = curr->next;
         }
         

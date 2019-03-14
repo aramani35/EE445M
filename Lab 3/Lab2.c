@@ -163,11 +163,11 @@ extern unsigned long MaxJitter;
 static int countbutton = 0;
 void ButtonWork(void){
 unsigned long myId = OS_Id(); 
-  PE1 ^= 0x02;
+  //PE1 ^= 0x02;
   countbutton++;
   DisableInterrupts();
   ST7735_Message(1,0,"NumCreated =",NumCreated); 
-  PE1 ^= 0x02;
+  //PE1 ^= 0x02;
   OS_Sleepthread(50);     // set this to sleep for 50msec
   ST7735_Message(1,1,"PIDWork     =",PIDWork);
   ST7735_Message(1,2,"DataLost    =",DataLost);
@@ -175,7 +175,7 @@ unsigned long myId = OS_Id();
 
   EnableInterrupts();
 
-  PE1 ^= 0x02;
+  //PE1 ^= 0x02;
   OS_Kill();  // done, OS does not return from a Kill
 } 
 #define PF1                     (*((volatile uint32_t *)0x40025008))
@@ -406,7 +406,7 @@ void Thread1(void){
 void Thread2(void){
   Count2 = 0;          
   for(;;){
-    PE1 ^= 0x02;       // heartbeat
+    //PE1 ^= 0x02;       // heartbeat
     Count2++;
     OS_Suspend();      // cooperative multitasking
   }
@@ -454,7 +454,7 @@ void Thread1b(void){
 void Thread2b(void){
   Count2 = 0;          
   for(;;){
-    PE1 ^= 0x02;       // heartbeat
+    //PE1 ^= 0x02;       // heartbeat
     Count2++;
   }
 }
@@ -691,7 +691,7 @@ void Thread6(void){  // foreground thread
   Count1 = 0;          
   for(;;){
     Count1++; 
-    PE0 ^= 0x01;        // debugging toggle bit 0  
+//    PE0 ^= 0x01;        // debugging toggle bit 0  
   }
 }
 extern void Jitter(void);   // prints jitter information (write this)
@@ -764,24 +764,29 @@ void OutputThread(void){  // foreground thread
 void Wait1(void){  // foreground thread
   for(;;){
     OS_Wait(&s);    // three threads waiting
+    //PE0 ^= 0x01;
     WaitCount1++; 
   }
 }
 void Wait2(void){  // foreground thread
   for(;;){
     OS_Wait(&s);    // three threads waiting
+    //PE1 ^= 0x02;
     WaitCount2++; 
   }
 }
 void Wait3(void){   // foreground thread
   for(;;){
     OS_Wait(&s);    // three threads waiting
+    PE2 ^= 0x04;
     WaitCount3++; 
   }
 }
 void Signal1(void){      // called every 799us in background
   if(SignalCount1<MAXCOUNT){
     OS_Signal(&s);
+//    PE3 ^= 0x08;
+
     SignalCount1++;
   }
 }
@@ -795,6 +800,8 @@ void Signal2(void){       // called every 1111us in background
 void Signal3(void){       // foreground
   while(SignalCount3<98*MAXCOUNT){
     OS_Signal(&s);
+    PE3 ^= 0x08;
+
     SignalCount3++;
   }
   OS_Kill();
@@ -810,6 +817,10 @@ int main(void){      // Testmain6  Lab 3
   OS_Init();           // initialize, disable interrupts
   delay = add(3,4);
   PortE_Init();
+  PE3=0;
+  PE2=0;
+  PE1=0;
+  PE0=0;
   SignalCount1 = 0;   // number of times s is signaled
   SignalCount2 = 0;   // number of times s is signaled
   SignalCount3 = 0;   // number of times s is signaled
@@ -817,16 +828,17 @@ int main(void){      // Testmain6  Lab 3
   WaitCount2 = 0;     // number of times s is successfully waited on
   WaitCount3 = 0;	  // number of times s is successfully waited on
   OS_InitSemaphore(&s,0);	 // this is the test semaphore
-  OS_AddPeriodicThread(&Signal1,(799*TIME_1MS)/1000,0);   // 0.799 ms, higher priority
-  OS_AddPeriodicThread(&Signal2,(1111*TIME_1MS)/1000,1);  // 1.111 ms, lower priority
+  //OS_AddPeriodicThread(&Signal1,(799*TIME_1MS)/1000,0);   // 0.799 ms, higher priority
+//  OS_AddPeriodicThread(&Signal2,(1111*TIME_1MS)/1000,1);  // 1.111 ms, lower priority
   NumCreated = 0 ;
   NumCreated += OS_AddThread(&Thread6,128,6);    	// idle thread to keep from crashing
-  NumCreated += OS_AddThread(&OutputThread,128,2); 	// results output thread
-  NumCreated += OS_AddThread(&Signal3,128,2); 	// signalling thread
-  NumCreated += OS_AddThread(&Wait1,128,4); 	// waiting thread
-  NumCreated += OS_AddThread(&Wait2,128,2); 	// waiting thread
-  NumCreated += OS_AddThread(&Wait3,128,1); 	// waiting thread
- 
+  //NumCreated += OS_AddThread(&OutputThread,128,2); 	// results output thread
+//  NumCreated += OS_AddThread(&Signal3,128,5); 	// signalling thread
+  //NumCreated += OS_AddThread(&Wait1,128,4); 	// waiting thread
+  NumCreated += OS_AddThread(&Wait2,128,4); 	// waiting thread
+  NumCreated += OS_AddThread(&Wait3,128,2); 	// waiting thread
+  NumCreated += OS_AddThread(&Signal3,128,3); 	// signalling thread
+
   OS_Launch(TIME_1MS);  // 1ms, doesn't return, interrupts enabled in here
   return 0;             // this never executes
 }

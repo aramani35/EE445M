@@ -37,15 +37,23 @@
 		EXPORT  PendSV_Handler
 		EXTERN 	threadRecordProfiler
 		EXTERN 	OS_Id
+		EXTERN  OS_timeDisabled
+		EXTERN	OS_timeEnabled
 
 
 OS_DisableInterrupts
         CPSID   I
+		PUSH 	{LR}
+		BL 		OS_timeDisabled
+		POP 	{LR}
         BX      LR
 
 
 OS_EnableInterrupts
         CPSIE   I
+		PUSH 	{LR}
+		BL 		OS_timeEnabled
+		POP 	{LR}
         BX      LR
 
 

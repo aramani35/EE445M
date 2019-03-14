@@ -648,6 +648,7 @@ void OS_Signal(Sema4Type *semaPt) {
 //        removeFromList(unblockedThread, &(semaPt->head_blocked_list), &(semaPt->tail_blocked_list));
         TCBtype *unblockedThread = removeFromBlockList(&(semaPt->head_blocked_list), &(semaPt->tail_blocked_list));
         num_threads++;
+        unblockedThread->blocked = 0;
         OS_AddThreadPri(unblockedThread, unblockedThread->priority);
 		
 		if (unblockedThread->priority < runPT->priority) {
@@ -1194,21 +1195,22 @@ void OS_SelectNextThread(void){
 	while((pri_index < NUMPRIS) && (pri_count[pri_index] == 0)) {
 		pri_index++;
 	}
-	if(pri_index == NUMPRIS) {}             // Bad, means there are no threads
+//	if(pri_index == NUMPRIS) {}             // Bad, means there are no threads
 	level = pri_index;                      // Record current highest priority level
 	
     // Loop through priority lists, to check if there are threads to run in current level
         // else, check next level
 	while(level < NUMPRIS) {
+//		for(pri_index = 0; (pri_index < pri_count[level]) && ((pri_lists[level]->sleepCT) || (pri_lists[level]->blocked)); pri_index++) {
 		for(pri_index = 0; (pri_index < pri_count[level]) && (pri_lists[level]->sleepCT); pri_index++) {
-			pri_lists[level] = pri_lists[level]->next;
+            pri_lists[level] = pri_lists[level]->next;
 		}
 		if(pri_index == pri_count[level]) { // Move to next level if done... 
 			level++;                            // checking threads in current level
 		}
 		else { break; }                     // If we still have threads to run in...
 	}                                           // current levelm break loop
-	if(level == NUMPRIS) {}                 // Bad, no threads to run
+//	if(level == NUMPRIS) {}                 // Bad, no threads to run
 
 	nextPT = pri_lists[level];              // load nextPT with next best thread to run
 }
