@@ -15,6 +15,7 @@
 #include "PLL.h"
 #include "ST7735.h"
 #include "UART.h"
+#include "efile.h"
 
 
 #define NVIC_ST_CTRL_R          (*((volatile uint32_t *)0xE000E010))
@@ -243,6 +244,8 @@ void OS_Init(void){
     Timer5_Init();
     WTimer4A_Init();
    	WTimer5A_Init();
+//    eFile_Init();
+//    eFile_Format();
     NVIC_ST_CTRL_R = 0;                     // disable SysTick during setup
     NVIC_ST_CURRENT_R = 0;                  // any write to current clears it
     NVIC_SYS_PRI3_R =(NVIC_SYS_PRI3_R&0x00FFFFFF)|0xE0000000; // SysTick priority 6
@@ -252,7 +255,7 @@ void OS_Init(void){
 		TCBs[i].used = 1;
 	} 
     start = 1;
-//    OS_AddThread(&dummy1, 128, 7);
+    OS_AddThread(&dummy1, 128, 7);
 //    OS_AddThread(&SW1Task,128, 1);
 //    OS_AddThread(&SW2Task,128, 1);
 

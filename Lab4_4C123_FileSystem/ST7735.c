@@ -1067,6 +1067,31 @@ void ST7735_DrawChar(short x, short y, char c, short textColor, short bgColor, u
     line = line<<1;   // move up to the next row
   }
 }
+
+
+//------------ST7735_DrawString------------
+// String draw function.
+// 16 rows (0 to 15) and 21 characters (0 to 20)
+// Requires (11 + size*size*6*8) bytes of transmission for each character
+// Input: x         columns from the left edge (0 to 20)
+//        y         rows from the top edge (0 to 15)
+//        pt        pointer to a null terminated string to be printed
+//        textColor 16-bit color of the characters
+// bgColor is Black and size is 1
+// Output: number of characters printed
+uint32_t ST7735_DrawString(uint16_t x, uint16_t y, char *pt, int16_t textColor){
+  uint32_t count = 0;
+  if(y>15) return 0;
+  while(*pt){
+    ST7735_DrawCharS(x*6, y*10, *pt, textColor, ST7735_BLACK, 1);
+    pt++;
+    x = x+1;
+    if(x>20) return count;  // number of characters printed
+    count++;
+  }
+  return count;  // number of characters printed
+}
+
 //------------ST7735_OutString------------
 // String draw function.  
 // 16 rows (0 to 15) and 21 characters (0 to 20)

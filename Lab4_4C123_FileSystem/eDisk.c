@@ -39,6 +39,7 @@
 // Silkscreen Label (SDC side up; LCD side down) - Connection
 // VCC  - +3.3 V
 // GND  - Ground
+
 // !SCL - PA2 Sclk SPI clock from microcontroller to TFT or SDC
 // !SDA - PA5 MOSI SPI data from microcontroller to TFT or SDC
 // DC   - PA6 TFT data/command
@@ -108,9 +109,12 @@ void CS_Init(void){
 // 200 for    400,000 bps slow mode, used during initialization
 // 8   for 10,000,000 bps fast mode, used during disk I/O
 //void Timer5_Init(void);
+void WTimer0B_Init(void);
+
 void SSI0_Init(unsigned long CPSDVSR){
   SYSCTL_RCGCSSI_R |= 0x01;    // activate SSI0
 //  Timer5_Init();
+  WTimer0B_Init();
   CS_Init();                            // initialize whichever GPIO pin is CS for the SD card
   // initialize Port A
   SYSCTL_RCGCGPIO_R |= 0x01;            // activate clock for Port A
@@ -144,6 +148,27 @@ void SSI0_Init(unsigned long CPSDVSR){
                                         // DSS = 8-bit data
   SSI0_CR0_R = (SSI0_CR0_R&~SSI_CR0_DSS_M)+SSI_CR0_DSS_8;
   SSI0_CR1_R |= SSI_CR1_SSE;            // enable SSI
+}
+int Ddelay = 0;
+void WTimer0B_Init(void){ //Used for periodic Task 1
+	SYSCTL_RCGCWTIMER_R |= 0x01;   //  activate WTIMER0
+	Ddelay = SYSCTL_SCGCTIMER_R;
+    Ddelay = SYSCTL_SCGCTIMER_R; 
+	WTIMER0_CTL_R = (WTIMER0_CTL_R&~0x00001F00);    // disable Wtimer0A during setup
+ 	WTIMER0_CFG_R = 0x00000004;    // configure for 32-bit timer mode
+    WTIMER0_TBMR_R  = 0x00000002;   // configure for periodic mode, default down-count settings
+    WTIMER0_TBILR_R = 799999;    // start value for trigger
+    WTIMER0_TBPR_R = 0;            // prescale value for trigger
+	WTIMER0_ICR_R = 0x00000100;    // 6) clear WTIMER0A timeout flag
+    WTIMER0_IMR_R = (WTIMER0_IMR_R&~0x00001F00)|0x00000100;    // enable timeout interrupts
+    NVIC_PRI23_R = (NVIC_PRI23_R&0x00FFFFFF)| (0x02 << 29);
+	NVIC_EN2_R = 0x80000000;              // enable interrupt 94 in NVIC
+    WTIMER0_CTL_R |= 0x00000100;  
+}
+
+void WideTimer0B_Handler(void){ 
+  WTIMER0_ICR_R |= 0x0100;       // acknowledge timer5A timeout
+  disk_timerproc();
 }
 
 

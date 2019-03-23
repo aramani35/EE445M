@@ -82,6 +82,7 @@
 #include <string.h> 
 #include <stdio.h>
 #include <stdint.h>
+#include "PLL.h"
 
 //*********Prototype for FFT in cr4_fft_64_stm32.s, STMicroelectronics
 void cr4_fft_64_stm32(void *pssOUT, void *pssIN, unsigned short Nbin);
@@ -272,7 +273,7 @@ extern void Interpreter(void);
 // execute   eFile_Init();  after periodic interrupts have started
 
 //*******************lab 4 main **********
-int main(void){        // lab 4 real main
+int realmain(void){        // lab 4 realmain
   OS_Init();           // initialize, disable interrupts
   Running = 0;         // robot not running
   DataLost = 0;        // lost data between producer and consumer
@@ -488,4 +489,124 @@ int testmain2(void){
  
   OS_Launch(10*TIME_1MS); // doesn't return, interrupts enabled in here
   return 0;               // this never executes
+}
+
+void diskError1(char *errtype, int32_t code, int32_t block){
+  ST7735_DrawString(0, 0, "Error:", ST7735_Color565(255, 0, 0));
+  ST7735_DrawString(7, 0, errtype, ST7735_Color565(255, 0, 0));
+  ST7735_DrawString(0, 1, "Code:", ST7735_Color565(255, 0, 0));
+//  ST7735_SetCursor(6, 1);
+//  ST7735_SetTextColor(ST7735_Color565(255, 0, 0));
+//  ST7735_OutUDec(code);
+  ST7735_DrawString(0, 2, "Block:", ST7735_Color565(255, 0, 0));
+//  ST7735_SetCursor(7, 2);
+//  ST7735_OutUDec(block);
+  while(1){};
+}
+
+
+// The simple unformatted test will destroy the formatting and
+// erase everything on the SD card.
+void SimpleUnformattedTest(void){ DSTATUS result; uint16_t block; int i; uint32_t n; uint32_t errors = 0;
+  // simple test of eDisk
+  
+  result = eFile_Init();//eDisk_init(0);  // initialize disk
+  if(result) diskError1("disk_initialize", result, 0);
+  n = 1;    // seed
+  for(block = 0; block < MAXBLOCKS; block++){
+    for(i=0; i<512; i++){
+      n = (16807*n)%2147483647; // pseudo random sequence
+      buffer[i] = 0xFF&n;
+    }
+    result = eDisk_Write (0,buffer, block, 1);
+    if(result) diskError1("disk_write", result, block); // save to disk
+  }
+  n = 1;  // reseed, start over to get the same sequence
+  for(block = 0; block < MAXBLOCKS; block++){
+    result = eDisk_Read(0,buffer, block,1);
+    if(result) diskError1("disk_read ", result, block); // read from disk
+    for(i=0; i<512; i++){
+      n = (16807*n)%2147483647; // pseudo random sequence
+      if(buffer[i] != (0xFF&n)){
+        errors = errors + 1;
+      }
+    }
+  }
+  ST7735_DrawString(0, 0, "Test done", ST7735_Color565(0, 255, 0));
+  ST7735_DrawString(0, 1, "Mismatches:", ST7735_Color565(0, 255, 0));
+//  ST7735_SetCursor(12, 1);
+//  ST7735_SetTextColor(ST7735_Color565(0, 255, 0));
+//  ST7735_OutUDec(errors);
+}
+
+
+void formatTest(void){ DSTATUS result; uint16_t block; int i; uint32_t n; uint32_t errors = 0;
+  // simple test of eDisk
+  
+    result = eFile_Init();//eDisk_init(0);  // initialize disk
+    if(result) diskError1("disk_initialize", result, 0);
+    result = eFile_Format();
+    if(result) diskError1("disk_initialize", result, 0);
+    n = 1;    // seed
+//  for(block = 0; block < MAXBLOCKS; block++){
+    for(i=0; i<512; i++){
+      buffer[i] = i;
+    }
+//    result = eDisk_Write (0,buffer, block, 1);
+//    if(result) diskError1("disk_write", result, block); // save to disk
+//  }
+//  n = 1;  // reseed, start over to get the same sequence
+    for(block = 0; block < MAXBLOCKS; block++){
+        result = eDisk_Read(0,buffer, block,1);
+        if(result) diskError1("disk_read ", result, block); // read from disk
+        for(i=0; i<512; i++){
+            n = buffer[i];
+            }
+        }
+  }
+
+void quickTest(void){ DSTATUS result; uint16_t block; int i; uint32_t n; uint32_t errors = 0;
+  // simple test of eDisk
+  
+    result = eFile_Init();//eDisk_init(0);  // initialize disk
+    if(result) diskError1("disk_initialize", result, 0);
+    result = eFile_Format();
+    if(result) diskError1("disk_initialize", result, 0);
+    n = 1;    // seed
+    
+    for(i=0; i<512; i++) buffer[i] = i;
+    result = eDisk_Write(0,buffer, 1, 1);
+    if(result) diskError1("disk_write", result, block); // save to disk
+
+    for(i=0; i<512; i++) buffer[i] = i*2;
+    result = eDisk_Write(0,buffer, 2, 1);
+    if(result) diskError1("disk_write", result, block); // save to disk
+
+    
+    result = eDisk_Read(0,buffer, 1,1);
+    if(result) diskError1("disk_read ", result, block); // read from disk
+    for(i=0; i<512; i++){
+        n = buffer[i];
+    }
+    
+    result = eDisk_Read(0,buffer, 2,1);
+    if(result) diskError1("disk_read ", result, block); // read from disk
+    for(i=0; i<512; i++){
+        n = buffer[i];
+    }
+
+  }
+
+
+int main(void){
+    UINT successfulreads, successfulwrites;
+    uint8_t c, x, y;
+    PLL_Init();    // 80 MHz
+    ST7735_InitR(INITR_REDTAB);
+    ST7735_FillScreen(0);                 // set screen to black
+    EnableInterrupts();
+    quickTest();
+    formatTest();
+    //SimpleUnformattedTest();
+    while(1){}
 }

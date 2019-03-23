@@ -62,6 +62,7 @@
 
 #ifndef _ST7735H_
 #define _ST7735H_
+#include <stdint.h>
 
 // some flags for ST7735_InitR()
 enum initRFlags{
@@ -136,5 +137,8 @@ void ST7735_Message (unsigned long d, unsigned long l, char *pt, long value);
 void ST7735_SetRotation(unsigned char m);
 
 void ST7735_InvertDisplay(int i);
+
+uint32_t ST7735_DrawString(uint16_t x, uint16_t y, char *pt, int16_t textColor);
+
 
 #endif
