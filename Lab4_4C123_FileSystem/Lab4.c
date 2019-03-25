@@ -598,7 +598,39 @@ void quickTest(void){ DSTATUS result; uint16_t block; int i; uint32_t n; uint32_
   }
 
 
-int main(void){
+void writeTest(void){
+	PortD_Init();
+	unsigned long n;
+	while(1){
+        PD3 ^= 0x08;     // PD3 high for 100 block writes
+        for(uint8_t block = 0; block < MAXBLOCKS; block++){
+            for(int i=0; i<512; i++){
+                n = (16807*n)%2147483647; // pseudo random sequence
+                buffer[i] = 0xFF&n;        
+            }
+            if(eDisk_WriteBlock(buffer,block))
+                diskError("eDisk_WriteBlock",block); // save to disk   
+        }
+		PD3 ^= 0x08;  
+    }
+}
+
+void readTest(void){
+	PortD_Init();
+	unsigned long n;
+	while(1){
+        PD3 ^= 0x08;     // PD3 high for 100 block reads
+        for(uint8_t block = 0; block < MAXBLOCKS; block++){
+            if(eDisk_ReadBlock(buffer,block))
+                diskError("eDisk_WriteBlock",block);  
+        }
+		PD3 ^= 0x08;  
+    }
+}
+  
+// bandwidth is the maximum data flow in bytes/second that can be processed by the system
+// 8   for 10,000,000 bps fast mode, used during disk I/O
+int main(void){     // testermain
     UINT successfulreads, successfulwrites;
     uint8_t c, x, y;
     PLL_Init();    // 80 MHz

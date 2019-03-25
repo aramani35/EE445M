@@ -27,10 +27,12 @@ typedef struct dir dirType;
 
 dirType DIR[NUMOFFILES];    // Global files list
 unsigned char fbuffer[512]; // Global buffer for reading/writing
-uint8_t Memory[BLOCKS];
-bool file_open = false;
-bool reader = false;
-int curr_block = 0;
+uint8_t Memory[BLOCKS];     // Blocks array corresponding to SDC data
+bool file_open = false;     // File Flag
+bool reader = false;        // Reading flag
+int curr_block = 0;         // Saves current block when reading/writing
+int read_index = 0;         // Saves current index when reading
+int curr_block_counter = 0; // Saves current num of blocks read/written
 
 char empty_string[8];
 
@@ -145,7 +147,7 @@ int eFile_WOpen(char name[]){               // open a file for writing
     }
     //!!!! may need end of block size
     curr_block = last;                      // Update Global
-    if (eDisk_ReadBlock(fbuffer,last)) return FAIL; // Read into RAM
+    if (eDisk_ReadBlock(fbuffer, last)) return FAIL; // Read into RAM
     return SUCCESS;   
 }
 
@@ -156,7 +158,7 @@ int eFile_WOpen(char name[]){               // open a file for writing
 int eFile_Write(char data){
     if (!file_open || reader) return FAIL;      // Make sure file is open & no one reading
     
-    if (DIR[file_open].size%BLOCKSIZE == 0){    // Save at end of the open file
+    if (DIR[file_open].size%BLOCKSIZE == 0){    // Save at end of block //the open file
         if(eDisk_WriteBlock(fbuffer, curr_block)) return FAIL;
 //        DIR[file_open].size++;                // Increase size
         curr_block++;                           // Move to next block
@@ -201,18 +203,44 @@ int eFile_WClose(void){ // close the file for writing
 // Open the file, read first block into RAM 
 // Input: file name is a single ASCII letter
 // Output: 0 if successful and 1 on failure (e.g., trouble read to flash)
-int eFile_ROpen( char name[]){      // open a file for reading 
-
-  return SUCCESS;     
+int eFile_ROpen( char name[]){              // open a file for reading 
+    if (file_open) return FAIL;             // Fail if file already open
+    reader = true;                          // Signify reading 
+    int index;
+    for (index = 1; index < NUMOFFILES; index++){	//skip file 0 - free space manager
+		if (strncmp(name, DIR[index].file_name, 8) == 0) break; // Stop if file exists
+	}
+    if (index >= NUMOFFILES) return FAIL;   // Fail if out of range
+    
+    file_open = index;                      // Set global
+    int length = DIR[index].size;           // Length in bytes
+    int start = DIR[index].start_block;     // start block
+    curr_block = start;                     // Update Global 
+    read_index = 0;                         // Global reader index
+    curr_block_counter = 0;
+    
+    if (eDisk_ReadBlock(fbuffer, curr_block)) return FAIL; // Read into RAM
+    return SUCCESS;   
 }
+ 
  
 //---------- eFile_ReadNext-----------------
 // retreive data from open file
 // Input: none
-// Output: return by reference data
+// Output: return by reference dat
 //         0 if successful and 1 on failure (e.g., end of file)
 int eFile_ReadNext( char *pt){       // get next byte 
-
+    if (!file_open || !reader) return FAIL;     // Make sure file is open & no one reading
+    if (DIR[file_open].size%BLOCKSIZE == 0){    // Reached end of block 
+        if (read_index >= DIR[file_open].size)  // Check if reached end of file;
+            return FAIL;
+        curr_block++;                           // Move to next block
+        curr_block_counter++;
+        if(eDisk_ReadBlock(fbuffer, curr_block)) return FAIL;
+    }
+    *pt = fbuffer[DIR[file_open].size%BLOCKSIZE];  // Add to fbuffer
+    read_index++;                               // Increase index
+    
   return SUCCESS; 
 }
 
@@ -222,8 +250,10 @@ int eFile_ReadNext( char *pt){       // get next byte
 // Input: none
 // Output: 0 if successful and 1 on failure (e.g., wasn't open)
 int eFile_RClose(void){ // close the file for writing
-
-  return SUCCESS;
+    if (!file_open || (file_open && reader)) return FAIL;      // Make sure file is open & no one reading
+    file_open = false;
+    reader = false;
+    return SUCCESS;
 }
 
 
@@ -234,7 +264,34 @@ int eFile_RClose(void){ // close the file for writing
 // Input: pointer to a function that outputs ASCII characters to display
 // Output: none
 //         0 if successful and 1 on failure (e.g., trouble reading from flash)
-int eFile_Directory(void(*fp)(char)){   
+int eFile_Directory(void(*fp)(char)){
+    int num_files = 0;
+    for (int index = 0; index < NUMOFFILES; index++){
+		if (DIR[index].file_name[0])
+            num_files++;                // counts num of files
+	
+        int i = 0;
+        while (DIR[index].file_name[i] && i < 8){
+            fp(DIR[index].file_name[i]);// Prints file name
+        }
+        for (int i = 0; i < 5; i++){	// Prints spaces to separate name and size
+            fp(' ');
+        }
+        fp('\n');                       // Prints new line
+
+    }      
+//        for (int index = 0; index < num_files; index++){	//skip file 0 - free space manager
+//            int i = 0;
+//            while (DIR[index].file_name[i] && i < 8){
+//                fp(DIR[index].file_name[i]);// Preints file name
+//            }
+//            for (int i = 0; i < 5; i++){	// Prints spaces to separate name and size
+//                fp(' ');
+//            }
+//            fp('\n');                       // Prints new line
+
+//        }
+   // }
 
   return SUCCESS;
 }
@@ -244,6 +301,30 @@ int eFile_Directory(void(*fp)(char)){
 // Input: file name is a single ASCII letter
 // Output: 0 if successful and 1 on failure (e.g., trouble writing to flash)
 int eFile_Delete( char name[]){  // remove this file 
+    int index;
+    for (index = 0; index < NUMOFFILES; index++){	
+		if (strncmp(name, DIR[index].file_name, 8) == 0) break; // Stop if file exists
+	}
+    if (index >= NUMOFFILES) return FAIL;   // Fail if out of range
+    
+    
+    int buff_counter = 0;                   // Empty buffer
+    while (buff_counter <  BLOCKSIZE)
+        fbuffer[buff_counter] = 0;
+    
+    int start = DIR[index].start_block;     // Empty memory blocks
+    for (int i = DIR[index].size; i > 0; i -= 512){
+        Memory[start] = 0;
+        if(eDisk_WriteBlock(fbuffer, start)) return FAIL;
+        start++;
+    }
+    
+    DIR[index].file_name[0] = 0;            // Reninitalize to new 
+    DIR[index].size = 0;
+    DIR[index].start_block = 0;
+    
+    writeDirectory();                       // Update SDC data
+    if(eDisk_Write(0, Memory, 1, BLOCKS/BLOCKSIZE)) return FAIL;
 
   return SUCCESS;    // restore directory back to flash
 }
