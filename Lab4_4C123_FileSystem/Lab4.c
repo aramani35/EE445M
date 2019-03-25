@@ -597,7 +597,30 @@ void quickTest(void){ DSTATUS result; uint16_t block; int i; uint32_t n; uint32_
 
   }
 
+void badFileTest(void){
+    int result;
+    result = eFile_Init();//eDisk_init(0);  // initialize disk
+    if(result) diskError1("disk_initialize", result, 0);
+    result = eFile_Format();
+    if(result) diskError1("disk_initialize", result, 0);
+    
+    eFile_WOpen("test.txt"); // file not made
+    eFile_WOpen("test.txt"); // file not made
+    
+    eFile_ROpen("test.txt"); // file not made
+    eFile_ROpen("test.txt"); // file not made
+    
+    eFile_Delete("test.txt"); // delete none existed file
 
+    
+    eFile_Create("test.txt"); // Make file
+    eFile_Create("test.txt"); // Make file twice
+    
+    eFile_WOpen("tes.txt"); // Open wrong file
+    eFile_ROpen("tes.txt"); // Open wrong file
+}
+  
+  
 void writeTest(void){
 	PortD_Init();
 	unsigned long n;
