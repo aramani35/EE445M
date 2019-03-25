@@ -256,8 +256,28 @@ int eFile_RClose(void){ // close the file for writing
     return SUCCESS;
 }
 
-
-
+//---------- eFile_PrintFile-----------------
+// Prints file to selected output
+// Input: which file to print, output function
+// Output: 0 if successful and 1 on failure (e.g., wasn't open)
+int eFile_PrintFile(char *name, void(*printFunc)(char)) {
+	if (eFile_ROpen(name) == FAIL) return FAIL;
+	
+	char data;
+	int status;
+	int count;
+	
+	for (count = 0; count < DIR[file_open].size; count++) {
+		status = eFile_ReadNext(&data);
+		printFunc(data);
+		
+		if (status == FAIL) return FAIL;
+	}
+	
+	eFile_RClose();
+	
+	return SUCCESS;
+}
 
 //---------- eFile_Directory-----------------
 // Display the directory with filenames and sizes
@@ -363,3 +383,4 @@ int fgetc (FILE *f){
   UART_OutChar(ch);            // echo
   return ch;
 }
+

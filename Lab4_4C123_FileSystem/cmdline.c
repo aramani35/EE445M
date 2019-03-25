@@ -38,6 +38,7 @@
 #include "ST7735.h"
 #include "OS.h"
 #include "UART.h"
+#include "efile.h"
 
 //*****************************************************************************
 //
@@ -389,61 +390,89 @@ int osCall(int numArgs, char* args[]) {
 		}
 	}
 	return 1;
-    
-//	if (numArgs != 2) {
-//		UART_OutString("OS commands are either 'os clear' or 'os read'");
-//		return -1;
-//	}
-//	
-//	else {
-//		if (!strcmp(args[1], "clear")) {
-//			OS_ClearPeriodicTime();
-//			UART_OutString("OS time has been cleared.");
-//		}
-//		else if (!strncmp(args[1], "read", 4)) {
-//			UART_OutString("OS time: ");
-//			UART_OutUDec(OS_ReadPeriodicTime());
-//		}
-//		else if (!strncmp(args[1], "critical", 8)) {
-//			if (!strncmp(args[2], "time", 4)) {
-//				UART_OutString("Time w/ interrupts disabled: ");
-//				UART_OutUDec(OS_ReadCriticalTime());
-//			}
-//			else if (!strncmp(args[2], "%", 1)) {
-//				UART_OutString("& of time w/ interrupts disabled: ");
-//				UART_OutUDec(OS_ReadCriticalPercentage());
-//			} 
-//			else if (!strncmp(args[2], "clear", 4)) {
-//				UART_OutString("Clearing critical time counter");
-//				UART_OutUDec(OS_ClearCriticalTime());
-//			}
-//			else {
-//				UART_OutString("Invalid OS Call");
-//				return -1;
-//			}
-//		}
-//		else if (!strncmp(args[1], "profile", 4)) {
-//			OS_GetProfilerAndReset();
-//			UART_OutString("Dumping Profile Data: \n\r");
-//			UART_OutUDec(OS_ReadPeriodicTime());
-//		}
-//		else {
-//			UART_OutString("Invalid OS Call");
-//			return -1;
-//		}
-//	}
-//	return 1;
+}
+
+
+int fileCall(int numArgs, char* args[]) {
+	// first arg is always fsys, so we can ignore
+	// second arg is command ["format", "cat", "rm"]
+	// third arg, if present, is file name
+	
+	int status; // used to check status of command
+	
+	if (numArgs != 2 && numArgs != 3) {
+		UART_OutString("Invalid command. Try print dir, print file, delete, etc");
+		return 0;
+	}
+	
+	if (numArgs == 2) {
+		if (!strcmp(args[1], "format")) {
+			UART_OutString("Formatting SD Card");
+			OutCRLF();
+			status = eFile_Format();
+			if (status == 0)
+				UART_OutString("Formatting succeeded");
+			else if (status == 1)
+				UART_OutString("Formatting failed");
+			
+			OutCRLF();
+		}
+	}
+	
+	else if (numArgs == 3) {
+		if (!strcmp(args[1], "cat")) {
+			if (!strcmp(args[2], "dir")) {
+				UART_OutString("Printing directory");
+				OutCRLF();
+				status = eFile_Directory(UART_OutChar);
+				OutCRLF();
+				
+				if (status == 1)
+					UART_OutString("Printing directory failed");
+			}
+			
+			else {
+				UART_OutString("Printing file with name ");
+				UART_OutString(args[2]);
+				OutCRLF();
+				status = eFile_PrintFile(args[2], UART_OutChar);
+				
+				if (status == 1) {
+					UART_OutString("Printing file failed");
+					OutCRLF();
+				}
+				
+				OutCRLF();
+			}
+		}
+		
+		else if (!strcmp(args[1], "rm")) {
+			UART_OutString("Deleting file with name ");
+			UART_OutString(args[2]);
+			OutCRLF();
+			
+			status = eFile_Delete(args[2]);
+			
+			if (status == 1) {
+				UART_OutString("File deletion failed");
+			}
+		}
+	}
+	
+	return 1;
 }
 
 // Used for UART commands
 char infoADC[] = "Send commands to the ADC";
 char infoLCD[] = "Send commands to the LCD";
 char infoOS[] = "Look up timer info";
+char infoFile[] = "Commands relating to file directory";
 
 tCmdLineEntry g_psCmdTable[] = {
     { "lcd", lcdCall, infoADC },
     { "adc", adcCall, infoLCD },
 	{ "os", osCall, infoOS },
+	{ "fsys", fileCall, infoFile },
 };
 
 //*****************************************************************************

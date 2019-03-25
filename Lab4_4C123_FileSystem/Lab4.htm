@@ -3,7 +3,7 @@
 <title>Static Call Graph - [.\Lab4.axf]</title></head>
 <body><HR>
 <H1>Static Call Graph for image .\Lab4.axf</H1><HR>
-<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060750: Last Updated: Fri Mar 22 22:22:13 2019
+<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5.03 [Build 76]: Last Updated: Mon Mar 25 00:13:13 2019
 <BR><P>
 <H3>Maximum Stack Usage =        168 bytes + Unknown(Functions without stacksize, Cycles, Untraceable Function Pointers)</H3><H3>
 Call chain for Maximum Stack Depth:</H3>
@@ -591,22 +591,22 @@ Global Symbols
 
 <P><STRONG><a name="[c8]"></a>__scatterload_rt2</STRONG> (Thumb, 0 bytes, Stack size 0 bytes, init.o(.text), UNUSED)
 
-<P><STRONG><a name="[c9]"></a>__decompress</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, __dczerorl.o(.text), UNUSED)
+<P><STRONG><a name="[c9]"></a>__decompress</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, __dczerorl2.o(.text), UNUSED)
 
-<P><STRONG><a name="[ca]"></a>__decompress0</STRONG> (Thumb, 58 bytes, Stack size unknown bytes, __dczerorl.o(.text), UNUSED)
+<P><STRONG><a name="[ca]"></a>__decompress1</STRONG> (Thumb, 92 bytes, Stack size unknown bytes, __dczerorl2.o(.text), UNUSED)
 
-<P><STRONG><a name="[1a]"></a>ADC0Seq2_Handler</STRONG> (Thumb, 26 bytes, Stack size 8 bytes, adc.o(i.ADC0Seq2_Handler))
+<P><STRONG><a name="[1a]"></a>ADC0Seq2_Handler</STRONG> (Thumb, 24 bytes, Stack size 8 bytes, adc.o(i.ADC0Seq2_Handler))
 <BR><BR>[Stack]<UL><LI>Max Depth = 8<LI>Call Chain = ADC0Seq2_Handler
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> startup.o(RESET)
 </UL>
-<P><STRONG><a name="[9a]"></a>ADC_In</STRONG> (Thumb, 64 bytes, Stack size 8 bytes, adc.o(i.ADC_In))
+<P><STRONG><a name="[9a]"></a>ADC_In</STRONG> (Thumb, 60 bytes, Stack size 8 bytes, adc.o(i.ADC_In))
 <BR><BR>[Stack]<UL><LI>Max Depth = 8<LI>Call Chain = ADC_In
 </UL>
 <BR>[Called By]<UL><LI><a href="#[21]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Timer2A_Handler
 </UL>
 
-<P><STRONG><a name="[8b]"></a>CS_Init</STRONG> (Thumb, 118 bytes, Stack size 0 bytes, edisk.o(i.CS_Init))
+<P><STRONG><a name="[8b]"></a>CS_Init</STRONG> (Thumb, 116 bytes, Stack size 0 bytes, edisk.o(i.CS_Init))
 <BR><BR>[Called By]<UL><LI><a href="#[95]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;commonInit
 <LI><a href="#[89]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;SSI0_Init
 </UL>
@@ -669,7 +669,7 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[83]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;OS_EnableInterrupts
 </UL>
 
-<P><STRONG><a name="[b5]"></a>PLL_Init</STRONG> (Thumb, 120 bytes, Stack size 0 bytes, pll.o(i.PLL_Init))
+<P><STRONG><a name="[b5]"></a>PLL_Init</STRONG> (Thumb, 118 bytes, Stack size 0 bytes, pll.o(i.PLL_Init))
 <BR><BR>[Called By]<UL><LI><a href="#[7c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
 </UL>
 
@@ -681,7 +681,7 @@ Global Symbols
 <BR><BR>[Called By]<UL><LI><a href="#[9d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;copyHardwareToSoftware
 </UL>
 
-<P><STRONG><a name="[89]"></a>SSI0_Init</STRONG> (Thumb, 306 bytes, Stack size 4 bytes, edisk.o(i.SSI0_Init))
+<P><STRONG><a name="[89]"></a>SSI0_Init</STRONG> (Thumb, 298 bytes, Stack size 4 bytes, edisk.o(i.SSI0_Init))
 <BR><BR>[Stack]<UL><LI>Max Depth = 4<LI>Call Chain = SSI0_Init
 </UL>
 <BR>[Calls]<UL><LI><a href="#[8b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;CS_Init
@@ -696,7 +696,7 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[a7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;diskError1
 </UL>
 
-<P><STRONG><a name="[8c]"></a>ST7735_DrawCharS</STRONG> (Thumb, 242 bytes, Stack size 48 bytes, st7735.o(i.ST7735_DrawCharS))
+<P><STRONG><a name="[8c]"></a>ST7735_DrawCharS</STRONG> (Thumb, 238 bytes, Stack size 48 bytes, st7735.o(i.ST7735_DrawCharS))
 <BR><BR>[Stack]<UL><LI>Max Depth = 112<LI>Call Chain = ST7735_DrawCharS &rArr; ST7735_FillRect &rArr; setAddrWindow &rArr; writedata
 </UL>
 <BR>[Calls]<UL><LI><a href="#[8e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ST7735_FillRect
@@ -828,7 +828,7 @@ Global Symbols
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> startup.o(RESET)
 </UL>
-<P><STRONG><a name="[58]"></a>WideTimer4A_Handler</STRONG> (Thumb, 110 bytes, Stack size 0 bytes, os.o(i.WideTimer4A_Handler))
+<P><STRONG><a name="[58]"></a>WideTimer4A_Handler</STRONG> (Thumb, 102 bytes, Stack size 0 bytes, os.o(i.WideTimer4A_Handler))
 <BR>[Address Reference Count : 1]<UL><LI> startup.o(RESET)
 </UL>
 <P><STRONG><a name="[cb]"></a>__scatterload_copy</STRONG> (Thumb, 14 bytes, Stack size unknown bytes, handlers.o(i.__scatterload_copy), UNUSED)
@@ -976,7 +976,7 @@ Local Symbols
 <LI><a href="#[95]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;commonInit
 </UL>
 
-<P><STRONG><a name="[95]"></a>commonInit</STRONG> (Thumb, 332 bytes, Stack size 8 bytes, st7735.o(i.commonInit))
+<P><STRONG><a name="[95]"></a>commonInit</STRONG> (Thumb, 330 bytes, Stack size 8 bytes, st7735.o(i.commonInit))
 <BR><BR>[Stack]<UL><LI>Max Depth = 40<LI>Call Chain = commonInit &rArr; commandList &rArr; Delay1ms
 </UL>
 <BR>[Calls]<UL><LI><a href="#[8b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;CS_Init
@@ -1004,7 +1004,7 @@ Local Symbols
 <LI><a href="#[8d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ST7735_DrawPixel
 </UL>
 
-<P><STRONG><a name="[97]"></a>writecommand</STRONG> (Thumb, 68 bytes, Stack size 8 bytes, st7735.o(i.writecommand))
+<P><STRONG><a name="[97]"></a>writecommand</STRONG> (Thumb, 66 bytes, Stack size 8 bytes, st7735.o(i.writecommand))
 <BR><BR>[Stack]<UL><LI>Max Depth = 8<LI>Call Chain = writecommand
 </UL>
 <BR>[Called By]<UL><LI><a href="#[94]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ST7735_InitR
@@ -1012,7 +1012,7 @@ Local Symbols
 <LI><a href="#[96]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;commandList
 </UL>
 
-<P><STRONG><a name="[92]"></a>writedata</STRONG> (Thumb, 70 bytes, Stack size 8 bytes, st7735.o(i.writedata))
+<P><STRONG><a name="[92]"></a>writedata</STRONG> (Thumb, 68 bytes, Stack size 8 bytes, st7735.o(i.writedata))
 <BR><BR>[Stack]<UL><LI>Max Depth = 8<LI>Call Chain = writedata
 </UL>
 <BR>[Called By]<UL><LI><a href="#[94]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ST7735_InitR
@@ -1051,7 +1051,7 @@ Local Symbols
 <BR>[Called By]<UL><LI><a href="#[ac]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;eDisk_Read
 </UL>
 
-<P><STRONG><a name="[b9]"></a>rcvr_spi</STRONG> (Thumb, 42 bytes, Stack size 0 bytes, edisk.o(i.rcvr_spi))
+<P><STRONG><a name="[b9]"></a>rcvr_spi</STRONG> (Thumb, 40 bytes, Stack size 0 bytes, edisk.o(i.rcvr_spi))
 <BR><BR>[Called By]<UL><LI><a href="#[b8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;rcvr_spi_multi
 </UL>
 
@@ -1097,7 +1097,7 @@ Local Symbols
 <LI><a href="#[ba]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;select
 </UL>
 
-<P><STRONG><a name="[a6]"></a>xchg_spi</STRONG> (Thumb, 50 bytes, Stack size 8 bytes, edisk.o(i.xchg_spi))
+<P><STRONG><a name="[a6]"></a>xchg_spi</STRONG> (Thumb, 48 bytes, Stack size 8 bytes, edisk.o(i.xchg_spi))
 <BR><BR>[Stack]<UL><LI>Max Depth = 8<LI>Call Chain = xchg_spi
 </UL>
 <BR>[Called By]<UL><LI><a href="#[a9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;eDisk_Init
@@ -1119,7 +1119,7 @@ Local Symbols
 <BR>[Called By]<UL><LI><a href="#[ae]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;eDisk_Write
 </UL>
 
-<P><STRONG><a name="[bc]"></a>xmit_spi_multi</STRONG> (Thumb, 42 bytes, Stack size 8 bytes, edisk.o(i.xmit_spi_multi))
+<P><STRONG><a name="[bc]"></a>xmit_spi_multi</STRONG> (Thumb, 40 bytes, Stack size 8 bytes, edisk.o(i.xmit_spi_multi))
 <BR><BR>[Stack]<UL><LI>Max Depth = 8<LI>Call Chain = xmit_spi_multi
 </UL>
 <BR>[Called By]<UL><LI><a href="#[af]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xmit_datablock

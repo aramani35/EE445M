@@ -2,33 +2,239 @@
 <body>
 <pre>
 <h1>µVision Build Log</h1>
-<h2>Tool Versions:</h2>
-IDE-Version: µVision V5.26.2.0
-Copyright (C) 2018 ARM Ltd and ARM Germany GmbH. All rights reserved.
-License Information: tariq muhanna, ee445l, LIC=Z3C64-Z4BMR-K15KE-NYIH9-EABNQ-K7D04
- 
-Tool Versions:
-Toolchain:       MDK-ARM Professional  Version: 5.26.2.0
-Toolchain Path:  C:\Keil_v5\ARM\ARMCC\Bin
-C Compiler:      Armcc.exe V5.06 update 6 (build 750)
-Assembler:       Armasm.exe V5.06 update 6 (build 750)
-Linker/Locator:  ArmLink.exe V5.06 update 6 (build 750)
-Library Manager: ArmAr.exe V5.06 update 6 (build 750)
-Hex Converter:   FromElf.exe V5.06 update 6 (build 750)
-CPU DLL:         SARMCM3.DLL V5.26.2.0
-Dialog DLL:      DCM.DLL V1.17.2.0
-Target DLL:      lmidk-agdi.dll V???
-Dialog DLL:      TCM.DLL V1.36.1.0
- 
 <h2>Project:</h2>
-C:\Users\Tariq Muhanna\Documents\ValvanoWareTM4C123\EE 445M\Lab4_4C123_FileSystem\Lab4.uvproj
-Project File Date:  03/21/2019
+C:\Users\Abhishek\Documents\ValvanoWareTM4C123\EE445M Labs\Lab4_4C123_FileSystem\Lab4.uvproj
+Project File Date:  03/10/2017
 
 <h2>Output:</h2>
-*** Using Compiler 'V5.06 update 6 (build 750)', folder: 'C:\Keil_v5\ARM\ARMCC\Bin'
-Build target 'Lab4'
-".\Lab4.axf" - 0 Error(s), 0 Warning(s).
-Build Time Elapsed:  00:00:00
-</pre>
-</body>
-</html>
+Rebuild target 'Lab4'
+assembling startup.s...
+compiling PLL.c...
+PLL.c(35): warning:  #47-D: incompatible redefinition of macro "SYSCTL_RIS_R" (declared at line 2049 of "..\../inc/tm4c123gh6pm.h")
+  #define SYSCTL_RIS_R            (*((volatile unsigned long *)0x400FE050))
+PLL.c(37): warning:  #47-D: incompatible redefinition of macro "SYSCTL_RCC_R" (declared at line 2053 of "..\../inc/tm4c123gh6pm.h")
+  #define SYSCTL_RCC_R            (*((volatile unsigned long *)0x400FE060))
+PLL.c(42): warning:  #47-D: incompatible redefinition of macro "SYSCTL_RCC2_R" (declared at line 2055 of "..\../inc/tm4c123gh6pm.h")
+  #define SYSCTL_RCC2_R           (*((volatile unsigned long *)0x400FE070))
+PLL.c: 3 warnings, 0 errors
+compiling ST7735.c...
+ST7735.c(114): warning:  #47-D: incompatible redefinition of macro "SYSCTL_RCGC1_R" (declared at line 2058 of "..\../inc/tm4c123gh6pm.h")
+  #define SYSCTL_RCGC1_R          (*((volatile unsigned long *)0x400FE104))
+ST7735.c(115): warning:  #47-D: incompatible redefinition of macro "SYSCTL_RCGC2_R" (declared at line 2059 of "..\../inc/tm4c123gh6pm.h")
+  #define SYSCTL_RCGC2_R          (*((volatile unsigned long *)0x400FE108))
+ST7735.c: 2 warnings, 0 errors
+compiling UART2.c...
+compiling OS.c...
+OS.c(806): warning:  #177-D: function "DebouncePF4" was declared but never referenced
+  void static DebouncePF4(void) {
+OS.c(814): warning:  #177-D: function "DebouncePF0" was declared but never referenced
+  void static DebouncePF0(void) {
+OS.c: 2 warnings, 0 errors
+assembling osasm.s...
+compiling ADC.c...
+assembling cr4_fft_64_stm32.s...
+compiling Interpreter.c...
+compiling eDisk.c...
+compiling efile.c...
+efile.c(216): warning:  #177-D: variable "length" was declared but never referenced
+      int length = DIR[index].size;           // Length in bytes
+efile.c: 1 warning, 0 errors
+compiling Lab4.c...
+Lab4.c(543): warning:  #550-D: variable "n" was set but never used
+  void formatTest(void){ DSTATUS result; uint16_t block; int i; uint32_t n; uint32_t errors = 0;
+Lab4.c(543): warning:  #177-D: variable "errors" was declared but never referenced
+  void formatTest(void){ DSTATUS result; uint16_t block; int i; uint32_t n; uint32_t errors = 0;
+Lab4.c(568): warning:  #550-D: variable "n" was set but never used
+  void quickTest(void){ DSTATUS result; uint16_t block; int i; uint32_t n; uint32_t errors = 0;
+Lab4.c(568): warning:  #177-D: variable "errors" was declared but never referenced
+  void quickTest(void){ DSTATUS result; uint16_t block; int i; uint32_t n; uint32_t errors = 0;
+Lab4.c(620): warning:  #177-D: variable "n" was declared but never referenced
+        unsigned long n;
+Lab4.c(634): warning:  #177-D: variable "successfulreads" was declared but never referenced
+      UINT successfulreads, successfulwrites;
+Lab4.c(634): warning:  #177-D: variable "successfulwrites" was declared but never referenced
+      UINT successfulreads, successfulwrites;
+Lab4.c(635): warning:  #177-D: variable "c" was declared but never referenced
+      uint8_t c, x, y;
+Lab4.c(635): warning:  #177-D: variable "x" was declared but never referenced
+      uint8_t c, x, y;
+Lab4.c(635): warning:  #177-D: variable "y" was declared but never referenced
+      uint8_t c, x, y;
+Lab4.c: 10 warnings, 0 errors
+compiling ADCSWTrigger.c...
+compiling board.c...
+compiling cmdline.c...
+cmdline.c(440): error:  #20: identifier "fbuffer" is undefined
+                                        char start = fbuffer[0];
+cmdline.c: 0 warnings, 1 error
+compiling EdgeTriggered.c...
+EdgeTriggered.c(41): warning:  #177-D: variable "delayf" was declared but never referenced
+      int delayf = 0;
+EdgeTriggered.c: 1 warning, 0 errors
+compiling LinkedList.c...
+compiling Timer.c...
+compiling UART.c...
+".\Lab4.axf" - 1 Error(s), 19 Warning(s).
+Target not created
+defined symbol fbuffer (referred from efile.o).
+Not enough information to list image symbols.
+Finished: 1 information, 0 warning and 1 error messages.
+".\Lab4.axf" - 1 Error(s), 20 Warning(s).
+Target not created
+196): error:  #268: declaration may not appear after executable statement in block
+        int pri_index = 0;                      // Init to zero
+OS.c(1281): error:  #29: expected an expression
+        for(int i=0; i<MAXPROFILE; i++){
+OS.c(1281): error:  #20: identifier "i" is undefined
+        for(int i=0; i<MAXPROFILE; i++){
+OS.c(1287): error:  #29: expected an expression
+        for(int i=0; i<MAXPROFILE; i++){
+OS.c(1287): error:  #20: identifier "i" is undefined
+        for(int i=0; i<MAXPROFILE; i++){
+OS.c(806): warning:  #177-D: function "DebouncePF4" was declared but never referenced
+  void static DebouncePF4(void) {
+OS.c(814): warning:  #177-D: function "DebouncePF0" was declared but never referenced
+  void static DebouncePF0(void) {
+OS.c: 2 warnings, 25 errors
+assembling osasm.s...
+compiling ADC.c...
+assembling cr4_fft_64_stm32.s...
+compiling Interpreter.c...
+compiling eDisk.c...
+compiling efile.c...
+efile.c(52): error:  #29: expected an expression
+      for (int i=0; i<NUMOFFILES; i++){
+efile.c(52): error:  #20: identifier "i" is undefined
+      for (int i=0; i<NUMOFFILES; i++){
+efile.c(54): error:  #29: expected an expression
+          for (int j=0+offset*i; j<offset+offset*i; j++){
+efile.c(54): error:  #20: identifier "j" is undefined
+          for (int j=0+offset*i; j<offset+offset*i; j++){
+efile.c(77): error:  #29: expected an expression
+      for (int i=0; i<BLOCKSIZE; i++)
+efile.c(77): error:  #20: identifier "i" is undefined
+      for (int i=0; i<BLOCKSIZE; i++)
+efile.c(80): error:  #29: expected an expression
+      for (int i=0; i<NUMOFFILES; i++) {
+efile.c(87): error:  #29: expected an expression
+      for(int i = 0; i < BLOCKS; i++){
+efile.c(111): error:  #268: declaration may not appear after executable statement in block
+      int i;
+efile.c(131): error:  #268: declaration may not appear after executable statement in block
+      int index;
+efile.c(137): error:  #268: declaration may not appear after executable statement in block
+      int length = DIR[index].size;           // Length in bytes
+efile.c(138): error:  #268: declaration may not appear after executable statement in block
+      int start = DIR[index].start_block;     // start block
+efile.c(139): error:  #268: declaration may not appear after executable statement in block
+      int last = start;                       // last block
+efile.c(209): error:  #268: declaration may not appear after executable statement in block
+      int index;
+efile.c(216): error:  #268: declaration may not appear after executable statement in block
+      int length = DIR[index].size;           // Length in bytes
+efile.c(217): error:  #268: declaration may not appear after executable statement in block
+      int start = DIR[index].start_block;     // start block
+efile.c(216): warning:  #177-D: variable "length" was declared but never referenced
+      int length = DIR[index].size;           // Length in bytes
+efile.c(269): error:  #29: expected an expression
+      for (int index = 0; index < NUMOFFILES; index++){
+efile.c(269): error:  #20: identifier "index" is undefined
+      for (int index = 0; index < NUMOFFILES; index++){
+efile.c(273): error:  #268: declaration may not appear after executable statement in block
+          int i = 0;
+efile.c(277): error:  #29: expected an expression
+          for (int i = 0; i < 5; i++){  // Prints spaces to separate name and size
+efile.c(311): error:  #268: declaration may not appear after executable statement in block
+      int buff_counter = 0;                   // Empty buffer
+efile.c(315): error:  #268: declaration may not appear after executable statement in block
+      int start = DIR[index].start_block;     // Empty memory blocks
+efile.c(316): error:  #29: expected an expression
+      for (int i = DIR[index].size; i > 0; i -= 512){
+efile.c(316): error:  #20: identifier "i" is undefined
+      for (int i = DIR[index].size; i > 0; i -= 512){
+efile.c: 1 warning, 24 errors
+compiling Lab4.c...
+Lab4.c(543): warning:  #550-D: variable "n" was set but never used
+  void formatTest(void){ DSTATUS result; uint16_t block; int i; uint32_t n; uint32_t errors = 0;
+Lab4.c(543): warning:  #177-D: variable "errors" was declared but never referenced
+  void formatTest(void){ DSTATUS result; uint16_t block; int i; uint32_t n; uint32_t errors = 0;
+Lab4.c(568): warning:  #550-D: variable "n" was set but never used
+  void quickTest(void){ DSTATUS result; uint16_t block; int i; uint32_t n; uint32_t errors = 0;
+Lab4.c(568): warning:  #177-D: variable "errors" was declared but never referenced
+  void quickTest(void){ DSTATUS result; uint16_t block; int i; uint32_t n; uint32_t errors = 0;
+Lab4.c(603): error:  #268: declaration may not appear after executable statement in block
+        unsigned long n;
+Lab4.c(606): error:  #254: type name is not allowed
+          for(uint8_t block = 0; block < MAXBLOCKS; block++){
+Lab4.c(606): error:  #65: expected a ";"
+          for(uint8_t block = 0; block < MAXBLOCKS; block++){
+Lab4.c(606): error:  #20: identifier "block" is undefined
+          for(uint8_t block = 0; block < MAXBLOCKS; block++){
+Lab4.c(607): error:  #29: expected an expression
+              for(int i=0; i<512; i++){
+Lab4.c(607): error:  #20: identifier "i" is undefined
+              for(int i=0; i<512; i++){
+Lab4.c(620): error:  #268: declaration may not appear after executable statement in block
+        unsigned long n;
+Lab4.c(623): error:  #254: type name is not allowed
+          for(uint8_t block = 0; block < MAXBLOCKS; block++){
+Lab4.c(623): error:  #65: expected a ";"
+          for(uint8_t block = 0; block < MAXBLOCKS; block++){
+Lab4.c(623): error:  #20: identifier "block" is undefined
+          for(uint8_t block = 0; block < MAXBLOCKS; block++){
+Lab4.c(620): warning:  #177-D: variable "n" was declared but never referenced
+        unsigned long n;
+Lab4.c(634): warning:  #177-D: variable "successfulreads" was declared but never referenced
+      UINT successfulreads, successfulwrites;
+Lab4.c(634): warning:  #177-D: variable "successfulwrites" was declared but never referenced
+      UINT successfulreads, successfulwrites;
+Lab4.c(635): warning:  #177-D: variable "c" was declared but never referenced
+      uint8_t c, x, y;
+Lab4.c(635): warning:  #177-D: variable "x" was declared but never referenced
+      uint8_t c, x, y;
+Lab4.c(635): warning:  #177-D: variable "y" was declared but never referenced
+      uint8_t c, x, y;
+Lab4.c: 10 warnings, 10 errors
+compiling ADCSWTrigger.c...
+compiling board.c...
+compiling cmdline.c...
+cmdline.c(223): error:  #268: declaration may not appear after executable statement in block
+        uint8_t screenNum = parseNumber(args[1]);
+cmdline.c(230): error:  #268: declaration may not appear after executable statement in block
+        uint8_t lineNum = parseNumber(args[2]);
+cmdline.c(237): error:  #268: declaration may not appear after executable statement in block
+        char message[100];
+cmdline.c(238): error:  #268: declaration may not appear after executable statement in block
+        int pos = 0;
+cmdline.c(239): error:  #29: expected an expression
+        for (int i = 3; i < numArgs; i++) {
+cmdline.c(239): error:  #20: identifier "i" is undefined
+        for (int i = 3; i < numArgs; i++) {
+cmdline.c(241): error:  #29: expected an expression
+                for (int j = 0; j < sizeOfWord; j++) {
+cmdline.c(241): error:  #20: identifier "j" is undefined
+                for (int j = 0; j < sizeOfWord; j++) {
+cmdline.c(282): error:  #268: declaration may not appear after executable statement in block
+                        int status = ADC_Status();
+cmdline.c(314): error:  #268: declaration may not appear after executable statement in block
+                uint8_t channelNum = parseNumber(args[2]);
+cmdline.c(317): error:  #268: declaration may not appear after executable statement in block
+                uint8_t sampleMode = parseNumber(args[3]);
+cmdline.c(318): error:  #268: declaration may not appear after executable statement in block
+                uint32_t fs = 80000000;
+cmdline.c(324): error:  #268: declaration may not appear after executable statement in block
+                uint8_t numSamples = parseNumber(args[4]);
+cmdline.c(325): error:  #268: declaration may not appear after executable statement in block
+                int buf[100];
+cmdline.c: 0 warnings, 14 errors
+compiling EdgeTriggered.c...
+EdgeTriggered.c(41): error:  #268: declaration may not appear after executable statement in block
+      int delayf = 0;
+EdgeTriggered.c(41): warning:  #177-D: variable "delayf" was declared but never referenced
+      int delayf = 0;
+EdgeTriggered.c: 1 warning, 1 error
+compiling LinkedList.c...
+compiling Timer.c...
+compiling UART.c...
+".\Lab4.axf" - 74 Error(s), 19 Warning(s).
+Target not created
