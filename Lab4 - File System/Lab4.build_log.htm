@@ -1,0 +1,86 @@
+<html>
+<body>
+<pre>
+<h1>µVision Build Log</h1>
+<h2>Project:</h2>
+C:\Users\Abhishek\Documents\ValvanoWareTM4C123\EE445M Labs\Lab4_4C123_FileSystem\Lab4.uvproj
+Project File Date:  03/25/2019
+
+<h2>Output:</h2>
+Rebuild target 'Lab4'
+assembling startup.s...
+compiling PLL.c...
+PLL.c(35): warning:  #47-D: incompatible redefinition of macro "SYSCTL_RIS_R" (declared at line 2049 of "..\../inc/tm4c123gh6pm.h")
+  #define SYSCTL_RIS_R            (*((volatile unsigned long *)0x400FE050))
+PLL.c(37): warning:  #47-D: incompatible redefinition of macro "SYSCTL_RCC_R" (declared at line 2053 of "..\../inc/tm4c123gh6pm.h")
+  #define SYSCTL_RCC_R            (*((volatile unsigned long *)0x400FE060))
+PLL.c(42): warning:  #47-D: incompatible redefinition of macro "SYSCTL_RCC2_R" (declared at line 2055 of "..\../inc/tm4c123gh6pm.h")
+  #define SYSCTL_RCC2_R           (*((volatile unsigned long *)0x400FE070))
+PLL.c: 3 warnings, 0 errors
+compiling ST7735.c...
+ST7735.c(114): warning:  #47-D: incompatible redefinition of macro "SYSCTL_RCGC1_R" (declared at line 2058 of "..\../inc/tm4c123gh6pm.h")
+  #define SYSCTL_RCGC1_R          (*((volatile unsigned long *)0x400FE104))
+ST7735.c(115): warning:  #47-D: incompatible redefinition of macro "SYSCTL_RCGC2_R" (declared at line 2059 of "..\../inc/tm4c123gh6pm.h")
+  #define SYSCTL_RCGC2_R          (*((volatile unsigned long *)0x400FE108))
+ST7735.c: 2 warnings, 0 errors
+compiling UART2.c...
+compiling OS.c...
+OS.c(806): warning:  #177-D: function "DebouncePF4" was declared but never referenced
+  void static DebouncePF4(void) {
+OS.c(814): warning:  #177-D: function "DebouncePF0" was declared but never referenced
+  void static DebouncePF0(void) {
+OS.c: 2 warnings, 0 errors
+assembling osasm.s...
+compiling ADC.c...
+assembling cr4_fft_64_stm32.s...
+compiling Interpreter.c...
+compiling eDisk.c...
+compiling efile.c...
+efile.c(311): warning:  #177-D: variable "length" was declared but never referenced
+      int length = DIR[index].size;           // Length in bytes
+efile.c: 1 warning, 0 errors
+compiling Lab4.c...
+Lab4.c(643): warning:  #550-D: variable "n" was set but never used
+  void formatTest(void){ DSTATUS result; uint16_t block; int i; uint32_t n; uint32_t errors = 0;
+Lab4.c(643): warning:  #177-D: variable "errors" was declared but never referenced
+  void formatTest(void){ DSTATUS result; uint16_t block; int i; uint32_t n; uint32_t errors = 0;
+Lab4.c(668): warning:  #550-D: variable "n" was set but never used
+  void quickTest(void){ DSTATUS result; uint16_t block; int i; uint32_t n; uint32_t errors = 0;
+Lab4.c(668): warning:  #177-D: variable "errors" was declared but never referenced
+  void quickTest(void){ DSTATUS result; uint16_t block; int i; uint32_t n; uint32_t errors = 0;
+Lab4.c(743): warning:  #177-D: variable "n" was declared but never referenced
+        unsigned long n;
+Lab4.c(757): warning:  #177-D: variable "successfulreads" was declared but never referenced
+      UINT successfulreads, successfulwrites;
+Lab4.c(757): warning:  #177-D: variable "successfulwrites" was declared but never referenced
+      UINT successfulreads, successfulwrites;
+Lab4.c(758): warning:  #177-D: variable "c" was declared but never referenced
+      uint8_t c, x, y;
+Lab4.c(758): warning:  #177-D: variable "x" was declared but never referenced
+      uint8_t c, x, y;
+Lab4.c(758): warning:  #177-D: variable "y" was declared but never referenced
+      uint8_t c, x, y;
+Lab4.c: 10 warnings, 0 errors
+compiling ADCSWTrigger.c...
+compiling board.c...
+compiling cmdline.c...
+compiling EdgeTriggered.c...
+EdgeTriggered.c(41): warning:  #177-D: variable "delayf" was declared but never referenced
+      int delayf = 0;
+EdgeTriggered.c: 1 warning, 0 errors
+compiling LinkedList.c...
+compiling Timer.c...
+compiling UART.c...
+linking...
+Program Size: Code=16924 RO-data=1684 RW-data=424 ZI-data=17504  
+".\Lab4.axf" - 0 Error(s), 19 Warning(s).
+Load "C:\\Users\\Abhishek\\Documents\\ValvanoWareTM4C123\\EE445M Labs\\Lab4_4C123_FileSystem\\Lab4.axf" 
+Connecting: Mode=JTAG, Speed=1000000Hz
+Erase Done.
+Programming Done.
+Verify OK.
+Load "C:\\Users\\Abhishek\\Documents\\ValvanoWareTM4C123\\EE445M Labs\\Lab4_4C123_FileSystem\\Lab4.axf" 
+Connecting: Mode=JTAG, Speed=1000000Hz
+Erase Done.
+Programming Done.
+Verify OK.
