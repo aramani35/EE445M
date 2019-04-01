@@ -196,6 +196,7 @@ unsigned long time;      // in 10msec,  0 to 1000
   #else
   printf("Robot running...");
   #endif
+  eFile_Init();
   eFile_RedirectToFile(Name); // robot0, robot1,...,robot7
   #if UARTPRINT
   UART_OutString("time(sec)\tdata(volts)\tdistance(mm)");

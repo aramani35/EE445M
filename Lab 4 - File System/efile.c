@@ -34,7 +34,7 @@ typedef struct dir dirType;
 dirType DIR[NUMOFFILES];    // Global files list
 unsigned char fbuffer[512]; // Global buffer for reading/writing
 uint8_t Memory[BLOCKS];     // Blocks array corresponding to SDC data
-bool file_open = false;     // File Flag
+int file_open = 0;     // File Flag
 bool reader = false;        // Reading flag
 bool readFirstBlock = false;
 bool writeFirstBlock = false;
@@ -57,6 +57,13 @@ int eFile_Init(void){ // initialize file system
     if (eDisk_Init(0))
         return FAIL;
     return SUCCESS;
+}
+
+
+void clearBuffer(void) {
+	for (int h = 0; h < 512; h++) {
+		fbuffer[h] = 0;
+	}
 }
 
 
@@ -92,16 +99,30 @@ int writeDirectory(){
 // Output: 0 if successful and 1 on failure (e.g., trouble writing to flash)
 int eFile_Format(void){ // erase disk, add format
 	// OS_Wait(&fsysOpen);
-    for (int i=0; i<BLOCKSIZE; i++)
-            fbuffer[i] = 0;
+    clearBuffer();
 
-    for (int i=0; i<NUMOFFILES; i++) {
-		if (DIR[i].file_name[0] == 0) break;
+    for (int i = 1; i<NUMOFFILES; i++) {
+		if (DIR[i].file_name[0] == 0) continue;
 		
-        DIR[i].file_name[0] = 0;
-        DIR[i].start_block = 0;
-        DIR[i].size = 0;
+        int start = DIR[i].start_block;     // Empty memory blocks
+		for (int j = DIR[i].size; i > 0; j -= 512) {
+			Memory[start] = 0;
+			if(eDisk_WriteBlock(fbuffer, start)) {
+				OutCRLF();
+				UART_OutString("Writing to block number ");
+				UART_OutUDec(start);
+				UART_OutString(" failed.");
+				OutCRLF();
+				return FAIL;
+			}
+			start++;
     }
+    
+		DIR[i].file_name[0] = 0;            // Reninitalize to new 
+		DIR[i].size = 0;
+		DIR[i].start_block = 0;
+    }
+	
     writeDirectory();
     
     for(int i = 0; i < BLOCKS; i++){
@@ -111,13 +132,15 @@ int eFile_Format(void){ // erase disk, add format
 	// Clears directory
     if(eDisk_WriteBlock(fbuffer, DIRBLOCK)) {
 		// OS_Signal(&fsysOpen);
-		UART_OutString("Writing to DIR failed");
+		OutCRLF();
+		UART_OutString("Writing DIR block failed");
 		OutCRLF();
 		return FAIL;
 	}
 	
 	if (eDisk_WriteBlock(Memory, MEMBLOCK)) {
-		UART_OutString("Writing to MEM failed");
+		OutCRLF();
+		UART_OutString("Writing DIR block failed");
 		OutCRLF();
 		return FAIL;
 	}
@@ -185,11 +208,6 @@ int eFile_Create( char name[]){  // create new file, make it empty
     return SUCCESS;     
 }
 
-void clearBuffer(void) {
-	for (int h = 0; h < 512; h++) {
-		fbuffer[h] = 0;
-	}
-}
 
 //---------- eFile_WOpen-----------------
 // Open the file, read into RAM last block
@@ -214,8 +232,9 @@ int eFile_WOpen(char name[]){               // open a file for writing
 		OutCRLF();
 		return FAIL;   // Fail if out of range
 	}
+	
     file_open = index;                      // Set global
-    int length = DIR[index].size;           // Length in bytes
+	int length = DIR[index].size;           // Length in bytes
     int start = DIR[index].start_block;     // start block
     int last = start;                       // last block
     while (1){                              // Loop till last block found
@@ -227,9 +246,9 @@ int eFile_WOpen(char name[]){               // open a file for writing
             break;
     }
 	
-	write_index = length;	// write_index is index of last byte entry in block
     //!!!! may need end of block size
     curr_block = last;                      // Update Global
+
 	
 	if (curr_block == start) {
 		writeFirstBlock = true; 
@@ -241,13 +260,13 @@ int eFile_WOpen(char name[]){               // open a file for writing
 	
     if (eDisk_ReadBlock(fbuffer, last)) {
 		// OS_Signal(&fsysOpen);
+		OutCRLF();
 		UART_OutString("Error. Couldn't read block number ");
 		UART_OutUDec(last);
 		OutCRLF();
 		return FAIL; // Read into RAM
 	}
 	
-	clearBuffer();
     return SUCCESS;   
 }
 

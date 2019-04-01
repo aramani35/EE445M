@@ -400,13 +400,14 @@ int fileCall(int numArgs, char* args[]) {
 	
 	int status; // used to check status of command
 	
+	OutCRLF();
+	
 	if (numArgs != 2 && numArgs != 3) {
 		UART_OutString("Invalid command. Try print dir, print file, delete, etc");
 		return 0;
 	}
 	
 	if (numArgs == 2) {
-		OutCRLF();
 		
 		if (!strcmp(args[1], "format")) {
 			status = eFile_Init();
@@ -427,6 +428,15 @@ int fileCall(int numArgs, char* args[]) {
 			OutCRLF();
 		}
 		
+		else if (!strcmp(args[1], "init")) {
+			status = eFile_Init();
+			if (status == 0)
+				UART_OutString("Initializing file system succeeded");
+			else
+				UART_OutString("Error. Can't init fsys");
+			
+			OutCRLF();
+		}
 	}
 	
 	else if (numArgs == 3) {
