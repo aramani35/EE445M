@@ -84,7 +84,7 @@
 #include "PLL.h"
 #include "UART.h"
 
-#define UARTPRINT 1
+#define UARTPRINT 0
 
 //*********Prototype for FFT in cr4_fft_64_stm32.s, STMicroelectronics
 void cr4_fft_64_stm32(void *pssOUT, void *pssIN, unsigned short Nbin);
@@ -302,7 +302,7 @@ extern void Interpreter(void);
 // execute   eFile_Init();  after periodic interrupts have started
 
 //*******************lab 4 main **********
-int realmain(void){        // lab 4 realmain
+int main(void){        // lab 4 realmain
   OS_Init();           // initialize, disable interrupts
   Running = 0;         // robot not running
   DataLost = 0;        // lost data between producer and consumer
@@ -382,7 +382,7 @@ int Testmain0(void){  // Testmain0
 }
 //*****************test project 1*************************
 unsigned char buffer[512];
-#define MAXBLOCKS 100
+#define MAXBLOCKS 4096
 void diskError(char* errtype, unsigned long n){
   #if UARTPRINT
   UART_OutString(errtype);
@@ -414,7 +414,7 @@ void TestDisk(void){  DSTATUS result;  unsigned short block;  int i; unsigned lo
   n = 1;    // seed
   for(block = 0; block < MAXBLOCKS; block++){
     for(i=0;i<512;i++){
-      n = (16807*n)%2147483647; // pseudo random sequence
+      n = (16807*n)%2147483647 + block; // pseudo random sequence
       buffer[i] = 0xFF&n;        
     }
     PD3 = 0x08;     // PD3 high for 100 block writes
@@ -433,7 +433,7 @@ void TestDisk(void){  DSTATUS result;  unsigned short block;  int i; unsigned lo
     if(eDisk_ReadBlock(buffer,block))diskError("eDisk_ReadBlock",block); // read from disk
     PD2 = 0x00;
     for(i=0;i<512;i++){
-      n = (16807*n)%2147483647; // pseudo random sequence
+      n = (16807*n)%2147483647 + block; // pseudo random sequence
       if(buffer[i] != (0xFF&n)){
 		#if UARTPRINT
 		UART_OutString("Read data not correct, block=");
@@ -572,7 +572,7 @@ void SW1Push2(void){
 //******************* test main2 **********
 // SYSTICK interrupts, period established by OS_Launch
 // Timer interrupts, period established by first call to OS_AddPeriodicThread
-int main(void){ 
+int testmain2(void){ 
   OS_Init();           // initialize, disable interrupts
   ST7735_InitR(INITR_REDTAB);
   PortD_Init();
@@ -641,7 +641,7 @@ void SimpleUnformattedTest(void){ DSTATUS result; uint16_t block; int i; uint32_
 
 
 void formatTest(void){ DSTATUS result; uint16_t block; int i; uint32_t n; uint32_t errors = 0;
-  // simple test of eDisk
+    // simple test of eDisk
   
     result = eFile_Init();//eDisk_init(0);  // initialize disk
     if(result) diskError1("disk_initialize", result, 0);

@@ -15,7 +15,7 @@
 
 #define SUCCESS 0
 #define FAIL 1
-#define MAXBLOCKS 4096    // Each block is 512 bytes
+#define MAXBLOCKS 4096     // Each block is 512 bytes
 #define BLOCKS 4096        // Each block is 512 bytes
 #define BLOCKSIZE 512
 #define DIRBLOCK 0
@@ -109,8 +109,16 @@ int eFile_Format(void){ // erase disk, add format
     }
 	
 	// Clears directory
-    if(eDisk_WriteBlock(fbuffer, 0)) {
+    if(eDisk_WriteBlock(fbuffer, DIRBLOCK)) {
 		// OS_Signal(&fsysOpen);
+		UART_OutString("Writing to DIR failed");
+		OutCRLF();
+		return FAIL;
+	}
+	
+	if (eDisk_WriteBlock(Memory, MEMBLOCK)) {
+		UART_OutString("Writing to MEM failed");
+		OutCRLF();
 		return FAIL;
 	}
 	
@@ -142,7 +150,7 @@ int eFile_Create( char name[]){  // create new file, make it empty
     DIR[index].size = 0;                // Init new file size to 0
     
     int i;
-    for (i = 2; i < BLOCKS; i++){    // Loop till free space found; 0th block is DIRBLOCK, 1st block is MEMBLOCK
+    for (i = 2; i < BLOCKS; i++) {    // Loop till free space found; 0th block is DIRBLOCK, 1st block is MEMBLOCK
         if (Memory[i] == 0) { 
 			int j;
 			for (j = 1; j < 64; j++) {	// look for contiguous sequence of 10 blocks
@@ -160,6 +168,7 @@ int eFile_Create( char name[]){  // create new file, make it empty
 	for (int k = 0; k < 64; k++) {
 		Memory[i+k] = index;	// Memory entries contain file index they are taken up by 
 	}
+	
     DIR[index].start_block = i;
     
     if (writeDirectory()) {
@@ -365,7 +374,7 @@ int eFile_ReadNext( char *pt){       // get next byte
 // Input: none
 // Output: 0 if successful and 1 on failure (e.g., wasn't open)
 int eFile_RClose(void){ // close the file for writing
-    if (!file_open || (file_open && reader)) return FAIL;      // Make sure file is open & no one reading
+    if (!file_open || !reader) return FAIL;      // Make sure file is open & no one reading
     file_open = false;
     reader = false;
     return SUCCESS;

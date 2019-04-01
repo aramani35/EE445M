@@ -406,7 +406,16 @@ int fileCall(int numArgs, char* args[]) {
 	}
 	
 	if (numArgs == 2) {
+		OutCRLF();
+		
 		if (!strcmp(args[1], "format")) {
+			status = eFile_Init();
+			if (status == 0)
+				UART_OutString("Initializing file system succeeded");
+			else
+				UART_OutString("Error. Can't init fsys");
+			
+			OutCRLF();
 			UART_OutString("Formatting SD Card");
 			OutCRLF();
 			status = eFile_Format();
@@ -417,6 +426,7 @@ int fileCall(int numArgs, char* args[]) {
 			
 			OutCRLF();
 		}
+		
 	}
 	
 	else if (numArgs == 3) {

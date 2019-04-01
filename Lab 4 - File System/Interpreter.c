@@ -7,13 +7,20 @@
 #include "ST7735.h"
 #include "os.h"
 #include "ADC.h"
-#include "UART2.h"
+#include "UART.h"
 #include "efile.h"
 #include "eDisk.h"
 #include <string.h> 
 #include <stdio.h>
-
+#include "cmdline.h"
 
 void Interpreter(void) {  
+	char stringBuf[20];
+	while(1) {
+		OutCRLF();
+		UART_OutString("Please enter a command: ");
+		UART_InString(stringBuf, 19);
+		CmdLineProcess(stringBuf);
+	}
 }
 
