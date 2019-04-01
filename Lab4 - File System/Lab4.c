@@ -76,13 +76,13 @@
 #include "../inc/tm4c123gh6pm.h"
 #include "ST7735.h"
 #include "ADC.h"
-#include "UART.h"
 #include "eDisk.h"
 #include "eFile.h"
 #include <string.h> 
 #include <stdio.h>
 #include <stdint.h>
 #include "PLL.h"
+#include "UART.h"
 
 #define UARTPRINT 1
 
@@ -506,7 +506,7 @@ int testmain1(void){   // testmain1
 //*****************test project 2*************************
 
 void TestFile(void){   int i; char data; 
-  
+  ST7735_FillScreen(0);
   unsigned char testBuf[512];
   #if UARTPRINT
   UART_OutString("\n\rEE445M/EE380L, Lab 4 eFile test");

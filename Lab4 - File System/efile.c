@@ -5,12 +5,13 @@
 #include <string.h>
 #include <math.h>
 #include "edisk.h"
-#include "UART2.h"
 #include <stdio.h>
 #include <stdint.h>
 #include <stdbool.h>
 #include "efile.h"
 #include "OS.h"
+#include "UART.h"
+
 
 #define SUCCESS 0
 #define FAIL 1
@@ -189,6 +190,8 @@ int eFile_WOpen(char name[]){               // open a file for writing
 	// OS_Wait(&fsysOpen);
     if (file_open) {
 		// OS_Signal(&fsysOpen);
+		UART_OutString("Error: File open");
+		OutCRLF();
 		return FAIL;             // Fail if file already open
 	}
     reader = false;                         // Dont allow reading 
@@ -198,6 +201,8 @@ int eFile_WOpen(char name[]){               // open a file for writing
 	}
     if (index >= NUMOFFILES) {
 		// OS_Signal(&fsysOpen);
+		UART_OutString("Error: index is too big");
+		OutCRLF();
 		return FAIL;   // Fail if out of range
 	}
     file_open = index;                      // Set global
@@ -227,6 +232,9 @@ int eFile_WOpen(char name[]){               // open a file for writing
 	
     if (eDisk_ReadBlock(fbuffer, last)) {
 		// OS_Signal(&fsysOpen);
+		UART_OutString("Error. Couldn't read block number ");
+		UART_OutUDec(last);
+		OutCRLF();
 		return FAIL; // Read into RAM
 	}
 	
@@ -270,6 +278,7 @@ int eFile_Close(void) {
 //    if (eDisk_Write(0, Memory, 1, BLOCKS/BLOCKSIZE)) return FAIL;
     eFile_WClose();                     // Close writing and reading
     eFile_RClose();
+	file_open = false;
   return SUCCESS;     
 }
 
