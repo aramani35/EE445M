@@ -235,7 +235,7 @@ void OS_Init(void){
     //PLL_Init(Bus80MHz);
     PLL_Init();
     UART_Init();              // initialize UART
-    ST7735_InitB();//Output_Init();
+    ST7735_InitR(INITR_REDTAB);//Output_Init();
     WTimer0A_Init(); // sleep
     OS_InitSemaphore(&SW1sem, 0);
     OS_InitSemaphore(&SW2sem, 0);

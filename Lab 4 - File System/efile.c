@@ -105,9 +105,12 @@ int eFile_Format(void){ // erase disk, add format
 		if (DIR[i].file_name[0] == 0) continue;
 		
         int start = DIR[i].start_block;     // Empty memory blocks
-		for (int j = DIR[i].size; i > 0; j -= 512) {
+		for (int j = DIR[i].size; j > 0; j -= 512) {
 			Memory[start] = 0;
-			if(eDisk_WriteBlock(fbuffer, start)) {
+			
+			int status = eDisk_WriteBlock(fbuffer, start);
+			
+			if(status != 0) {
 				OutCRLF();
 				UART_OutString("Writing to block number ");
 				UART_OutUDec(start);

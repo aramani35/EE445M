@@ -191,6 +191,7 @@ unsigned long time;      // in 10msec,  0 to 1000
   OS_ClearMsTime();    
   DataLost = 0;          // new run with no lost data 
   OS_Fifo_Init(256);
+  ST7735_FillScreen(0);
   #if UARTPRINT
   UART_OutString("Robot running...");
   #else
@@ -202,7 +203,7 @@ unsigned long time;      // in 10msec,  0 to 1000
   UART_OutString("time(sec)\tdata(volts)\tdistance(mm)");
   OutCRLF();
   #else
-  printf("time(sec)\tdata(volts)\tdistance(mm)\n\r");
+  printf("time(sec)\t\tdata(volts)\t\tdistance(mm)\n\r");
   #endif
 	do{
     PIDWork++;    // performance measurement
@@ -303,7 +304,7 @@ extern void Interpreter(void);
 // execute   eFile_Init();  after periodic interrupts have started
 
 //*******************lab 4 main **********
-int main(void){        // lab 4 realmain
+int realmain(void){        // lab 4 realmain
   OS_Init();           // initialize, disable interrupts
   Running = 0;         // robot not running
   DataLost = 0;        // lost data between producer and consumer
@@ -602,6 +603,7 @@ void diskError1(char *errtype, int32_t code, int32_t block){
   ST7735_DrawString(0, 2, "Block:", ST7735_Color565(255, 0, 0));
 //  ST7735_SetCursor(7, 2);
 //  ST7735_OutUDec(block);
+	
   while(1){};
 }
 
@@ -668,7 +670,7 @@ void formatTest(void){ DSTATUS result; uint16_t block; int i; uint32_t n; uint32
 
 void quickTest(void){ DSTATUS result; uint16_t block; int i; uint32_t n; uint32_t errors = 0;
   // simple test of eDisk
-  
+  while(1) {
     result = eFile_Init();//eDisk_init(0);  // initialize disk
     if(result) diskError1("disk_initialize", result, 0);
     result = eFile_Format();
@@ -695,8 +697,8 @@ void quickTest(void){ DSTATUS result; uint16_t block; int i; uint32_t n; uint32_
     for(i=0; i<512; i++){
         n = buffer[i];
     }
-
   }
+}
 
 void badFileTest(void){
     int result;
@@ -705,20 +707,30 @@ void badFileTest(void){
     result = eFile_Format();
     if(result) diskError1("disk_initialize", result, 0);
     
-    eFile_WOpen("test.txt"); // file not made
-    eFile_WOpen("test.txt"); // file not made
+    result = eFile_WOpen("test.txt"); // file not made
+	 if(result) diskError1("WOpen 1", result, 0);
+    result = eFile_WOpen("test.txt"); // file not made
+     if(result) diskError1("WOpen 2", result, 0);
+	
+    result = eFile_ROpen("test.txt"); // file not made
+	 if(result) diskError1("ROpen nonexistent", result, 0);
+	
+    result = eFile_ROpen("test.txt"); // file not made
+     if(result) diskError1("ROpen nonexistent", result, 0);
+	
+	
+    result = eFile_Delete("test.txt"); // delete none existed file
+ if(result) diskError1("delete nonexistent", result, 0);
     
-    eFile_ROpen("test.txt"); // file not made
-    eFile_ROpen("test.txt"); // file not made
-    
-    eFile_Delete("test.txt"); // delete none existed file
-
-    
-    eFile_Create("test.txt"); // Make file
+    result = eFile_Create("test.txt"); // Make file
+	 if(result) diskError1("error making file", result, 0);
     eFile_Create("test.txt"); // Make file twice
+	 if(result) diskError1("error making file twice", result, 0);
     
-    eFile_WOpen("tes.txt"); // Open wrong file
-    eFile_ROpen("tes.txt"); // Open wrong file
+    result = eFile_WOpen("tes.txt"); // Open wrong file
+	 if(result) diskError1("error opening wrong file", result, 0);
+    result = eFile_ROpen("tes.txt"); // Open wrong file
+	 if(result) diskError1("error opening wrong file", result, 0);
 }
   
   
@@ -760,9 +772,11 @@ int testermain(void){     // testermain
     PLL_Init();    // 80 MHz
     ST7735_InitR(INITR_REDTAB);
     ST7735_FillScreen(0);                 // set screen to black
+	UART_Init();
     EnableInterrupts();
-    quickTest();
-    formatTest();
+//    quickTest();
+//    formatTest();
+	badFileTest();
     //SimpleUnformattedTest();
     while(1){}
 }
