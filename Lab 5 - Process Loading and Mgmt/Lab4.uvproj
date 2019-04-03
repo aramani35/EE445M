@@ -441,11 +441,6 @@
               <FilePath>.\Interpreter.c</FilePath>
             </File>
             <File>
-              <FileName>Lab4.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\Lab4.c</FilePath>
-            </File>
-            <File>
               <FileName>ADCSWTrigger.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\ADCSWTrigger.c</FilePath>
@@ -569,6 +564,11 @@
               <FileName>integer.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\integer.h</FilePath>
+            </File>
+            <File>
+              <FileName>Lab5.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Lab5.c</FilePath>
             </File>
           </Files>
         </Group>

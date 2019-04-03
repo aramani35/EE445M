@@ -421,11 +421,6 @@
               <FilePath>.\ST7735.c</FilePath>
             </File>
             <File>
-              <FileName>UART2.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\UART2.c</FilePath>
-            </File>
-            <File>
               <FileName>OS.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\OS.c</FilePath>
@@ -441,24 +436,9 @@
               <FilePath>.\ADC.c</FilePath>
             </File>
             <File>
-              <FileName>cr4_fft_64_stm32.s</FileName>
-              <FileType>2</FileType>
-              <FilePath>.\cr4_fft_64_stm32.s</FilePath>
-            </File>
-            <File>
               <FileName>Interpreter.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\Interpreter.c</FilePath>
-            </File>
-            <File>
-              <FileName>eDisk.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\eDisk.c</FilePath>
-            </File>
-            <File>
-              <FileName>efile.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\efile.c</FilePath>
             </File>
             <File>
               <FileName>Lab4.c</FileName>
@@ -526,16 +506,6 @@
               <FilePath>.\EdgeTriggered.h</FilePath>
             </File>
             <File>
-              <FileName>edisk.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\edisk.h</FilePath>
-            </File>
-            <File>
-              <FileName>efile.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\efile.h</FilePath>
-            </File>
-            <File>
               <FileName>FIFO.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FIFO.h</FilePath>
@@ -571,9 +541,34 @@
               <FilePath>.\UART.h</FilePath>
             </File>
             <File>
-              <FileName>UART2.h</FileName>
+              <FileName>diskio.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\diskio.c</FilePath>
+            </File>
+            <File>
+              <FileName>ff.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\ff.c</FilePath>
+            </File>
+            <File>
+              <FileName>diskio.h</FileName>
               <FileType>5</FileType>
-              <FilePath>.\UART2.h</FilePath>
+              <FilePath>.\diskio.h</FilePath>
+            </File>
+            <File>
+              <FileName>ff.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\ff.h</FilePath>
+            </File>
+            <File>
+              <FileName>ffconf.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\ffconf.h</FilePath>
+            </File>
+            <File>
+              <FileName>integer.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\integer.h</FilePath>
             </File>
           </Files>
         </Group>
