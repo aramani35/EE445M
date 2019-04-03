@@ -38,6 +38,7 @@ void (*SWOneTask)(void);        // SW1 task to execute
 void (*SWTwoTask)(void);        // SW2 task to execute
 
 //#define TIMESLICE
+#define MAXPROCESSES 5
 #define OSFIFOSIZE  250
 #define NUMTHREADS  20           // maximum number of threads
 #define STACKSIZE   100         // number of 32-bit words in stack
@@ -72,6 +73,7 @@ Sema4Type SW2sem;
 TCBtype *runPT = 0;
 TCBtype *nextPT = 0;
 TCBtype TCBs[NUMTHREADS];
+PCBtype PCBs[MAXPROCESSES];
 unsigned int numTasks = 0;
 int16_t CurrentID;
 uint32_t time_slice;
@@ -486,6 +488,30 @@ int OS_AddThreadPri(TCBtype *threadPT, uint32_t priority) {
 
 
 int OS_AddProcess(void(*entry)(void), void *text, void *data, unsigned long stackSize, unsigned long priority){
+    long status = StartCritical();
+    PCBtype *unusedProcess;
+    
+    // Loop to find free process
+    int index;
+	for(index = 0; index < MAXPROCESSES; index++){
+		if(PCBs[index].pid == 0){
+			break;
+		}
+	}
+    // No room
+    if(index == MAXPROCESSES){
+		EndCritical(status);
+		return 1;
+	}
+    
+    // Update components
+    unusedProcess = &PCBs[index];
+	unusedProcess->pid = 22;	//Current ID is incremented forever for different IDs
+//	unusedProcess->code
+//	unusedProcess->data
+	unusedProcess->num_threads = 1;
+    
+    // Add new process thread
     return 0;
 }
 

@@ -46,7 +46,7 @@ struct PCB{
 	uint16_t pid;
 	uint8_t num_threads;
 };
-typedef struct PCB pcbType;
+typedef struct PCB PCBtype;
 
 
 // feel free to change the type of semaphore, there are lots of good solutions
