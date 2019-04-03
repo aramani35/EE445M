@@ -1,0 +1,11 @@
+.\efile.o: efile.c
+.\efile.o: C:\Keil\ARM\ARMCC\bin\..\include\string.h
+.\efile.o: C:\Keil\ARM\ARMCC\bin\..\include\math.h
+.\efile.o: edisk.h
+.\efile.o: C:\Keil\ARM\ARMCC\bin\..\include\stdio.h
+.\efile.o: C:\Keil\ARM\ARMCC\bin\..\include\stdint.h
+.\efile.o: C:\Keil\ARM\ARMCC\bin\..\include\stdbool.h
+.\efile.o: efile.h
+.\efile.o: OS.h
+.\efile.o: ..\../inc/tm4c123gh6pm.h
+.\efile.o: UART.h

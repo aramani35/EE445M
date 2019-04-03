@@ -1,0 +1,12 @@
+.\cmdline.o: cmdline.c
+.\cmdline.o: C:\Keil\ARM\ARMCC\bin\..\include\stdint.h
+.\cmdline.o: C:\Keil\ARM\ARMCC\bin\..\include\stdbool.h
+.\cmdline.o: C:\Keil\ARM\ARMCC\bin\..\include\string.h
+.\cmdline.o: C:\Keil\ARM\ARMCC\bin\..\include\math.h
+.\cmdline.o: cmdline.h
+.\cmdline.o: ADC.h
+.\cmdline.o: ST7735.h
+.\cmdline.o: OS.h
+.\cmdline.o: ..\../inc/tm4c123gh6pm.h
+.\cmdline.o: UART.h
+.\cmdline.o: efile.h
