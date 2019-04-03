@@ -103,14 +103,14 @@ unsigned char buffer[512];
 // the error was caused by a mistake in configuring SSI0, then
 // the LCD will probably not work.
 void diskError(char *errtype, int32_t code, int32_t block){
-  ST7735_DrawString(0, 0, "Error:", ST7735_Color565(255, 0, 0));
-  ST7735_DrawString(7, 0, errtype, ST7735_Color565(255, 0, 0));
-  ST7735_DrawString(0, 1, "Code:", ST7735_Color565(255, 0, 0));
-//  // ST7735_SetCursor(6, 1);
-//  // ST7735_SetTextColor(ST7735_Color565(255, 0, 0));
+//  ST7735_DrawString(0, 0, "Error:", ST7735_Color565(255, 0, 0));
+//  ST7735_DrawString(7, 0, errtype, ST7735_Color565(255, 0, 0));
+//  ST7735_DrawString(0, 1, "Code:", ST7735_Color565(255, 0, 0));
+//  ST7735_SetCursor(6, 1);
+//  ST7735_SetTextColor(ST7735_Color565(255, 0, 0));
 //  ST7735_OutUDec(code);
-  ST7735_DrawString(0, 2, "Block:", ST7735_Color565(255, 0, 0));
-//  // ST7735_SetCursor(7, 2);
+//  ST7735_DrawString(0, 2, "Block:", ST7735_Color565(255, 0, 0));
+//  ST7735_SetCursor(7, 2);
 //  ST7735_OutUDec(block);
   while(1){};
 }
@@ -140,11 +140,11 @@ void SimpleUnformattedTest(void){ DSTATUS result; uint16_t block; int i; uint32_
       }
     }
   }
-  ST7735_DrawString(0, 0, "Test done", ST7735_Color565(0, 255, 0));
-  ST7735_DrawString(0, 1, "Mismatches:", ST7735_Color565(0, 255, 0));
-  // ST7735_SetCursor(12, 1);
-  // ST7735_SetTextColor(ST7735_Color565(0, 255, 0));
-  ST7735_OutUDec(errors);
+//  ST7735_DrawString(0, 0, "Test done", ST7735_Color565(0, 255, 0));
+//  ST7735_DrawString(0, 1, "Mismatches:", ST7735_Color565(0, 255, 0));
+//  ST7735_SetCursor(12, 1);
+//  ST7735_SetTextColor(ST7735_Color565(0, 255, 0));
+//  ST7735_OutUDec(errors);
 }
 #define FILETESTSIZE 10000
 void FileSystemTest(void){
@@ -201,8 +201,8 @@ void FileSystemTest(void){
     }
   } else{
     ST7735_DrawString(0, 0, "Error testFile.txt (  )", ST7735_Color565(255, 0, 0));
-    // ST7735_SetCursor(20, 0);
-    // ST7735_SetTextColor(ST7735_Color565(255, 0, 0));
+    ST7735_SetCursor(20, 0);
+    ST7735_SetTextColor(ST7735_Color565(255, 0, 0));
     ST7735_OutUDec((uint32_t)Fresult);
     while(1){};
   }
@@ -231,8 +231,8 @@ void FileSystemTest(void){
     }
   } else{
     ST7735_DrawString(0, 0, "Error out.txt (  )", ST7735_Color565(255, 0, 0));
-    // ST7735_SetCursor(15, 0);
-    // ST7735_SetTextColor(ST7735_Color565(255, 0, 0));
+    ST7735_SetCursor(15, 0);
+    ST7735_SetTextColor(ST7735_Color565(255, 0, 0));
     ST7735_OutUDec((uint32_t)Fresult);
   }*/
 }
@@ -248,13 +248,19 @@ int main(void){
   ST7735_FillScreen(0);                 // set screen to black
   EnableInterrupts();
 //  SimpleUnformattedTest();              // comment this out if continuing to the advanced file system tests
-//  FileSystemTest();                     // comment this out if file system works
   MountFresult = f_mount(&g_sFatFs, "", 0);
   if(MountFresult){
     ST7735_DrawString(0, 0, "f_mount error", ST7735_Color565(0, 0, 255));
     while(1){};
   }
+  FileSystemTest();                     // comment this out if file system works
   // open the file to be read
+//  Fresult = f_open(&Handle, "Proc.axf", FA_READ);
+//  if(Fresult != FR_OK){
+//    ST7735_DrawString(0, 0, "Proc.axf f_open error", ST7735_Color565(0, 0, 255));
+//    while(1){
+//    }
+//  }
   Fresult = f_open(&Handle, inFilename, FA_READ);
   if(Fresult == FR_OK){
     ST7735_DrawString(0, 0, "Opened ", ST7735_Color565(0, 255, 0));
@@ -286,8 +292,8 @@ int main(void){
     // print the error code
     ST7735_DrawString(0, 0, "Error          (  )", ST7735_Color565(255, 0, 0));
     ST7735_DrawString(6, 0, (char *)inFilename, ST7735_Color565(255, 0, 0));
-    // ST7735_SetCursor(16, 0);
-    // ST7735_SetTextColor(ST7735_Color565(255, 0, 0));
+    ST7735_SetCursor(16, 0);
+    ST7735_SetTextColor(ST7735_Color565(255, 0, 0));
     ST7735_OutUDec((uint32_t)Fresult);
   }
 
@@ -309,18 +315,18 @@ int main(void){
       // print the number of successful writes
       // expect: third parameter of f_write()
       ST7735_DrawString(0, 15, "Writes:    @", ST7735_Color565(0, 255, 0));
-      // ST7735_SetCursor(8, 15);
-      // ST7735_SetTextColor(ST7735_Color565(255, 255, 255));
+      ST7735_SetCursor(8, 15);
+      ST7735_SetTextColor(ST7735_Color565(255, 255, 255));
       ST7735_OutUDec((uint32_t)successfulwrites);
-      // ST7735_SetCursor(13, 15);
+      ST7735_SetCursor(13, 15);
       // print the byte offset from the start of the file where the writes started
       // expect: (third parameter of f_write())*(number of times this program has been run before)
       ST7735_OutUDec((uint32_t)(Handle.fptr - successfulwrites));
     } else{
       // print the error code
       ST7735_DrawString(0, 15, "f_write() error (  )", ST7735_Color565(255, 0, 0));
-      // ST7735_SetCursor(17, 15);
-      // ST7735_SetTextColor(ST7735_Color565(255, 0, 0));
+      ST7735_SetCursor(17, 15);
+      ST7735_SetTextColor(ST7735_Color565(255, 0, 0));
       ST7735_OutUDec((uint32_t)Fresult);
     }
     // close the file
@@ -329,8 +335,8 @@ int main(void){
     // print the error code
     ST7735_DrawString(0, 14, "Error          (  )", ST7735_Color565(255, 0, 0));
     ST7735_DrawString(6, 14, (char *)outFilename, ST7735_Color565(255, 0, 0));
-    // ST7735_SetCursor(16, 14);
-    // ST7735_SetTextColor(ST7735_Color565(255, 0, 0));
+    ST7735_SetCursor(16, 14);
+    ST7735_SetTextColor(ST7735_Color565(255, 0, 0));
     ST7735_OutUDec((uint32_t)Fresult);
   }
   while(1){};

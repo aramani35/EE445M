@@ -111,10 +111,10 @@ ARM Macro Assembler    Page 2
    79 00000020         ; BL threadRecordProfiler
    80 00000020 F85D EB04       POP              {LR}
    81 00000024 E92D 0FF0       PUSH             {R4 - R11}
-   82 00000028 480E            LDR              R0, =runPT
+   82 00000028 4810            LDR              R0, =runPT
    83 0000002A 6801            LDR              R1, [R0]
    84 0000002C F8C1 D000       STR              SP, [R1]
-   85 00000030 490D            LDR              R1, =nextPT
+   85 00000030 490F            LDR              R1, =nextPT
    86 00000032 680A            LDR              R2, [R1]
    87 00000034 6002            STR              R2, [R0]
    88 00000036 F8D2 D000       LDR              SP, [R2]
@@ -201,7 +201,7 @@ ARM Macro Assembler    Page 4
 
   141 00000042         
   142 00000042         StartOS
-  143 00000042 4808            LDR              R0, =runPT  ; currently running
+  143 00000042 480A            LDR              R0, =runPT  ; currently running
                                                              thread
   144 00000044 6802            LDR              R2, [R0]    ; R2 = value of Run
                                                             Pt
@@ -223,8 +223,35 @@ ARM Macro Assembler    Page 4
   153 00000060 4770            BX               LR          ; start first threa
                                                             d
   154 00000062         
-  155 00000062 00 00           ALIGN
-  156 00000064                 END
+  155 00000062         ;SVC_Handler
+  156 00000062         ;LDR R12,[SP,#24]    ; Return address
+  157 00000062         ;LDRH R12,[R12,#-2]    ; SVC instruction is 2 bytes
+  158 00000062         ;BIC R12,#0xFF00    ; Extract trap numbers (ID) in R12
+  159 00000062         ;LDM SP,{R0-R3}     ; Get any parameters
+  160 00000062         
+  161 00000062         ;PUSH {LR}
+  162 00000062         ;LDR LR, =Return
+  163 00000062         ;CMP R12, #0
+  164 00000062         ;BEQ OS_AddThread
+  165 00000062         ;CMP R12, #1
+  166 00000062         ;BEQ OS_Kill
+  167 00000062         ;CMP R12, #2
+  168 00000062         ;BEQ OS_Sleep
+  169 00000062         ;CMP R12, #3
+  170 00000062         ;BEQ OS_Time
+  171 00000062         ;CMP R12, #4
+  172 00000062         ;BEQ OS_Id
+  173 00000062         
+  174 00000062         Return
+  175 00000062 F85D EB04       POP              {LR}
+  176 00000066 9000            STR              R0,[SP]     ; Store return valu
+                                                            e
+  177 00000068 4770            BX               LR          ; Return from excep
+                                                            tion
+  178 0000006A         
+  179 0000006A         
+  180 0000006A 00 00           ALIGN
+  181 0000006C                 END
               00000000 
               00000000 
 Command Line: --debug --xref --cpu=Cortex-M4 --apcs=interwork --depend=.\osasm.
@@ -268,6 +295,14 @@ Symbol: PendSV_Handler
    Uses
       At line 37 in file osasm.s
 Comment: PendSV_Handler used once
+Return 00000062
+
+Symbol: Return
+   Definitions
+      At line 174 in file osasm.s
+   Uses
+      None
+Comment: Return unused
 StartOS 00000042
 
 Symbol: StartOS
@@ -276,7 +311,7 @@ Symbol: StartOS
    Uses
       At line 35 in file osasm.s
 Comment: StartOS used once
-5 symbols
+6 symbols
 
 
 
@@ -333,4 +368,4 @@ Symbol: threadRecordProfiler
       None
 Comment: threadRecordProfiler unused
 6 symbols
-344 symbols in table
+345 symbols in table
