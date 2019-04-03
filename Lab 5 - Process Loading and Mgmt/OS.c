@@ -484,6 +484,13 @@ int OS_AddThreadPri(TCBtype *threadPT, uint32_t priority) {
 }
 
 
+
+int OS_AddProcess(void(*entry)(void), void *text, void *data, unsigned long stackSize, unsigned long priority){
+    return 0;
+}
+
+
+
 //******** OS_AddThread *************** 
 // add a foregound thread to the scheduler
 // Inputs: pointer to a void/void foreground task

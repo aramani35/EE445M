@@ -40,6 +40,15 @@ struct TCB {
 typedef struct TCB TCBtype;
 
 
+struct PCB{
+	int32_t *data;
+	int32_t *code;
+	uint16_t pid;
+	uint8_t num_threads;
+};
+typedef struct PCB pcbType;
+
+
 // feel free to change the type of semaphore, there are lots of good solutions
 struct  Sema4{
 	long Value;   // >0 means free, otherwise means busy        
@@ -322,3 +331,9 @@ int OS_ClearCriticalTime(void);
 // May need global array that will be printed in cmdline.h
 // Reader-writer semaphores may be necessary
 int OS_GetProfilerAndReset(void);
+
+
+int OS_AddProcess(void(*entry)(void), void *text, void *data, 
+                  unsigned long stackSize, unsigned long priority);
+
+
