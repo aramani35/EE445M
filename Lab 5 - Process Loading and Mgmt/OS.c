@@ -231,7 +231,7 @@ void OS_Init(void){
     MaxJitter = 0;
     MaxJitter2 = 0;
     //PLL_Init(Bus80MHz);
-    PLL_Init();
+    PLL_Init(Bus80MHz);
     UART_Init();              // initialize UART
     ST7735_InitR(INITR_REDTAB);//Output_Init();
     WTimer0A_Init(); // sleep

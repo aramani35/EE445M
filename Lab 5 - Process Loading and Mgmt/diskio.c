@@ -77,9 +77,12 @@ void CS_Init(void){
 // SSIClk = PIOSC / (CPSDVSR * (1 + SCR)) = 16 MHz/CPSDVSR
 // 40 for   400,000 bps slow mode, used during initialization
 // 2  for 8,000,000 bps fast mode, used during disk I/O
-void Timer5_Init(void);
+// void Timer5_Init(void);
+void WTimer0B_Init(void);
+
 void SSI0_Init(uint32_t CPSDVSR){
-  Timer5_Init();                        // initialize Timer5 for 1 ms interrupts
+  // Timer5_Init();                        // initialize Timer5 for 1 ms interrupts
+  void WTimer0B_Init(void);
   CS_Init();                            // initialize whichever GPIO pin is CS for the SD card
   // initialize Port A
   SYSCTL_RCGCGPIO_R |= 0x01;            // activate clock for Port A
@@ -643,24 +646,45 @@ void disk_timerproc (void)
 }
 
 
-void Timer5_Init(void){
-  SYSCTL_RCGCTIMER_R |= 0x20;
-  while((SYSCTL_PRTIMER_R&0x20) == 0){};
-  TIMER5_CTL_R = 0x00000000;       // 1) disable timer5 during setup
-  TIMER5_CFG_R = 0x00000000;       // 2) configure for 32-bit mode
-  TIMER5_TAMR_R = 0x00000002;      // 3) configure for periodic mode, default down-count settings
-  TIMER5_TAILR_R = 79999;          // 4) reload value, 1 ms, 80 MHz clock
-  TIMER5_TAPR_R = 0;               // 5) bus clock resolution
-  TIMER5_ICR_R = 0x00000001;       // 6) clear timer5A timeout flag
-  TIMER5_IMR_R = 0x00000001;       // 7) arm timeout interrupt
-  NVIC_PRI23_R = (NVIC_PRI23_R&0xFFFFFF00)|0x00000040; // 8) priority 2
-// interrupts enabled in the main program after all devices initialized
-// vector number 108, interrupt number 92
-  NVIC_EN2_R = 0x10000000;         // 9) enable interrupt 92 in NVIC
-  TIMER5_CTL_R = 0x00000001;       // 10) enable timer5A
+//void Timer5_Init(void){
+//  SYSCTL_RCGCTIMER_R |= 0x20;
+//  while((SYSCTL_PRTIMER_R&0x20) == 0){};
+//  TIMER5_CTL_R = 0x00000000;       // 1) disable timer5 during setup
+//  TIMER5_CFG_R = 0x00000000;       // 2) configure for 32-bit mode
+//  TIMER5_TAMR_R = 0x00000002;      // 3) configure for periodic mode, default down-count settings
+//  TIMER5_TAILR_R = 79999;          // 4) reload value, 1 ms, 80 MHz clock
+//  TIMER5_TAPR_R = 0;               // 5) bus clock resolution
+//  TIMER5_ICR_R = 0x00000001;       // 6) clear timer5A timeout flag
+//  TIMER5_IMR_R = 0x00000001;       // 7) arm timeout interrupt
+//  NVIC_PRI23_R = (NVIC_PRI23_R&0xFFFFFF00)|0x00000040; // 8) priority 2
+//// interrupts enabled in the main program after all devices initialized
+//// vector number 108, interrupt number 92
+//  NVIC_EN2_R = 0x10000000;         // 9) enable interrupt 92 in NVIC
+//  TIMER5_CTL_R = 0x00000001;       // 10) enable timer5A
+//}
+int Ddelay = 0;
+void WTimer0B_Init(void){ //Used for periodic Task 1
+	SYSCTL_RCGCWTIMER_R |= 0x01;   //  activate WTIMER0
+	Ddelay = SYSCTL_SCGCTIMER_R;
+    Ddelay = SYSCTL_SCGCTIMER_R; 
+	WTIMER0_CTL_R = (WTIMER0_CTL_R&~0x00001F00);    // disable Wtimer0A during setup
+ 	WTIMER0_CFG_R = 0x00000004;    // configure for 32-bit timer mode
+    WTIMER0_TBMR_R  = 0x00000002;   // configure for periodic mode, default down-count settings
+    WTIMER0_TBILR_R = 799999;    // start value for trigger
+    WTIMER0_TBPR_R = 0;            // prescale value for trigger
+	WTIMER0_ICR_R = 0x00000100;    // 6) clear WTIMER0A timeout flag
+    WTIMER0_IMR_R = (WTIMER0_IMR_R&~0x00001F00)|0x00000100;    // enable timeout interrupts
+    NVIC_PRI23_R = (NVIC_PRI23_R&0x00FFFFFF)| (0x02 << 29);
+	NVIC_EN2_R = 0x80000000;              // enable interrupt 94 in NVIC
+    WTIMER0_CTL_R |= 0x00000100;  
 }
+
 // Executed every 1 ms
-void Timer5A_Handler(void){
-  TIMER5_ICR_R = 0x00000001;       // acknowledge timer5A timeout
+//void Timer5A_Handler(void){
+//  TIMER5_ICR_R = 0x00000001;       // acknowledge timer5A timeout
+//  disk_timerproc();
+//}
+void WideTimer0B_Handler(void){ 
+  WTIMER0_ICR_R |= 0x0100;       // acknowledge timer5A timeout
   disk_timerproc();
 }

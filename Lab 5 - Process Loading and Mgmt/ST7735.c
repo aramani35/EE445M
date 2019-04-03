@@ -55,6 +55,8 @@
 #include "ST7735.h"
 #include "../inc/tm4c123gh6pm.h"
 #include "OS.h"
+#include "diskio.h"
+
 #define SDC_CS_PB0 1
 #define SDC_CS_PD7 0
 #if SDC_CS_PD7
@@ -654,19 +656,15 @@ void static commandList(const unsigned char *addr) {
 
 
 // Initialization code common to both 'B' and 'R' type displays
-void static commonInit(const uint8_t *cmdList) {
+void static commonInit(const unsigned char *cmdList) {
   ColStart  = RowStart = 0; // May be overridden in init func
-                                        // activate clock for Port A
-  SYSCTL_RCGCGPIO_R |= SYSCTL_RCGCGPIO_R0;
-                                        // allow time for clock to stabilize
-  while((SYSCTL_PRGPIO_R&SYSCTL_PRGPIO_R0) == 0){};
-                                        // activate clock for SSI0
-  SYSCTL_RCGCSSI_R |= SYSCTL_RCGCSSI_R0;
-                                        // allow time for clock to stabilize
-  while((SYSCTL_PRSSI_R&SYSCTL_PRSSI_R0) == 0){};
+  CS_Init();
+  SYSCTL_RCGCSSI_R |= 0x01;  // activate SSI0
+  SYSCTL_RCGCGPIO_R |= 0x01; // activate port A
+  while((SYSCTL_PRGPIO_R&0x01)==0){};
 
   // toggle RST low to reset; CS low so it'll listen to us
-  // SSI0Fss is used as GPIO
+  // SSI0Fss is temporarily used as GPIO
   GPIO_PORTA_DIR_R |= 0xC8;             // make PA3,6,7 out
   GPIO_PORTA_AFSEL_R &= ~0xC8;          // disable alt funct on PA3,6,7
   GPIO_PORTA_DEN_R |= 0xC8;             // enable digital I/O on PA3,6,7
@@ -683,35 +681,17 @@ void static commonInit(const uint8_t *cmdList) {
 
   // initialize SSI0
   GPIO_PORTA_AFSEL_R |= 0x34;           // enable alt funct on PA2,4,5
-  GPIO_PORTA_PUR_R |= 0x3C;             // enable weak pullup on PA2,3,4,5
   GPIO_PORTA_DEN_R |= 0x34;             // enable digital I/O on PA2,4,5
                                         // configure PA2,4,5 as SSI
-  GPIO_PORTA_PCTL_R = (GPIO_PORTA_PCTL_R&0xFF00F0FF)+0x00220200;
+  GPIO_PORTA_PCTL_R = (GPIO_PORTA_PCTL_R&0xFF0F00FF)+0x00202200;
   GPIO_PORTA_AMSEL_R &= ~0x34;          // disable analog functionality on PA2,4,5
-                                        // activate clock for Port D
-  SYSCTL_RCGCGPIO_R |= SYSCTL_RCGCGPIO_R3;
-                                        // allow time for clock to stabilize
-  while((SYSCTL_PRGPIO_R&SYSCTL_PRGPIO_R3) == 0){};
-  GPIO_PORTD_LOCK_R = 0x4C4F434B;       // unlock GPIO Port D
-  GPIO_PORTD_CR_R = 0xFF;               // allow changes to PD7-0
-  // only PD7 needs to be unlocked, other bits can't be locked
-  GPIO_PORTD_DIR_R |= 0x80;             // make PD7 out
-  GPIO_PORTD_AFSEL_R &= ~0x80;          // disable alt funct on PD7
-  GPIO_PORTD_PUR_R |= 0x80;             // enable weak pullup on PD7
-  GPIO_PORTD_DEN_R |= 0x80;             // enable digital I/O on PD7
-                                        // configure PD7 as GPIO
-  GPIO_PORTD_PCTL_R = (GPIO_PORTD_PCTL_R&0x0FFFFFFF)+0x00000000;
-  GPIO_PORTD_AMSEL_R &= ~0x80;          // disable analog functionality on PD7
-  SDC_CS = SDC_CS_HIGH;
   SSI0_CR1_R &= ~SSI_CR1_SSE;           // disable SSI
   SSI0_CR1_R &= ~SSI_CR1_MS;            // master mode
-                                        // configure for clock from source PIOSC for baud clock source
-  SSI0_CC_R = (SSI0_CC_R&~SSI_CC_CS_M)+SSI_CC_CS_PIOSC;
-                                        // clock divider for 8 MHz SSIClk (16 MHz PIOSC/2)
-                                        // PIOSC/(CPSDVSR*(1+SCR))
-                                        // 16/(2*(1+0)) = 8 MHz
-  SSI0_CPSR_R = (SSI0_CPSR_R&~SSI_CPSR_CPSDVSR_M)+2; // must be even number
-  SSI0_CR0_R &= ~(SSI_CR0_SCR_M |       // SCR = 0 (8 Mbps data rate)
+                                        // clock divider for 10 MHz SSIClk (assumes 80 MHz PIOSC)
+  SSI0_CPSR_R = (SSI0_CPSR_R&~SSI_CPSR_CPSDVSR_M)+8; 
+  // CPSDVSR must be even from 2 to 254
+  
+  SSI0_CR0_R &= ~(SSI_CR0_SCR_M |       // SCR = 0 (80 Mbps base clock)
                   SSI_CR0_SPH |         // SPH = 0
                   SSI_CR0_SPO);         // SPO = 0
                                         // FRF = Freescale format
