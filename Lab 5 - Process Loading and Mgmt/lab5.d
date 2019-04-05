@@ -12,3 +12,4 @@
 .\lab5.o: integer.h
 .\lab5.o: ff.h
 .\lab5.o: ffconf.h
+.\lab5.o: heap.h

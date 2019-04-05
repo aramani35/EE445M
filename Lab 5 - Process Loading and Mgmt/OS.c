@@ -39,6 +39,7 @@ void (*SWOneTask)(void);        // SW1 task to execute
 void (*SWTwoTask)(void);        // SW2 task to execute
 
 //#define TIMESLICE
+#define MAXPROCESSES 5
 #define OSFIFOSIZE  	250
 #define NUMTHREADS  	20           // maximum number of threads
 #define NUMPROCESSES 	5
@@ -74,9 +75,10 @@ Sema4Type SW2sem;
 TCBtype *runPT = 0;
 TCBtype *nextPT = 0;
 TCBtype TCBs[NUMTHREADS];
+PCBtype PCBs[MAXPROCESSES];
 
 static uint32_t num_processes = 0;
-pcbType PCBs[NUMPROCESSES];
+PCBtype PCBs[NUMPROCESSES];
 
 unsigned int numTasks = 0;
 int16_t CurrentID;
@@ -240,6 +242,7 @@ void OS_Init(void){
     PLL_Init(Bus80MHz);
     UART_Init();              // initialize UART
     ST7735_InitR(INITR_REDTAB);//Output_Init();
+	ST7735_FillScreen(0);                 // set screen to black
     WTimer0A_Init(); // sleep
     OS_InitSemaphore(&SW1sem, 0);
     OS_InitSemaphore(&SW2sem, 0);
@@ -490,13 +493,42 @@ int OS_AddThreadPri(TCBtype *threadPT, uint32_t priority) {
 }
 
 
-
-int OS_AddProcess(void(*entry)(void), void *text, void *data, unsigned long stackSize, unsigned long priority){
-	
+int OS_AddProcess2(void(*entry)(void), void *text, void *data, unsigned long stackSize, unsigned long priority){
+    long status = StartCritical();
+    PCBtype *unusedProcess;
+    
+    // Loop to find free process
+    int index;
+	for(index = 0; index < MAXPROCESSES; index++){
+		if(PCBs[index].pid == 0){
+			break;
+		}
+	}
+    // No room
+    if(index == MAXPROCESSES){
+		EndCritical(status);
+		return 1;
+	}
+    
+    // Update components
+    unusedProcess = &PCBs[index];
+	unusedProcess->pid = 22;	//Current ID is incremented forever for different IDs
+//	unusedProcess->code
+//	unusedProcess->data
+	unusedProcess->num_threads = 1;
+    
+    // Add new process thread
     return 0;
 }
 
-
+int OS_AddProcess(void(*entry)(void), void *text, void *data, unsigned long stackSize, unsigned long priority){
+	OS_AddProcess2(entry, text, data, stackSize, priority);
+	
+	long status = StartCritical();
+	
+	EndCritical(status);
+    return 0;
+}
 
 //******** OS_AddThread *************** 
 // add a foregound thread to the scheduler

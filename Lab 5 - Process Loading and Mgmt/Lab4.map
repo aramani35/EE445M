@@ -20,13 +20,8 @@ Section Cross References
     startup.o(RESET) refers to diskio.o(i.WideTimer0B_Handler) for WideTimer0B_Handler
     startup.o(RESET) refers to os.o(i.WideTimer4A_Handler) for WideTimer4A_Handler
     startup.o(RESET) refers to entry.o(.ARM.Collect$$$$00000000) for __main
-    st7735.o(i.Delay1ms) refers to st7735.o(.emb_text) for Delay
-    st7735.o(i.Output_Clear) refers to st7735.o(i.ST7735_FillScreen) for ST7735_FillScreen
-    st7735.o(i.Output_Color) refers to st7735.o(i.ST7735_SetTextColor) for ST7735_SetTextColor
     st7735.o(i.Output_Init) refers to st7735.o(i.ST7735_InitR) for ST7735_InitR
     st7735.o(i.Output_Init) refers to st7735.o(i.ST7735_FillScreen) for ST7735_FillScreen
-    st7735.o(i.Output_Off) refers to st7735.o(i.Output_Clear) for Output_Clear
-    st7735.o(i.Output_On) refers to st7735.o(i.Output_Init) for Output_Init
     st7735.o(i.ST7735_DrawBitmap) refers to st7735.o(i.setAddrWindow) for setAddrWindow
     st7735.o(i.ST7735_DrawBitmap) refers to st7735.o(i.writedata) for writedata
     st7735.o(i.ST7735_DrawBitmap) refers to st7735.o(.data) for _width
@@ -38,10 +33,6 @@ Section Cross References
     st7735.o(i.ST7735_DrawCharS) refers to st7735.o(i.ST7735_FillRect) for ST7735_FillRect
     st7735.o(i.ST7735_DrawCharS) refers to st7735.o(.data) for _width
     st7735.o(i.ST7735_DrawCharS) refers to st7735.o(.constdata) for Font
-    st7735.o(i.ST7735_DrawCircle) refers to st7735.o(i.setAddrWindow) for setAddrWindow
-    st7735.o(i.ST7735_DrawCircle) refers to st7735.o(i.writedata) for writedata
-    st7735.o(i.ST7735_DrawCircle) refers to st7735.o(.data) for _width
-    st7735.o(i.ST7735_DrawCircle) refers to st7735.o(.constdata) for circle
     st7735.o(i.ST7735_DrawFastHLine) refers to st7735.o(i.setAddrWindow) for setAddrWindow
     st7735.o(i.ST7735_DrawFastHLine) refers to st7735.o(i.writedata) for writedata
     st7735.o(i.ST7735_DrawFastHLine) refers to st7735.o(.data) for _width
@@ -51,76 +42,51 @@ Section Cross References
     st7735.o(i.ST7735_DrawPixel) refers to st7735.o(i.setAddrWindow) for setAddrWindow
     st7735.o(i.ST7735_DrawPixel) refers to st7735.o(i.pushColor) for pushColor
     st7735.o(i.ST7735_DrawPixel) refers to st7735.o(.data) for _width
-    st7735.o(i.ST7735_DrawSmallCircle) refers to st7735.o(i.setAddrWindow) for setAddrWindow
-    st7735.o(i.ST7735_DrawSmallCircle) refers to st7735.o(i.writedata) for writedata
-    st7735.o(i.ST7735_DrawSmallCircle) refers to st7735.o(.data) for _width
-    st7735.o(i.ST7735_DrawSmallCircle) refers to st7735.o(.constdata) for smallCircle
-    st7735.o(i.ST7735_DrawString) refers to st7735.o(i.ST7735_DrawCharS) for ST7735_DrawCharS
     st7735.o(i.ST7735_FillRect) refers to st7735.o(i.setAddrWindow) for setAddrWindow
     st7735.o(i.ST7735_FillRect) refers to st7735.o(i.writedata) for writedata
     st7735.o(i.ST7735_FillRect) refers to st7735.o(.data) for _width
     st7735.o(i.ST7735_FillScreen) refers to st7735.o(i.ST7735_FillRect) for ST7735_FillRect
     st7735.o(i.ST7735_FillScreen) refers to st7735.o(.data) for _height
     st7735.o(i.ST7735_InitB) refers to st7735.o(i.commonInit) for commonInit
-    st7735.o(i.ST7735_InitB) refers to st7735.o(i.ST7735_SetCursor) for ST7735_SetCursor
-    st7735.o(i.ST7735_InitB) refers to st7735.o(i.ST7735_FillScreen) for ST7735_FillScreen
+    st7735.o(i.ST7735_InitB) refers to os.o(i.OS_InitSemaphore) for OS_InitSemaphore
     st7735.o(i.ST7735_InitB) refers to st7735.o(.constdata) for Bcmd
-    st7735.o(i.ST7735_InitB) refers to st7735.o(.data) for StTextColor
+    st7735.o(i.ST7735_InitB) refers to st7735.o(.bss) for LCDFree
     st7735.o(i.ST7735_InitR) refers to st7735.o(i.commonInit) for commonInit
     st7735.o(i.ST7735_InitR) refers to st7735.o(i.commandList) for commandList
     st7735.o(i.ST7735_InitR) refers to st7735.o(i.writecommand) for writecommand
     st7735.o(i.ST7735_InitR) refers to st7735.o(i.writedata) for writedata
-    st7735.o(i.ST7735_InitR) refers to st7735.o(i.ST7735_SetCursor) for ST7735_SetCursor
-    st7735.o(i.ST7735_InitR) refers to st7735.o(i.ST7735_FillScreen) for ST7735_FillScreen
+    st7735.o(i.ST7735_InitR) refers to os.o(i.OS_InitSemaphore) for OS_InitSemaphore
     st7735.o(i.ST7735_InitR) refers to st7735.o(.constdata) for Rcmd1
     st7735.o(i.ST7735_InitR) refers to st7735.o(.data) for ColStart
+    st7735.o(i.ST7735_InitR) refers to st7735.o(.bss) for LCDFree
     st7735.o(i.ST7735_InvertDisplay) refers to st7735.o(i.writecommand) for writecommand
-    st7735.o(i.ST7735_Message) refers to st7735.o(i.ST7735_SetCursor) for ST7735_SetCursor
+    st7735.o(i.ST7735_Message) refers to os.o(i.OS_bWait) for OS_bWait
     st7735.o(i.ST7735_Message) refers to st7735.o(i.ST7735_OutString) for ST7735_OutString
-    st7735.o(i.ST7735_Message) refers to st7735.o(i.ST7735_OutChar) for ST7735_OutChar
-    st7735.o(i.ST7735_Message) refers to st7735.o(i.ST7735_OutUDec) for ST7735_OutUDec
-    st7735.o(i.ST7735_OutChar) refers to st7735.o(i.ST7735_DrawString) for ST7735_DrawString
-    st7735.o(i.ST7735_OutChar) refers to st7735.o(i.ST7735_DrawCharS) for ST7735_DrawCharS
-    st7735.o(i.ST7735_OutChar) refers to st7735.o(.data) for StY
-    st7735.o(i.ST7735_OutString) refers to st7735.o(i.ST7735_OutChar) for ST7735_OutChar
+    st7735.o(i.ST7735_Message) refers to st7735.o(i.ST7735_OutUDec2) for ST7735_OutUDec2
+    st7735.o(i.ST7735_Message) refers to os.o(i.OS_bSignal) for OS_bSignal
+    st7735.o(i.ST7735_Message) refers to st7735.o(.bss) for LCDFree
+    st7735.o(i.ST7735_OutString) refers to st7735.o(i.ST7735_DrawCharS) for ST7735_DrawCharS
     st7735.o(i.ST7735_OutUDec) refers to st7735.o(i.fillmessage) for fillmessage
-    st7735.o(i.ST7735_OutUDec) refers to st7735.o(i.ST7735_DrawString) for ST7735_DrawString
-    st7735.o(i.ST7735_OutUDec) refers to st7735.o(i.ST7735_DrawCharS) for ST7735_DrawCharS
+    st7735.o(i.ST7735_OutUDec) refers to st7735.o(i.ST7735_OutString) for ST7735_OutString
     st7735.o(i.ST7735_OutUDec) refers to st7735.o(.data) for Messageindex
     st7735.o(i.ST7735_OutUDec) refers to st7735.o(.bss) for Message
-    st7735.o(i.ST7735_PlotBar) refers to st7735.o(i.ST7735_DrawFastVLine) for ST7735_DrawFastVLine
-    st7735.o(i.ST7735_PlotBar) refers to st7735.o(.data) for Ymin
-    st7735.o(i.ST7735_PlotClear) refers to st7735.o(i.ST7735_Color565) for ST7735_Color565
-    st7735.o(i.ST7735_PlotClear) refers to st7735.o(i.ST7735_FillRect) for ST7735_FillRect
-    st7735.o(i.ST7735_PlotClear) refers to st7735.o(.data) for Ymax
-    st7735.o(i.ST7735_PlotLine) refers to st7735.o(i.ST7735_DrawPixel) for ST7735_DrawPixel
-    st7735.o(i.ST7735_PlotLine) refers to st7735.o(.data) for Ymin
-    st7735.o(i.ST7735_PlotNext) refers to st7735.o(.data) for X
-    st7735.o(i.ST7735_PlotNextErase) refers to st7735.o(i.ST7735_Color565) for ST7735_Color565
-    st7735.o(i.ST7735_PlotNextErase) refers to st7735.o(i.ST7735_DrawFastVLine) for ST7735_DrawFastVLine
-    st7735.o(i.ST7735_PlotNextErase) refers to st7735.o(.data) for X
-    st7735.o(i.ST7735_PlotPoint) refers to st7735.o(i.ST7735_DrawPixel) for ST7735_DrawPixel
-    st7735.o(i.ST7735_PlotPoint) refers to st7735.o(.data) for Ymin
-    st7735.o(i.ST7735_PlotPoints) refers to st7735.o(i.ST7735_DrawPixel) for ST7735_DrawPixel
-    st7735.o(i.ST7735_PlotPoints) refers to st7735.o(.data) for Ymin
-    st7735.o(i.ST7735_PlotdBfs) refers to st7735.o(i.ST7735_DrawFastVLine) for ST7735_DrawFastVLine
-    st7735.o(i.ST7735_PlotdBfs) refers to st7735.o(.constdata) for dBfs
-    st7735.o(i.ST7735_PlotdBfs) refers to st7735.o(.data) for X
-    st7735.o(i.ST7735_SetCursor) refers to st7735.o(.data) for StX
+    st7735.o(i.ST7735_OutUDec2) refers to st7735.o(i.fillmessage) for fillmessage
+    st7735.o(i.ST7735_OutUDec2) refers to st7735.o(i.ST7735_OutString) for ST7735_OutString
+    st7735.o(i.ST7735_OutUDec2) refers to st7735.o(.data) for Messageindex
+    st7735.o(i.ST7735_OutUDec2) refers to st7735.o(.bss) for Message
+    st7735.o(i.ST7735_SetCursor) refers to st7735.o(.data) for Cursor
     st7735.o(i.ST7735_SetRotation) refers to st7735.o(i.writecommand) for writecommand
     st7735.o(i.ST7735_SetRotation) refers to st7735.o(i.writedata) for writedata
     st7735.o(i.ST7735_SetRotation) refers to st7735.o(.data) for Rotation
-    st7735.o(i.ST7735_SetTextColor) refers to st7735.o(.data) for StTextColor
     st7735.o(i.commandList) refers to st7735.o(i.writecommand) for writecommand
     st7735.o(i.commandList) refers to st7735.o(i.writedata) for writedata
     st7735.o(i.commandList) refers to st7735.o(i.Delay1ms) for Delay1ms
+    st7735.o(i.commonInit) refers to diskio.o(i.CS_Init) for CS_Init
     st7735.o(i.commonInit) refers to st7735.o(i.Delay1ms) for Delay1ms
-    st7735.o(i.commonInit) refers to st7735.o(i.SDC_CS_Init) for SDC_CS_Init
     st7735.o(i.commonInit) refers to st7735.o(i.commandList) for commandList
     st7735.o(i.commonInit) refers to st7735.o(.data) for RowStart
     st7735.o(i.fillmessage) refers to st7735.o(.bss) for Message
     st7735.o(i.fillmessage) refers to st7735.o(.data) for Messageindex
-    st7735.o(i.fputc) refers to st7735.o(i.ST7735_OutChar) for ST7735_OutChar
     st7735.o(i.pushColor) refers to st7735.o(i.writedata) for writedata
     st7735.o(i.setAddrWindow) refers to st7735.o(i.writecommand) for writecommand
     st7735.o(i.setAddrWindow) refers to st7735.o(i.writedata) for writedata
@@ -167,6 +133,7 @@ Section Cross References
     os.o(i.OS_Init) refers to uart.o(i.UART_Init) for UART_Init
     os.o(i.OS_Init) refers to pll.o(i.PLL_Init) for PLL_Init
     os.o(i.OS_Init) refers to st7735.o(i.ST7735_InitR) for ST7735_InitR
+    os.o(i.OS_Init) refers to st7735.o(i.ST7735_FillScreen) for ST7735_FillScreen
     os.o(i.OS_Init) refers to os.o(i.WTimer0A_Init) for WTimer0A_Init
     os.o(i.OS_Init) refers to os.o(i.OS_InitSemaphore) for OS_InitSemaphore
     os.o(i.OS_Init) refers to edgetriggered.o(i.EdgeCounter_PF4_Init) for EdgeCounter_PF4_Init
@@ -287,6 +254,9 @@ Section Cross References
     cmdline.o(i.CmdLineProcess) refers to strcmp.o(.text) for strcmp
     cmdline.o(i.CmdLineProcess) refers to cmdline.o(.bss) for g_ppcArgv
     cmdline.o(i.CmdLineProcess) refers to cmdline.o(.data) for g_psCmdTable
+    cmdline.o(i.LoadProgram) refers to loader.o(i.exec_elf) for exec_elf
+    cmdline.o(i.LoadProgram) refers to uart.o(i.UART_OutString) for UART_OutString
+    cmdline.o(i.LoadProgram) refers to cmdline.o(.constdata) for .constdata
     cmdline.o(i.adcCall) refers to uart.o(i.UART_OutString) for UART_OutString
     cmdline.o(i.adcCall) refers to strcmp.o(.text) for strcmp
     cmdline.o(i.adcCall) refers to uart.o(i.OutCRLF) for OutCRLF
@@ -303,6 +273,25 @@ Section Cross References
     cmdline.o(i.fileCall) refers to uart.o(i.OutCRLF) for OutCRLF
     cmdline.o(i.fileCall) refers to uart.o(i.UART_OutString) for UART_OutString
     cmdline.o(i.fileCall) refers to strcmp.o(.text) for strcmp
+    cmdline.o(i.fileCall) refers to ff.o(i.f_open) for f_open
+    cmdline.o(i.fileCall) refers to uart.o(i.UART_OutUDec) for UART_OutUDec
+    cmdline.o(i.fileCall) refers to ff.o(i.f_read) for f_read
+    cmdline.o(i.fileCall) refers to uart.o(i.UART_OutChar) for UART_OutChar
+    cmdline.o(i.fileCall) refers to ff.o(i.f_close) for f_close
+    cmdline.o(i.fileCall) refers to ff.o(i.f_unlink) for f_unlink
+    cmdline.o(i.fileCall) refers to cmdline.o(i.LoadProgram) for LoadProgram
+    cmdline.o(i.heapCall) refers to heap.o(i.Heap_Test) for Heap_Test
+    cmdline.o(i.heapCall) refers to heap.o(i.Heap_Stats) for Heap_Stats
+    cmdline.o(i.heapCall) refers to memcpya.o(.text) for __aeabi_memcpy4
+    cmdline.o(i.heapCall) refers to strcmp.o(.text) for strcmp
+    cmdline.o(i.heapCall) refers to uart.o(i.UART_OutString) for UART_OutString
+    cmdline.o(i.heapCall) refers to uart.o(i.OutCRLF) for OutCRLF
+    cmdline.o(i.heapCall) refers to uart.o(i.UART_OutUDec) for UART_OutUDec
+    cmdline.o(i.heapCall) refers to cmdline.o(i.myAtoi) for myAtoi
+    cmdline.o(i.heapCall) refers to heap.o(i.Heap_Free) for Heap_Free
+    cmdline.o(i.heapCall) refers to heap.o(i.Heap_Malloc) for Heap_Malloc
+    cmdline.o(i.heapCall) refers to cmdline.o(.data) for statusH
+    cmdline.o(i.heapCall) refers to cmdline.o(.bss) for heap_Stats
     cmdline.o(i.lcdCall) refers to uart.o(i.OutCRLF) for OutCRLF
     cmdline.o(i.lcdCall) refers to uart.o(i.UART_OutString) for UART_OutString
     cmdline.o(i.lcdCall) refers to cmdline.o(i.parseNumber) for parseNumber
@@ -322,11 +311,14 @@ Section Cross References
     cmdline.o(i.parseNumber) refers to strlen.o(.text) for strlen
     cmdline.o(i.parseNumber) refers to uart.o(i.OutCRLF) for OutCRLF
     cmdline.o(i.parseNumber) refers to uart.o(i.UART_OutString) for UART_OutString
+    cmdline.o(.constdata) refers to cmdline.o(.conststring) for .conststring
+    cmdline.o(.constdata) refers to st7735.o(i.ST7735_Message) for ST7735_Message
     cmdline.o(.data) refers to cmdline.o(.conststring) for .conststring
     cmdline.o(.data) refers to cmdline.o(i.lcdCall) for lcdCall
     cmdline.o(.data) refers to cmdline.o(i.adcCall) for adcCall
     cmdline.o(.data) refers to cmdline.o(i.osCall) for osCall
     cmdline.o(.data) refers to cmdline.o(i.fileCall) for fileCall
+    cmdline.o(.data) refers to cmdline.o(i.heapCall) for heapCall
     linkedlist.o(i.linkThread) refers to startup.o(.text) for StartCritical
     linkedlist.o(i.unlinkThread) refers to os.o(i.OS_pendSVTrigger) for OS_pendSVTrigger
     timer.o(i.Timer0A_Handler) refers to timer.o(.data) for Timer0First
@@ -606,14 +598,13 @@ Section Cross References
     ff.o(i.validate) refers to diskio.o(i.disk_status) for disk_status
     lab5.o(i.FileSystemTest) refers to ff.o(i.f_open) for f_open
     lab5.o(i.FileSystemTest) refers to st7735.o(i.ST7735_Color565) for ST7735_Color565
-    lab5.o(i.FileSystemTest) refers to st7735.o(i.ST7735_DrawString) for ST7735_DrawString
+    lab5.o(i.FileSystemTest) refers to st7735.o(i.ST7735_OutString) for ST7735_OutString
+    lab5.o(i.FileSystemTest) refers to st7735.o(i.ST7735_OutUDec) for ST7735_OutUDec
     lab5.o(i.FileSystemTest) refers to ff.o(i.f_write) for f_write
     lab5.o(i.FileSystemTest) refers to ff.o(i.f_close) for f_close
     lab5.o(i.FileSystemTest) refers to ff.o(i.f_read) for f_read
     lab5.o(i.FileSystemTest) refers to st7735.o(i.ST7735_DrawChar) for ST7735_DrawChar
     lab5.o(i.FileSystemTest) refers to st7735.o(i.ST7735_SetCursor) for ST7735_SetCursor
-    lab5.o(i.FileSystemTest) refers to st7735.o(i.ST7735_SetTextColor) for ST7735_SetTextColor
-    lab5.o(i.FileSystemTest) refers to st7735.o(i.ST7735_OutUDec) for ST7735_OutUDec
     lab5.o(i.FileSystemTest) refers to lab5.o(.bss) for Handle2
     lab5.o(i.FileSystemTest) refers to lab5.o(.data) for Fresult
     lab5.o(i.IdleTask) refers to lab5.o(.data) for Idlecount
@@ -622,33 +613,175 @@ Section Cross References
     lab5.o(i.SimpleUnformattedTest) refers to diskio.o(i.disk_write) for disk_write
     lab5.o(i.SimpleUnformattedTest) refers to diskio.o(i.disk_read) for disk_read
     lab5.o(i.SimpleUnformattedTest) refers to lab5.o(.bss) for buffer
-    lab5.o(i.main) refers to pll.o(i.PLL_Init) for PLL_Init
-    lab5.o(i.main) refers to st7735.o(i.ST7735_InitR) for ST7735_InitR
+    lab5.o(i.heaptestmain) refers to heap.o(i.Heap_Init) for Heap_Init
+    lab5.o(i.heaptestmain) refers to heap.o(i.Heap_Malloc) for Heap_Malloc
+    lab5.o(i.heaptestmain) refers to heap.o(i.Heap_Test) for Heap_Test
+    lab5.o(i.heaptestmain) refers to heap.o(i.Heap_Free) for Heap_Free
+    lab5.o(i.heaptestmain) refers to heap.o(i.Heap_Stats) for Heap_Stats
+    lab5.o(i.heaptestmain) refers to memcpya.o(.text) for __aeabi_memcpy4
+    lab5.o(i.heaptestmain) refers to heap.o(i.Heap_Realloc) for Heap_Realloc
+    lab5.o(i.heaptestmain) refers to heap.o(i.Heap_Calloc) for Heap_Calloc
+    lab5.o(i.heaptestmain) refers to lab5.o(.data) for statush
+    lab5.o(i.heaptestmain) refers to lab5.o(.bss) for stats
+    lab5.o(i.main) refers to os.o(i.OS_Init) for OS_Init
     lab5.o(i.main) refers to st7735.o(i.ST7735_FillScreen) for ST7735_FillScreen
-    lab5.o(i.main) refers to startup.o(.text) for EnableInterrupts
+    lab5.o(i.main) refers to os.o(i.OS_Fifo_Init) for OS_Fifo_Init
     lab5.o(i.main) refers to ff.o(i.f_mount) for f_mount
     lab5.o(i.main) refers to st7735.o(i.ST7735_Color565) for ST7735_Color565
-    lab5.o(i.main) refers to st7735.o(i.ST7735_DrawString) for ST7735_DrawString
-    lab5.o(i.main) refers to lab5.o(i.FileSystemTest) for FileSystemTest
-    lab5.o(i.main) refers to ff.o(i.f_open) for f_open
-    lab5.o(i.main) refers to ff.o(i.f_read) for f_read
-    lab5.o(i.main) refers to st7735.o(i.ST7735_DrawChar) for ST7735_DrawChar
-    lab5.o(i.main) refers to ff.o(i.f_close) for f_close
-    lab5.o(i.main) refers to st7735.o(i.ST7735_SetCursor) for ST7735_SetCursor
-    lab5.o(i.main) refers to st7735.o(i.ST7735_SetTextColor) for ST7735_SetTextColor
-    lab5.o(i.main) refers to st7735.o(i.ST7735_OutUDec) for ST7735_OutUDec
-    lab5.o(i.main) refers to ff.o(i.f_lseek) for f_lseek
-    lab5.o(i.main) refers to ff.o(i.f_write) for f_write
+    lab5.o(i.main) refers to st7735.o(i.ST7735_OutString) for ST7735_OutString
+    lab5.o(i.main) refers to os.o(i.OS_AddThread) for OS_AddThread
+    lab5.o(i.main) refers to heap.o(i.Heap_Init) for Heap_Init
+    lab5.o(i.main) refers to os.o(i.OS_Launch) for OS_Launch
     lab5.o(i.main) refers to lab5.o(.bss) for g_sFatFs
     lab5.o(i.main) refers to lab5.o(.data) for MountFresult
-    lab5.o(i.main) refers to lab5.o(.constdata) for inFilename
-    lab5.o(i.realmain) refers to os.o(i.OS_Init) for OS_Init
-    lab5.o(i.realmain) refers to os.o(i.OS_Fifo_Init) for OS_Fifo_Init
-    lab5.o(i.realmain) refers to os.o(i.OS_AddThread) for OS_AddThread
-    lab5.o(i.realmain) refers to os.o(i.OS_Launch) for OS_Launch
-    lab5.o(i.realmain) refers to lab5.o(.data) for NumCreated
-    lab5.o(i.realmain) refers to interpreter.o(i.Interpreter) for Interpreter
-    lab5.o(i.realmain) refers to lab5.o(i.IdleTask) for IdleTask
+    lab5.o(i.main) refers to interpreter.o(i.Interpreter) for Interpreter
+    lab5.o(i.main) refers to lab5.o(i.IdleTask) for IdleTask
+    lab5.o(i.sdctestmain) refers to pll.o(i.PLL_Init) for PLL_Init
+    lab5.o(i.sdctestmain) refers to st7735.o(i.ST7735_InitR) for ST7735_InitR
+    lab5.o(i.sdctestmain) refers to st7735.o(i.ST7735_FillScreen) for ST7735_FillScreen
+    lab5.o(i.sdctestmain) refers to startup.o(.text) for EnableInterrupts
+    lab5.o(i.sdctestmain) refers to ff.o(i.f_mount) for f_mount
+    lab5.o(i.sdctestmain) refers to st7735.o(i.ST7735_Color565) for ST7735_Color565
+    lab5.o(i.sdctestmain) refers to st7735.o(i.ST7735_OutString) for ST7735_OutString
+    lab5.o(i.sdctestmain) refers to lab5.o(i.FileSystemTest) for FileSystemTest
+    lab5.o(i.sdctestmain) refers to ff.o(i.f_open) for f_open
+    lab5.o(i.sdctestmain) refers to ff.o(i.f_read) for f_read
+    lab5.o(i.sdctestmain) refers to st7735.o(i.ST7735_DrawChar) for ST7735_DrawChar
+    lab5.o(i.sdctestmain) refers to ff.o(i.f_close) for f_close
+    lab5.o(i.sdctestmain) refers to st7735.o(i.ST7735_SetCursor) for ST7735_SetCursor
+    lab5.o(i.sdctestmain) refers to st7735.o(i.ST7735_OutUDec) for ST7735_OutUDec
+    lab5.o(i.sdctestmain) refers to ff.o(i.f_lseek) for f_lseek
+    lab5.o(i.sdctestmain) refers to ff.o(i.f_write) for f_write
+    lab5.o(i.sdctestmain) refers to lab5.o(.bss) for g_sFatFs
+    lab5.o(i.sdctestmain) refers to lab5.o(.data) for MountFresult
+    lab5.o(i.sdctestmain) refers to lab5.o(.constdata) for inFilename
+    heap.o(i.Heap_Calloc) refers to heap.o(i.Heap_Malloc) for Heap_Malloc
+    heap.o(i.Heap_Free) refers to heap.o(i.inHeapRange) for inHeapRange
+    heap.o(i.Heap_Free) refers to heap.o(i.blockUnused) for blockUnused
+    heap.o(i.Heap_Free) refers to heap.o(i.blockTrailer) for blockTrailer
+    heap.o(i.Heap_Free) refers to heap.o(i.markBlockUnused) for markBlockUnused
+    heap.o(i.Heap_Free) refers to heap.o(i.previousBlockHeader) for previousBlockHeader
+    heap.o(i.Heap_Free) refers to heap.o(i.mergeBlockWithBelow) for mergeBlockWithBelow
+    heap.o(i.Heap_Free) refers to heap.o(i.nextBlockHeader) for nextBlockHeader
+    heap.o(i.Heap_Free) refers to heap.o(.bss) for Heap
+    heap.o(i.Heap_Init) refers to heap.o(.bss) for Heap
+    heap.o(i.Heap_Malloc) refers to heap.o(i.blockUnused) for blockUnused
+    heap.o(i.Heap_Malloc) refers to heap.o(i.blockRoom) for blockRoom
+    heap.o(i.Heap_Malloc) refers to heap.o(i.splitAndMarkBlockUsed) for splitAndMarkBlockUsed
+    heap.o(i.Heap_Malloc) refers to heap.o(i.nextBlockHeader) for nextBlockHeader
+    heap.o(i.Heap_Malloc) refers to heap.o(i.inHeapRange) for inHeapRange
+    heap.o(i.Heap_Malloc) refers to heap.o(.bss) for Heap
+    heap.o(i.Heap_Realloc) refers to heap.o(i.inHeapRange) for inHeapRange
+    heap.o(i.Heap_Realloc) refers to heap.o(i.blockUnused) for blockUnused
+    heap.o(i.Heap_Realloc) refers to heap.o(i.Heap_Malloc) for Heap_Malloc
+    heap.o(i.Heap_Realloc) refers to heap.o(i.blockRoom) for blockRoom
+    heap.o(i.Heap_Realloc) refers to heap.o(i.Heap_Free) for Heap_Free
+    heap.o(i.Heap_Stats) refers to heap.o(i.blockUsed) for blockUsed
+    heap.o(i.Heap_Stats) refers to heap.o(i.blockRoom) for blockRoom
+    heap.o(i.Heap_Stats) refers to heap.o(i.nextBlockHeader) for nextBlockHeader
+    heap.o(i.Heap_Stats) refers to heap.o(i.inHeapRange) for inHeapRange
+    heap.o(i.Heap_Stats) refers to memcpya.o(.text) for __aeabi_memcpy4
+    heap.o(i.Heap_Stats) refers to heap.o(.bss) for Heap
+    heap.o(i.Heap_Test) refers to heap.o(i.blockTrailer) for blockTrailer
+    heap.o(i.Heap_Test) refers to heap.o(i.inHeapRange) for inHeapRange
+    heap.o(i.Heap_Test) refers to heap.o(i.blockUnused) for blockUnused
+    heap.o(i.Heap_Test) refers to heap.o(.bss) for Heap
+    heap.o(i.blockHeader) refers to heap.o(i.blockRoom) for blockRoom
+    heap.o(i.blockTrailer) refers to heap.o(i.blockRoom) for blockRoom
+    heap.o(i.inHeapRange) refers to heap.o(.bss) for Heap
+    heap.o(i.markBlockUnused) refers to heap.o(i.blockTrailer) for blockTrailer
+    heap.o(i.markBlockUnused) refers to heap.o(i.blockUnused) for blockUnused
+    heap.o(i.markBlockUsed) refers to heap.o(i.blockTrailer) for blockTrailer
+    heap.o(i.markBlockUsed) refers to heap.o(i.blockUsed) for blockUsed
+    heap.o(i.mergeBlockWithBelow) refers to heap.o(i.blockTrailer) for blockTrailer
+    heap.o(i.nextBlockHeader) refers to heap.o(i.blockTrailer) for blockTrailer
+    heap.o(i.previousBlockHeader) refers to heap.o(i.blockHeader) for blockHeader
+    heap.o(i.splitAndMarkBlockUsed) refers to heap.o(i.blockRoom) for blockRoom
+    heap.o(i.splitAndMarkBlockUsed) refers to heap.o(i.blockTrailer) for blockTrailer
+    heap.o(i.splitAndMarkBlockUsed) refers to heap.o(i.markBlockUsed) for markBlockUsed
+    loader.o(i.LOADER_OPEN_FOR_RD) refers to ff.o(i.f_open) for f_open
+    loader.o(i.LOADER_OPEN_FOR_RD) refers to loader.o(.bss) for fd
+    loader.o(i.LOADER_READ) refers to ff.o(i.f_read) for f_read
+    loader.o(i.LOADER_WRITE) refers to ff.o(i.f_write) for f_write
+    loader.o(i.addressOf) refers to strcmp.o(.text) for strcmp
+    loader.o(i.addressOf) refers to loader.o(i.sectionOf) for sectionOf
+    loader.o(i.exec_elf) refers to loader.o(i.LOADER_OPEN_FOR_RD) for LOADER_OPEN_FOR_RD
+    loader.o(i.exec_elf) refers to loader.o(i.initElf) for initElf
+    loader.o(i.exec_elf) refers to loader.o(i.loadProgram) for loadProgram
+    loader.o(i.exec_elf) refers to loader.o(i.relocateProgram) for relocateProgram
+    loader.o(i.exec_elf) refers to loader.o(i.jumpTo) for jumpTo
+    loader.o(i.exec_elf) refers to loader.o(i.freeElf) for freeElf
+    loader.o(i.exec_elf) refers to uart.o(i.UART_OutString) for UART_OutString
+    loader.o(i.exec_elf) refers to loader.o(i.loadSymbols) for loadSymbols
+    loader.o(i.exec_elf) refers to loader.o(i.relocateSections) for relocateSections
+    loader.o(i.exec_elf) refers to loader.o(.bss) for exec
+    loader.o(i.freeElf) refers to ff.o(i.f_close) for f_close
+    loader.o(i.freeSection) refers to heap.o(i.Heap_Free) for Heap_Free
+    loader.o(i.freeSegment) refers to heap.o(i.Heap_Free) for Heap_Free
+    loader.o(i.initElf) refers to loader.o(i.LOADER_CLEAR) for LOADER_CLEAR
+    loader.o(i.initElf) refers to loader.o(i.LOADER_READ) for LOADER_READ
+    loader.o(i.initElf) refers to ff.o(i.f_lseek) for f_lseek
+    loader.o(i.jumpTo) refers to os.o(i.OS_AddProcess) for OS_AddProcess
+    loader.o(i.jumpTo) refers to uart.o(i.UART_OutString) for UART_OutString
+    loader.o(i.loadProgram) refers to uart.o(i.UART_OutString) for UART_OutString
+    loader.o(i.loadProgram) refers to loader.o(i.readSegHeader) for readSegHeader
+    loader.o(i.loadProgram) refers to loader.o(i.placeDynamic) for placeDynamic
+    loader.o(i.loadProgram) refers to loader.o(i.loadSegData) for loadSegData
+    loader.o(i.loadProgram) refers to loader.o(i.freeSegment) for freeSegment
+    loader.o(i.loadSecData) refers to uart.o(i.UART_OutString) for UART_OutString
+    loader.o(i.loadSecData) refers to heap.o(i.Heap_Malloc) for Heap_Malloc
+    loader.o(i.loadSecData) refers to ff.o(i.f_lseek) for f_lseek
+    loader.o(i.loadSecData) refers to loader.o(i.freeSection) for freeSection
+    loader.o(i.loadSecData) refers to loader.o(i.LOADER_READ) for LOADER_READ
+    loader.o(i.loadSecData) refers to loader.o(i.LOADER_CLEAR) for LOADER_CLEAR
+    loader.o(i.loadSecData) refers to loader.o(i.dumpData) for dumpData
+    loader.o(i.loadSegData) refers to uart.o(i.UART_OutString) for UART_OutString
+    loader.o(i.loadSegData) refers to heap.o(i.Heap_Malloc) for Heap_Malloc
+    loader.o(i.loadSegData) refers to ff.o(i.f_lseek) for f_lseek
+    loader.o(i.loadSegData) refers to loader.o(i.freeSegment) for freeSegment
+    loader.o(i.loadSegData) refers to loader.o(i.LOADER_READ) for LOADER_READ
+    loader.o(i.loadSegData) refers to loader.o(i.LOADER_CLEAR) for LOADER_CLEAR
+    loader.o(i.loadSegData) refers to loader.o(i.dumpData) for dumpData
+    loader.o(i.loadSymbols) refers to uart.o(i.UART_OutString) for UART_OutString
+    loader.o(i.loadSymbols) refers to memcpya.o(.text) for __aeabi_memcpy4
+    loader.o(i.loadSymbols) refers to loader.o(i.readSecHeader) for readSecHeader
+    loader.o(i.loadSymbols) refers to loader.o(i.readSectionName) for readSectionName
+    loader.o(i.loadSymbols) refers to loader.o(i.placeInfo) for placeInfo
+    loader.o(i.loadSymbols) refers to loader.o(.constdata) for .constdata
+    loader.o(i.placeDynamic) refers to ff.o(i.f_lseek) for f_lseek
+    loader.o(i.placeDynamic) refers to loader.o(i.LOADER_READ) for LOADER_READ
+    loader.o(i.placeInfo) refers to strcmp.o(.text) for strcmp
+    loader.o(i.placeInfo) refers to loader.o(i.loadSecData) for loadSecData
+    loader.o(i.readSecHeader) refers to ff.o(i.f_lseek) for f_lseek
+    loader.o(i.readSecHeader) refers to loader.o(i.LOADER_READ) for LOADER_READ
+    loader.o(i.readSection) refers to loader.o(i.readSecHeader) for readSecHeader
+    loader.o(i.readSection) refers to loader.o(i.readSectionName) for readSectionName
+    loader.o(i.readSectionName) refers to ff.o(i.f_lseek) for f_lseek
+    loader.o(i.readSectionName) refers to loader.o(i.LOADER_READ) for LOADER_READ
+    loader.o(i.readSegHeader) refers to ff.o(i.f_lseek) for f_lseek
+    loader.o(i.readSegHeader) refers to loader.o(i.LOADER_READ) for LOADER_READ
+    loader.o(i.readSegment) refers to loader.o(i.readSegHeader) for readSegHeader
+    loader.o(i.readSymbol) refers to ff.o(i.f_lseek) for f_lseek
+    loader.o(i.readSymbol) refers to loader.o(i.LOADER_READ) for LOADER_READ
+    loader.o(i.readSymbol) refers to loader.o(i.readSymbolName) for readSymbolName
+    loader.o(i.readSymbol) refers to loader.o(i.readSection) for readSection
+    loader.o(i.readSymbolName) refers to ff.o(i.f_lseek) for f_lseek
+    loader.o(i.readSymbolName) refers to loader.o(i.LOADER_READ) for LOADER_READ
+    loader.o(i.relocate) refers to ff.o(i.f_lseek) for f_lseek
+    loader.o(i.relocate) refers to loader.o(i.LOADER_READ) for LOADER_READ
+    loader.o(i.relocate) refers to memcpya.o(.text) for __aeabi_memcpy4
+    loader.o(i.relocate) refers to loader.o(i.readSymbol) for readSymbol
+    loader.o(i.relocate) refers to loader.o(i.addressOf) for addressOf
+    loader.o(i.relocate) refers to loader.o(i.relocateSymbol) for relocateSymbol
+    loader.o(i.relocate) refers to uart.o(i.UART_OutString) for UART_OutString
+    loader.o(i.relocate) refers to loader.o(.constdata) for .constdata
+    loader.o(i.relocateProgram) refers to loader.o(i.relocate) for relocate
+    loader.o(i.relocateProgram) refers to uart.o(i.UART_OutString) for UART_OutString
+    loader.o(i.relocateSection) refers to loader.o(i.readSecHeader) for readSecHeader
+    loader.o(i.relocateSection) refers to loader.o(i.relocate) for relocate
+    loader.o(i.relocateSection) refers to uart.o(i.UART_OutString) for UART_OutString
+    loader.o(i.relocateSections) refers to loader.o(i.relocateSection) for relocateSection
+    loader.o(i.relocateSymbol) refers to loader.o(i.relJmpCall) for relJmpCall
     pow.o(i.__softfp_pow) refers (Special) to iusefp.o(.text) for __I$use$fp
     pow.o(i.__softfp_pow) refers to pow.o(i.pow) for pow
     pow.o(i.pow) refers (Special) to iusefp.o(.text) for __I$use$fp
@@ -740,97 +873,52 @@ Section Cross References
 Removing Unused input sections from the image.
 
     Removing startup.o(HEAP), (0 bytes).
-    Removing st7735.o(i.Output_Clear), (10 bytes).
-    Removing st7735.o(i.Output_Color), (12 bytes).
     Removing st7735.o(i.Output_Init), (16 bytes).
-    Removing st7735.o(i.Output_Off), (8 bytes).
-    Removing st7735.o(i.Output_On), (8 bytes).
     Removing st7735.o(i.ST7735_DrawBitmap), (288 bytes).
-    Removing st7735.o(i.ST7735_DrawCircle), (168 bytes).
+    Removing st7735.o(i.ST7735_DrawChar), (284 bytes).
     Removing st7735.o(i.ST7735_DrawFastHLine), (124 bytes).
     Removing st7735.o(i.ST7735_DrawFastVLine), (124 bytes).
-    Removing st7735.o(i.ST7735_DrawSmallCircle), (168 bytes).
-    Removing st7735.o(i.ST7735_InitB), (40 bytes).
+    Removing st7735.o(i.ST7735_InitB), (28 bytes).
     Removing st7735.o(i.ST7735_InvertDisplay), (22 bytes).
-    Removing st7735.o(i.ST7735_Message), (84 bytes).
-    Removing st7735.o(i.ST7735_OutChar), (212 bytes).
-    Removing st7735.o(i.ST7735_OutString), (24 bytes).
-    Removing st7735.o(i.ST7735_PlotBar), (88 bytes).
-    Removing st7735.o(i.ST7735_PlotClear), (92 bytes).
-    Removing st7735.o(i.ST7735_PlotLine), (264 bytes).
-    Removing st7735.o(i.ST7735_PlotNext), (32 bytes).
-    Removing st7735.o(i.ST7735_PlotNextErase), (64 bytes).
-    Removing st7735.o(i.ST7735_PlotPoint), (152 bytes).
-    Removing st7735.o(i.ST7735_PlotPoints), (172 bytes).
-    Removing st7735.o(i.ST7735_PlotdBfs), (60 bytes).
+    Removing st7735.o(i.ST7735_OutUDec), (68 bytes).
+    Removing st7735.o(i.ST7735_SetCursor), (32 bytes).
     Removing st7735.o(i.ST7735_SetRotation), (212 bytes).
     Removing st7735.o(i.ST7735_SwapColor), (18 bytes).
-    Removing st7735.o(i.ferror), (8 bytes).
-    Removing st7735.o(i.fgetc), (6 bytes).
-    Removing st7735.o(i.fputc), (16 bytes).
     Removing os.o(i.ContextSwitch), (16 bytes).
     Removing os.o(i.DebouncePF0), (64 bytes).
     Removing os.o(i.DebouncePF4), (64 bytes).
     Removing os.o(i.Jitter), (56 bytes).
     Removing os.o(i.OS_AddPeriodicThread), (248 bytes).
-    Removing os.o(i.OS_AddProcess), (10 bytes).
     Removing os.o(i.OS_AddSW1Task), (80 bytes).
     Removing os.o(i.OS_AddSW2Task), (80 bytes).
-    Removing os.o(i.OS_AddThread), (224 bytes).
-    Removing os.o(i.OS_ClearCriticalTime), (16 bytes).
     Removing os.o(i.OS_ClearMsTime), (12 bytes).
-    Removing os.o(i.OS_ClearPeriodicTime), (12 bytes).
     Removing os.o(i.OS_DisplayProfile), (60 bytes).
     Removing os.o(i.OS_Fifo_Get), (88 bytes).
-    Removing os.o(i.OS_Fifo_Init), (60 bytes).
     Removing os.o(i.OS_Fifo_Put), (80 bytes).
     Removing os.o(i.OS_Fifo_Size), (68 bytes).
-    Removing os.o(i.OS_GetProfilerAndReset), (4 bytes).
     Removing os.o(i.OS_Id), (16 bytes).
-    Removing os.o(i.OS_Init), (208 bytes).
-    Removing os.o(i.OS_InitSemaphore), (10 bytes).
     Removing os.o(i.OS_Kill), (76 bytes).
-    Removing os.o(i.OS_Launch), (36 bytes).
     Removing os.o(i.OS_MailBox_Init), (28 bytes).
     Removing os.o(i.OS_MailBox_Recv), (36 bytes).
     Removing os.o(i.OS_MailBox_Send), (36 bytes).
     Removing os.o(i.OS_MsTime), (12 bytes).
-    Removing os.o(i.OS_ReadCriticalPercentage), (40 bytes).
-    Removing os.o(i.OS_ReadCriticalTime), (12 bytes).
-    Removing os.o(i.OS_ReadPeriodicTime), (12 bytes).
     Removing os.o(i.OS_Signal), (92 bytes).
     Removing os.o(i.OS_Sleep), (76 bytes).
     Removing os.o(i.OS_Wait), (92 bytes).
     Removing os.o(i.OS_Yield), (8 bytes).
-    Removing os.o(i.OS_bSignal), (88 bytes).
-    Removing os.o(i.OS_bWait), (92 bytes).
     Removing os.o(i.OS_clearProfile), (36 bytes).
     Removing os.o(i.OS_pendSVTrigger), (32 bytes).
     Removing os.o(i.OS_resetRecord), (12 bytes).
-    Removing os.o(i.SetInitialStack), (336 bytes).
-    Removing os.o(i.Timer4A_Init), (52 bytes).
-    Removing os.o(i.Timer5_Init), (64 bytes).
-    Removing os.o(i.WTimer0A_Init), (120 bytes).
-    Removing os.o(i.WTimer4A_Init), (104 bytes).
-    Removing os.o(i.WTimer5A_Init), (96 bytes).
     Removing os.o(i.add_thread), (52 bytes).
-    Removing os.o(i.dummy1), (4 bytes).
     Removing os.o(i.find_next), (60 bytes).
     Removing os.o(i.find_prev), (64 bytes).
     Removing os.o(i.portFDisable), (28 bytes).
     Removing os.o(i.portFEnable), (28 bytes).
-    Removing os.o(i.removeThreadPri), (72 bytes).
     Removing os.o(i.threadRecordProfiler), (60 bytes).
     Removing os.o(.constdata), (4 bytes).
     Removing adc.o(i.ADC_Collect), (56 bytes).
-    Removing adc.o(i.ADC_Collect_old), (76 bytes).
-    Removing adc.o(i.ADC_Open), (36 bytes).
-    Removing adc.o(i.ADC_Status), (12 bytes).
-    Removing adc.o(i.dummy), (2 bytes).
-    Removing interpreter.o(i.Interpreter), (60 bytes).
     Removing adcswtrigger.o(i.ADC0_InSeq3), (44 bytes).
     Removing adcswtrigger.o(i.ADC0_InitSWTriggerSeq2), (1076 bytes).
-    Removing adcswtrigger.o(i.ADC0_InitSWTriggerSeq3), (1032 bytes).
     Removing adcswtrigger.o(i.ADC0_InitSWTriggerSeq3_Ch9), (236 bytes).
     Removing adcswtrigger.o(i.ADC_ADC2millimeter), (32 bytes).
     Removing adcswtrigger.o(i.ADC_In3210), (76 bytes).
@@ -840,18 +928,7 @@ Removing Unused input sections from the image.
     Removing board.o(i.Board_Init), (100 bytes).
     Removing board.o(i.Board_Input), (12 bytes).
     Removing board.o(i.Board_Output), (12 bytes).
-    Removing cmdline.o(i.CmdLineProcess), (148 bytes).
-    Removing cmdline.o(i.adcCall), (628 bytes).
-    Removing cmdline.o(i.fileCall), (624 bytes).
-    Removing cmdline.o(i.lcdCall), (288 bytes).
-    Removing cmdline.o(i.osCall), (528 bytes).
-    Removing cmdline.o(i.parseNumber), (100 bytes).
-    Removing cmdline.o(.bss), (36 bytes).
-    Removing cmdline.o(.conststring), (16 bytes).
-    Removing cmdline.o(.data), (156 bytes).
-    Removing edgetriggered.o(i.EdgeCounter_PF4_Init), (212 bytes).
     Removing edgetriggered.o(i.Timer5Arm), (28 bytes).
-    Removing linkedlist.o(i.addToList), (32 bytes).
     Removing linkedlist.o(i.linkThread), (48 bytes).
     Removing linkedlist.o(i.removeFromBlockList), (80 bytes).
     Removing linkedlist.o(i.unlinkThread), (32 bytes).
@@ -867,27 +944,13 @@ Removing Unused input sections from the image.
     Removing timer.o(i.Timer1_Read), (24 bytes).
     Removing timer.o(i.Timer1_StartHCSR04), (52 bytes).
     Removing timer.o(i.Timer1_StartPing), (136 bytes).
-    Removing timer.o(i.Timer2_Init), (88 bytes).
     Removing timer.o(i.Timer3_Init), (272 bytes).
     Removing timer.o(i.Timer3_Read), (24 bytes).
     Removing timer.o(i.Timer3_StartHCSR04), (48 bytes).
     Removing timer.o(i.Timer3_StartPing), (136 bytes).
-    Removing uart.o(i.OutCRLF), (16 bytes).
-    Removing uart.o(i.RxFifo_Get), (60 bytes).
-    Removing uart.o(i.RxFifo_Init), (36 bytes).
-    Removing uart.o(i.TxFifo_Init), (36 bytes).
-    Removing uart.o(i.TxFifo_Put), (60 bytes).
-    Removing uart.o(i.UART_InChar), (20 bytes).
-    Removing uart.o(i.UART_InString), (70 bytes).
     Removing uart.o(i.UART_InUDec), (76 bytes).
     Removing uart.o(i.UART_InUHex), (108 bytes).
-    Removing uart.o(i.UART_Init), (204 bytes).
-    Removing uart.o(i.UART_OutChar), (52 bytes).
-    Removing uart.o(i.UART_OutString), (24 bytes).
-    Removing uart.o(i.UART_OutUDec), (42 bytes).
     Removing uart.o(i.UART_OutUHex), (52 bytes).
-    Removing ff.o(i.dir_read), (112 bytes).
-    Removing ff.o(i.dir_remove), (54 bytes).
     Removing ff.o(i.f_chdir), (84 bytes).
     Removing ff.o(i.f_chmod), (96 bytes).
     Removing ff.o(i.f_closedir), (22 bytes).
@@ -902,26 +965,25 @@ Removing Unused input sections from the image.
     Removing ff.o(i.f_setlabel), (488 bytes).
     Removing ff.o(i.f_stat), (60 bytes).
     Removing ff.o(i.f_truncate), (184 bytes).
-    Removing ff.o(i.f_unlink), (190 bytes).
     Removing ff.o(i.f_utime), (98 bytes).
+    Removing ff.o(i.f_write), (470 bytes).
     Removing ff.o(i.get_fileinfo), (116 bytes).
     Removing ff.o(.constdata), (44 bytes).
-    Removing lab5.o(i.IdleTask), (20 bytes).
+    Removing lab5.o(i.FileSystemTest), (708 bytes).
     Removing lab5.o(i.SimpleUnformattedTest), (236 bytes).
     Removing lab5.o(i.diskError), (4 bytes).
-    Removing lab5.o(i.realmain), (88 bytes).
-    Removing dmul.o(.text), (228 bytes).
-    Removing dflti.o(.text), (34 bytes).
-    Removing dfixui.o(.text), (50 bytes).
-    Removing depilogue.o(.text), (190 bytes).
-    Removing dadd.o(.text), (334 bytes).
-    Removing ddiv.o(.text), (222 bytes).
-    Removing dscalb.o(.text), (46 bytes).
-    Removing cdrcmple.o(.text), (40 bytes).
-    Removing dsqrt.o(.text), (162 bytes).
+    Removing lab5.o(i.heaptestmain), (724 bytes).
+    Removing lab5.o(i.sdctestmain), (784 bytes).
+    Removing lab5.o(.constdata), (17 bytes).
+    Removing heap.o(i.Heap_Calloc), (46 bytes).
+    Removing heap.o(i.Heap_Realloc), (112 bytes).
+    Removing loader.o(i.LOADER_WRITE), (30 bytes).
+    Removing loader.o(i.readSegment), (36 bytes).
+    Removing loader.o(i.swabo), (30 bytes).
+    Removing loader.o(i.typeStr), (112 bytes).
     Removing cdcmple.o(.text), (40 bytes).
 
-181 unused section(s) (total 21146 bytes) removed from the image.
+110 unused section(s) (total 14803 bytes) removed from the image.
 
 ==============================================================================
 
@@ -932,24 +994,26 @@ Image Symbol Table
     Symbol Name                              Value     Ov Type        Size  Object(Section)
 
     RESET                                    0x00000000   Section      644  startup.o(RESET)
-    ../clib/../cmprslib/zerorunl.c           0x00000000   Number         0  __dczerorl.o ABSOLUTE
+    ../clib/../cmprslib/zerorunl2.c          0x00000000   Number         0  __dczerorl2.o ABSOLUTE
     ../clib/microlib/errno.c                 0x00000000   Number         0  errno.o ABSOLUTE
-    ../clib/microlib/init/entry.s            0x00000000   Number         0  entry9b.o ABSOLUTE
-    ../clib/microlib/init/entry.s            0x00000000   Number         0  entry9a.o ABSOLUTE
     ../clib/microlib/init/entry.s            0x00000000   Number         0  entry7a.o ABSOLUTE
+    ../clib/microlib/init/entry.s            0x00000000   Number         0  entry5.o ABSOLUTE
+    ../clib/microlib/init/entry.s            0x00000000   Number         0  entry.o ABSOLUTE
+    ../clib/microlib/init/entry.s            0x00000000   Number         0  entry9b.o ABSOLUTE
     ../clib/microlib/init/entry.s            0x00000000   Number         0  entry10a.o ABSOLUTE
     ../clib/microlib/init/entry.s            0x00000000   Number         0  entry10b.o ABSOLUTE
     ../clib/microlib/init/entry.s            0x00000000   Number         0  entry11a.o ABSOLUTE
-    ../clib/microlib/init/entry.s            0x00000000   Number         0  entry.o ABSOLUTE
-    ../clib/microlib/init/entry.s            0x00000000   Number         0  entry11b.o ABSOLUTE
-    ../clib/microlib/init/entry.s            0x00000000   Number         0  entry7b.o ABSOLUTE
-    ../clib/microlib/init/entry.s            0x00000000   Number         0  entry5.o ABSOLUTE
-    ../clib/microlib/init/entry.s            0x00000000   Number         0  entry2.o ABSOLUTE
+    ../clib/microlib/init/entry.s            0x00000000   Number         0  entry9a.o ABSOLUTE
     ../clib/microlib/init/entry.s            0x00000000   Number         0  entry8b.o ABSOLUTE
     ../clib/microlib/init/entry.s            0x00000000   Number         0  entry8a.o ABSOLUTE
-    ../clib/microlib/longlong.c              0x00000000   Number         0  llushr.o ABSOLUTE
-    ../clib/microlib/longlong.c              0x00000000   Number         0  llshl.o ABSOLUTE
+    ../clib/microlib/init/entry.s            0x00000000   Number         0  entry7b.o ABSOLUTE
+    ../clib/microlib/init/entry.s            0x00000000   Number         0  entry11b.o ABSOLUTE
+    ../clib/microlib/init/entry.s            0x00000000   Number         0  entry2.o ABSOLUTE
     ../clib/microlib/longlong.c              0x00000000   Number         0  llsshr.o ABSOLUTE
+    ../clib/microlib/longlong.c              0x00000000   Number         0  llshl.o ABSOLUTE
+    ../clib/microlib/longlong.c              0x00000000   Number         0  llushr.o ABSOLUTE
+    ../clib/microlib/string/memcpy.c         0x00000000   Number         0  memcpya.o ABSOLUTE
+    ../clib/microlib/string/memcpy.c         0x00000000   Number         0  memcpyb.o ABSOLUTE
     ../clib/microlib/string/strcmp.c         0x00000000   Number         0  strcmp.o ABSOLUTE
     ../clib/microlib/string/strlen.c         0x00000000   Number         0  strlen.o ABSOLUTE
     ../clib/microlib/string/strncmp.c        0x00000000   Number         0  strncmp.o ABSOLUTE
@@ -968,8 +1032,8 @@ Image Symbol Table
     ../mathlib/pow.c                         0x00000000   Number         0  pow_x.o ABSOLUTE
     ../mathlib/pow.c                         0x00000000   Number         0  pow.o ABSOLUTE
     ../mathlib/qnan.c                        0x00000000   Number         0  qnan.o ABSOLUTE
-    ../mathlib/sqrt.c                        0x00000000   Number         0  sqrt_x.o ABSOLUTE
     ../mathlib/sqrt.c                        0x00000000   Number         0  sqrt.o ABSOLUTE
+    ../mathlib/sqrt.c                        0x00000000   Number         0  sqrt_x.o ABSOLUTE
     ADC.c                                    0x00000000   Number         0  adc.o ABSOLUTE
     ADCSWTrigger.c                           0x00000000   Number         0  adcswtrigger.o ABSOLUTE
     EdgeTriggered.c                          0x00000000   Number         0  edgetriggered.o ABSOLUTE
@@ -978,7 +1042,6 @@ Image Symbol Table
     LinkedList.c                             0x00000000   Number         0  linkedlist.o ABSOLUTE
     OS.c                                     0x00000000   Number         0  os.o ABSOLUTE
     PLL.c                                    0x00000000   Number         0  pll.o ABSOLUTE
-    ST7735.c                                 0x00000000   Number         0  st7735.o ABSOLUTE
     ST7735.c                                 0x00000000   Number         0  st7735.o ABSOLUTE
     Timer.c                                  0x00000000   Number         0  timer.o ABSOLUTE
     UART.c                                   0x00000000   Number         0  uart.o ABSOLUTE
@@ -990,7 +1053,9 @@ Image Symbol Table
     diskio.c                                 0x00000000   Number         0  diskio.o ABSOLUTE
     ff.c                                     0x00000000   Number         0  ff.o ABSOLUTE
     handlers.s                               0x00000000   Number         0  handlers.o ABSOLUTE
+    heap.c                                   0x00000000   Number         0  heap.o ABSOLUTE
     init.s                                   0x00000000   Number         0  init.o ABSOLUTE
+    loader.c                                 0x00000000   Number         0  loader.o ABSOLUTE
     osasm.s                                  0x00000000   Number         0  osasm.o ABSOLUTE
     startup.s                                0x00000000   Number         0  startup.o ABSOLUTE
     .ARM.Collect$$$$00000000                 0x00000284   Section        0  entry.o(.ARM.Collect$$$$00000000)
@@ -1003,202 +1068,381 @@ Image Symbol Table
     .ARM.Collect$$$$0000000F                 0x00000294   Section        0  entry11a.o(.ARM.Collect$$$$0000000F)
     .ARM.Collect$$$$00002712                 0x00000294   Section        4  entry2.o(.ARM.Collect$$$$00002712)
     __lit__00000000                          0x00000294   Data           4  entry2.o(.ARM.Collect$$$$00002712)
-    .emb_text                                0x00000298   Section        6  st7735.o(.emb_text)
-    .text                                    0x000002a0   Section       28  startup.o(.text)
-    .text                                    0x000002bc   Section      116  osasm.o(.text)
-    .text                                    0x00000330   Section       36  init.o(.text)
-    .text                                    0x00000354   Section        0  __dczerorl.o(.text)
-    i.ADC0Seq2_Handler                       0x00000390   Section        0  adc.o(i.ADC0Seq2_Handler)
-    i.ADC_In                                 0x000003b4   Section        0  adc.o(i.ADC_In)
-    i.CS_Init                                0x00000400   Section        0  diskio.o(i.CS_Init)
-    i.Delay1ms                               0x00000498   Section        0  st7735.o(i.Delay1ms)
-    i.FileSystemTest                         0x000004b0   Section        0  lab5.o(i.FileSystemTest)
-    i.GPIOPortF_Handler                      0x0000077c   Section        0  os.o(i.GPIOPortF_Handler)
-    i.OS_AddThreadPri                        0x000007ec   Section        0  os.o(i.OS_AddThreadPri)
-    i.OS_SelectNextThread                    0x00000844   Section        0  os.o(i.OS_SelectNextThread)
-    i.OS_Suspend                             0x000008d4   Section        0  os.o(i.OS_Suspend)
-    i.OS_Time                                0x000008ec   Section        0  os.o(i.OS_Time)
-    i.OS_TimeDifference                      0x000008fc   Section        0  os.o(i.OS_TimeDifference)
-    i.OS_timeDisabled                        0x00000908   Section        0  os.o(i.OS_timeDisabled)
-    i.OS_timeEnabled                         0x00000924   Section        0  os.o(i.OS_timeEnabled)
-    i.PLL_Init                               0x0000096c   Section        0  pll.o(i.PLL_Init)
-    i.RxFifo_Put                             0x000009e8   Section        0  uart.o(i.RxFifo_Put)
-    i.RxFifo_Size                            0x00000a24   Section        0  uart.o(i.RxFifo_Size)
-    i.SDC_CS_Init                            0x00000a3c   Section        0  st7735.o(i.SDC_CS_Init)
-    i.SSI0_Init                              0x00000ad4   Section        0  diskio.o(i.SSI0_Init)
-    i.ST7735_Color565                        0x00000c1c   Section        0  st7735.o(i.ST7735_Color565)
-    i.ST7735_DrawChar                        0x00000c34   Section        0  st7735.o(i.ST7735_DrawChar)
-    i.ST7735_DrawCharS                       0x00000d40   Section        0  st7735.o(i.ST7735_DrawCharS)
-    i.ST7735_DrawPixel                       0x00000e34   Section        0  st7735.o(i.ST7735_DrawPixel)
-    i.ST7735_DrawString                      0x00000e7c   Section        0  st7735.o(i.ST7735_DrawString)
-    i.ST7735_FillRect                        0x00000ed4   Section        0  st7735.o(i.ST7735_FillRect)
-    i.ST7735_FillScreen                      0x00000f80   Section        0  st7735.o(i.ST7735_FillScreen)
-    i.ST7735_InitR                           0x00000fa4   Section        0  st7735.o(i.ST7735_InitR)
-    i.ST7735_OutUDec                         0x00001020   Section        0  st7735.o(i.ST7735_OutUDec)
-    i.ST7735_SetCursor                       0x000010ac   Section        0  st7735.o(i.ST7735_SetCursor)
-    i.ST7735_SetTextColor                    0x000010cc   Section        0  st7735.o(i.ST7735_SetTextColor)
-    i.SysTick_Handler                        0x000010d8   Section        0  os.o(i.SysTick_Handler)
-    i.Timer0A_Handler                        0x000010ec   Section        0  timer.o(i.Timer0A_Handler)
-    i.Timer1A_Handler                        0x00001134   Section        0  timer.o(i.Timer1A_Handler)
-    i.Timer2A_Handler                        0x0000117c   Section        0  adc.o(i.Timer2A_Handler)
-    i.Timer3A_Handler                        0x000011d0   Section        0  timer.o(i.Timer3A_Handler)
-    i.Timer4A_Handler                        0x00001218   Section        0  os.o(i.Timer4A_Handler)
-    i.Timer5A_Handler                        0x000012b4   Section        0  os.o(i.Timer5A_Handler)
-    i.TxFifo_Get                             0x00001350   Section        0  uart.o(i.TxFifo_Get)
-    i.TxFifo_Size                            0x0000138c   Section        0  uart.o(i.TxFifo_Size)
-    i.UART0_Handler                          0x000013a4   Section        0  uart.o(i.UART0_Handler)
-    i.WTimer0B_Init                          0x000013fc   Section        0  diskio.o(i.WTimer0B_Init)
-    i.WideTimer0A_Handler                    0x00001484   Section        0  os.o(i.WideTimer0A_Handler)
-    i.WideTimer0B_Handler                    0x000014f4   Section        0  diskio.o(i.WideTimer0B_Handler)
-    i.WideTimer4A_Handler                    0x0000150c   Section        0  os.o(i.WideTimer4A_Handler)
-    i.__scatterload_copy                     0x0000159c   Section       14  handlers.o(i.__scatterload_copy)
-    i.__scatterload_null                     0x000015aa   Section        2  handlers.o(i.__scatterload_null)
-    i.__scatterload_zeroinit                 0x000015ac   Section       14  handlers.o(i.__scatterload_zeroinit)
-    i.check_fs                               0x000015bc   Section        0  ff.o(i.check_fs)
-    check_fs                                 0x000015bd   Thumb Code   140  ff.o(i.check_fs)
-    i.chk_chr                                0x0000164c   Section        0  ff.o(i.chk_chr)
-    chk_chr                                  0x0000164d   Thumb Code    24  ff.o(i.chk_chr)
-    i.clust2sect                             0x00001664   Section        0  ff.o(i.clust2sect)
-    i.commandList                            0x0000167e   Section        0  st7735.o(i.commandList)
-    commandList                              0x0000167f   Thumb Code    86  st7735.o(i.commandList)
-    i.commonInit                             0x000016d4   Section        0  st7735.o(i.commonInit)
-    commonInit                               0x000016d5   Thumb Code   382  st7735.o(i.commonInit)
-    i.copyHardwareToSoftware                 0x00001888   Section        0  uart.o(i.copyHardwareToSoftware)
-    copyHardwareToSoftware                   0x00001889   Thumb Code    36  uart.o(i.copyHardwareToSoftware)
-    i.copySoftwareToHardware                 0x000018b0   Section        0  uart.o(i.copySoftwareToHardware)
-    copySoftwareToHardware                   0x000018b1   Thumb Code    38  uart.o(i.copySoftwareToHardware)
-    i.create_chain                           0x000018dc   Section        0  ff.o(i.create_chain)
-    create_chain                             0x000018dd   Thumb Code   214  ff.o(i.create_chain)
-    i.create_name                            0x000019b4   Section        0  ff.o(i.create_name)
-    create_name                              0x000019b5   Thumb Code   418  ff.o(i.create_name)
-    i.deselect                               0x00001b68   Section        0  diskio.o(i.deselect)
-    deselect                                 0x00001b69   Thumb Code    16  diskio.o(i.deselect)
-    i.dir_alloc                              0x00001b7c   Section        0  ff.o(i.dir_alloc)
-    dir_alloc                                0x00001b7d   Thumb Code    92  ff.o(i.dir_alloc)
-    i.dir_find                               0x00001bd8   Section        0  ff.o(i.dir_find)
-    dir_find                                 0x00001bd9   Thumb Code    92  ff.o(i.dir_find)
-    i.dir_next                               0x00001c34   Section        0  ff.o(i.dir_next)
-    dir_next                                 0x00001c35   Thumb Code   270  ff.o(i.dir_next)
-    i.dir_register                           0x00001d42   Section        0  ff.o(i.dir_register)
-    dir_register                             0x00001d43   Thumb Code    58  ff.o(i.dir_register)
-    i.dir_sdi                                0x00001d7c   Section        0  ff.o(i.dir_sdi)
-    dir_sdi                                  0x00001d7d   Thumb Code   158  ff.o(i.dir_sdi)
-    i.disk_initialize                        0x00001e1c   Section        0  diskio.o(i.disk_initialize)
-    i.disk_ioctl                             0x00001f78   Section        0  diskio.o(i.disk_ioctl)
-    i.disk_read                              0x000021a0   Section        0  diskio.o(i.disk_read)
-    i.disk_status                            0x00002230   Section        0  diskio.o(i.disk_status)
-    i.disk_timerproc                         0x00002244   Section        0  diskio.o(i.disk_timerproc)
-    i.disk_write                             0x00002284   Section        0  diskio.o(i.disk_write)
-    i.f_close                                0x00002338   Section        0  ff.o(i.f_close)
-    i.f_lseek                                0x00002358   Section        0  ff.o(i.f_lseek)
-    i.f_mount                                0x000024d8   Section        0  ff.o(i.f_mount)
-    i.f_open                                 0x00002534   Section        0  ff.o(i.f_open)
-    i.f_read                                 0x00002694   Section        0  ff.o(i.f_read)
-    i.f_sync                                 0x00002834   Section        0  ff.o(i.f_sync)
-    i.f_write                                0x000028e4   Section        0  ff.o(i.f_write)
-    i.fillmessage                            0x00002abc   Section        0  st7735.o(i.fillmessage)
-    i.find_volume                            0x00002b04   Section        0  ff.o(i.find_volume)
-    find_volume                              0x00002b05   Thumb Code   890  ff.o(i.find_volume)
-    i.follow_path                            0x00002e90   Section        0  ff.o(i.follow_path)
-    follow_path                              0x00002e91   Thumb Code   176  ff.o(i.follow_path)
-    i.get_fat                                0x00002f40   Section        0  ff.o(i.get_fat)
-    i.get_ldnumber                           0x00003032   Section        0  ff.o(i.get_ldnumber)
-    get_ldnumber                             0x00003033   Thumb Code    74  ff.o(i.get_ldnumber)
-    i.init_spi                               0x0000307c   Section        0  diskio.o(i.init_spi)
-    init_spi                                 0x0000307d   Thumb Code    32  diskio.o(i.init_spi)
-    i.ld_clust                               0x000030a4   Section        0  ff.o(i.ld_clust)
-    ld_clust                                 0x000030a5   Thumb Code    32  ff.o(i.ld_clust)
-    i.main                                   0x000030c4   Section        0  lab5.o(i.main)
-    i.mem_cmp                                0x00003414   Section        0  ff.o(i.mem_cmp)
-    mem_cmp                                  0x00003415   Thumb Code    38  ff.o(i.mem_cmp)
-    i.mem_cpy                                0x0000343a   Section        0  ff.o(i.mem_cpy)
-    mem_cpy                                  0x0000343b   Thumb Code    26  ff.o(i.mem_cpy)
-    i.mem_set                                0x00003454   Section        0  ff.o(i.mem_set)
-    mem_set                                  0x00003455   Thumb Code    20  ff.o(i.mem_set)
-    i.move_window                            0x00003468   Section        0  ff.o(i.move_window)
-    move_window                              0x00003469   Thumb Code    52  ff.o(i.move_window)
-    i.pushColor                              0x0000349c   Section        0  st7735.o(i.pushColor)
-    pushColor                                0x0000349d   Thumb Code    18  st7735.o(i.pushColor)
-    i.put_fat                                0x000034ae   Section        0  ff.o(i.put_fat)
-    i.rcvr_datablock                         0x000035f4   Section        0  diskio.o(i.rcvr_datablock)
-    rcvr_datablock                           0x000035f5   Thumb Code    66  diskio.o(i.rcvr_datablock)
-    i.rcvr_spi                               0x0000363c   Section        0  diskio.o(i.rcvr_spi)
-    rcvr_spi                                 0x0000363d   Thumb Code    40  diskio.o(i.rcvr_spi)
-    i.rcvr_spi_multi                         0x00003668   Section        0  diskio.o(i.rcvr_spi_multi)
-    rcvr_spi_multi                           0x00003669   Thumb Code    24  diskio.o(i.rcvr_spi_multi)
-    i.removeFromList                         0x00003680   Section        0  linkedlist.o(i.removeFromList)
-    i.remove_chain                           0x000036a4   Section        0  ff.o(i.remove_chain)
-    remove_chain                             0x000036a5   Thumb Code   108  ff.o(i.remove_chain)
-    i.select                                 0x00003710   Section        0  diskio.o(i.select)
-    select                                   0x00003711   Thumb Code    44  diskio.o(i.select)
-    i.send_cmd                               0x00003740   Section        0  diskio.o(i.send_cmd)
-    send_cmd                                 0x00003741   Thumb Code   150  diskio.o(i.send_cmd)
-    i.setAddrWindow                          0x000037d8   Section        0  st7735.o(i.setAddrWindow)
-    setAddrWindow                            0x000037d9   Thumb Code   106  st7735.o(i.setAddrWindow)
-    i.st_clust                               0x0000384c   Section        0  ff.o(i.st_clust)
-    st_clust                                 0x0000384d   Thumb Code    16  ff.o(i.st_clust)
-    i.sync_fs                                0x0000385c   Section        0  ff.o(i.sync_fs)
-    sync_fs                                  0x0000385d   Thumb Code   200  ff.o(i.sync_fs)
-    i.sync_window                            0x00003924   Section        0  ff.o(i.sync_window)
-    sync_window                              0x00003925   Thumb Code    82  ff.o(i.sync_window)
-    i.validate                               0x00003976   Section        0  ff.o(i.validate)
-    validate                                 0x00003977   Thumb Code    54  ff.o(i.validate)
-    i.wait_ready                             0x000039ac   Section        0  diskio.o(i.wait_ready)
-    wait_ready                               0x000039ad   Thumb Code    42  diskio.o(i.wait_ready)
-    i.writecommand                           0x000039dc   Section        0  st7735.o(i.writecommand)
-    writecommand                             0x000039dd   Thumb Code    66  st7735.o(i.writecommand)
-    i.writedata                              0x00003a2c   Section        0  st7735.o(i.writedata)
-    writedata                                0x00003a2d   Thumb Code    68  st7735.o(i.writedata)
-    i.xchg_spi                               0x00003a7c   Section        0  diskio.o(i.xchg_spi)
-    xchg_spi                                 0x00003a7d   Thumb Code    48  diskio.o(i.xchg_spi)
-    i.xmit_datablock                         0x00003ab0   Section        0  diskio.o(i.xmit_datablock)
-    xmit_datablock                           0x00003ab1   Thumb Code    76  diskio.o(i.xmit_datablock)
-    i.xmit_spi_multi                         0x00003afc   Section        0  diskio.o(i.xmit_spi_multi)
-    xmit_spi_multi                           0x00003afd   Thumb Code    40  diskio.o(i.xmit_spi_multi)
-    .constdata                               0x00003b28   Section     2114  st7735.o(.constdata)
-    Font                                     0x00003b28   Data        1275  st7735.o(.constdata)
-    Bcmd                                     0x00004023   Data         103  st7735.o(.constdata)
-    Rcmd1                                    0x0000408a   Data          59  st7735.o(.constdata)
-    Rcmd2green                               0x000040c5   Data          13  st7735.o(.constdata)
-    Rcmd2red                                 0x000040d2   Data          13  st7735.o(.constdata)
-    Rcmd3                                    0x000040df   Data          43  st7735.o(.constdata)
-    .constdata                               0x0000436a   Section       17  lab5.o(.constdata)
-    .data                                    0x20000000   Section       44  st7735.o(.data)
-    _width                                   0x2000000a   Data           2  st7735.o(.data)
-    _height                                  0x2000000c   Data           2  st7735.o(.data)
-    ColStart                                 0x20000014   Data           1  st7735.o(.data)
-    RowStart                                 0x20000015   Data           1  st7735.o(.data)
-    Rotation                                 0x20000016   Data           1  st7735.o(.data)
-    TabColor                                 0x20000017   Data           1  st7735.o(.data)
-    .data                                    0x2000002c   Section      192  os.o(.data)
-    num_threads                              0x2000002c   Data           4  os.o(.data)
-    num_processes                            0x2000003c   Data           4  os.o(.data)
-    LastTime                                 0x2000007c   Data           4  os.o(.data)
-    LastTime                                 0x20000080   Data           4  os.o(.data)
-    Last                                     0x20000094   Data           4  os.o(.data)
-    Release                                  0x20000098   Data           4  os.o(.data)
-    .data                                    0x200000ec   Section       28  adc.o(.data)
-    .data                                    0x20000108   Section       40  timer.o(.data)
-    .data                                    0x20000130   Section       16  uart.o(.data)
-    .data                                    0x20000140   Section       17  diskio.o(.data)
-    Stat                                     0x20000140   Data           1  diskio.o(.data)
-    Timer1                                   0x20000148   Data           4  diskio.o(.data)
-    Timer2                                   0x2000014c   Data           4  diskio.o(.data)
-    CardType                                 0x20000150   Data           1  diskio.o(.data)
-    .data                                    0x20000154   Section        6  ff.o(.data)
-    FatFs                                    0x20000154   Data           4  ff.o(.data)
-    Fsid                                     0x20000158   Data           2  ff.o(.data)
-    .data                                    0x2000015c   Section       10  lab5.o(.data)
-    .bss                                     0x20000168   Section       12  st7735.o(.bss)
-    .bss                                     0x20000174   Section    10476  os.o(.bss)
-    OS_Fifo                                  0x20002848   Data         500  os.o(.bss)
-    .bss                                     0x20002a60   Section       32  uart.o(.bss)
-    RxFifo                                   0x20002a60   Data          16  uart.o(.bss)
-    TxFifo                                   0x20002a70   Data          16  uart.o(.bss)
-    .bss                                     0x20002a80   Section     2172  lab5.o(.bss)
-    g_sFatFs                                 0x20002a80   Data         564  lab5.o(.bss)
-    STACK                                    0x20003300   Section     1024  startup.o(STACK)
-    StackMem                                 0x20003300   Data           0  startup.o(STACK)
+    .text                                    0x00000298   Section       28  startup.o(.text)
+    .text                                    0x000002b4   Section      116  osasm.o(.text)
+    .text                                    0x00000328   Section        0  memcpya.o(.text)
+    .text                                    0x0000034c   Section        0  strlen.o(.text)
+    .text                                    0x0000035a   Section        0  strcmp.o(.text)
+    .text                                    0x00000376   Section        0  strncmp.o(.text)
+    .text                                    0x00000394   Section        0  dmul.o(.text)
+    .text                                    0x00000478   Section        0  dflti.o(.text)
+    .text                                    0x0000049a   Section        0  dfixui.o(.text)
+    .text                                    0x000004cc   Section        0  llushr.o(.text)
+    .text                                    0x000004ec   Section        0  depilogue.o(.text)
+    .text                                    0x000004ec   Section        0  iusefp.o(.text)
+    .text                                    0x000005aa   Section        0  dadd.o(.text)
+    .text                                    0x000006f8   Section        0  ddiv.o(.text)
+    .text                                    0x000007d6   Section        0  dscalb.o(.text)
+    .text                                    0x00000804   Section       40  cdrcmple.o(.text)
+    .text                                    0x0000082c   Section       36  init.o(.text)
+    .text                                    0x00000850   Section        0  llshl.o(.text)
+    .text                                    0x0000086e   Section        0  llsshr.o(.text)
+    .text                                    0x00000892   Section        0  dsqrt.o(.text)
+    .text                                    0x00000934   Section        0  __dczerorl2.o(.text)
+    i.ADC0Seq2_Handler                       0x00000990   Section        0  adc.o(i.ADC0Seq2_Handler)
+    i.ADC0_InitSWTriggerSeq3                 0x000009b4   Section        0  adcswtrigger.o(i.ADC0_InitSWTriggerSeq3)
+    i.ADC_Collect_old                        0x00000dbc   Section        0  adc.o(i.ADC_Collect_old)
+    i.ADC_In                                 0x00000e08   Section        0  adc.o(i.ADC_In)
+    i.ADC_Open                               0x00000e54   Section        0  adc.o(i.ADC_Open)
+    i.ADC_Status                             0x00000e78   Section        0  adc.o(i.ADC_Status)
+    i.CS_Init                                0x00000e84   Section        0  diskio.o(i.CS_Init)
+    i.CmdLineProcess                         0x00000f1c   Section        0  cmdline.o(i.CmdLineProcess)
+    i.Delay1ms                               0x00000fb0   Section        0  st7735.o(i.Delay1ms)
+    i.EdgeCounter_PF4_Init                   0x00000fd0   Section        0  edgetriggered.o(i.EdgeCounter_PF4_Init)
+    i.GPIOPortF_Handler                      0x000010a4   Section        0  os.o(i.GPIOPortF_Handler)
+    i.Heap_Free                              0x00001114   Section        0  heap.o(i.Heap_Free)
+    i.Heap_Init                              0x000011a4   Section        0  heap.o(i.Heap_Init)
+    i.Heap_Malloc                            0x000011bc   Section        0  heap.o(i.Heap_Malloc)
+    i.Heap_Stats                             0x00001210   Section        0  heap.o(i.Heap_Stats)
+    i.Heap_Test                              0x00001284   Section        0  heap.o(i.Heap_Test)
+    i.IdleTask                               0x000012ec   Section        0  lab5.o(i.IdleTask)
+    i.Interpreter                            0x00001300   Section        0  interpreter.o(i.Interpreter)
+    i.LOADER_CLEAR                           0x0000133c   Section        0  loader.o(i.LOADER_CLEAR)
+    i.LOADER_OPEN_FOR_RD                     0x00001354   Section        0  loader.o(i.LOADER_OPEN_FOR_RD)
+    i.LOADER_READ                            0x00001370   Section        0  loader.o(i.LOADER_READ)
+    i.LoadProgram                            0x00001390   Section        0  cmdline.o(i.LoadProgram)
+    i.OS_AddProcess                          0x000013d4   Section        0  os.o(i.OS_AddProcess)
+    i.OS_AddThread                           0x000013e0   Section        0  os.o(i.OS_AddThread)
+    i.OS_AddThreadPri                        0x000014c0   Section        0  os.o(i.OS_AddThreadPri)
+    i.OS_ClearCriticalTime                   0x00001518   Section        0  os.o(i.OS_ClearCriticalTime)
+    i.OS_ClearPeriodicTime                   0x00001528   Section        0  os.o(i.OS_ClearPeriodicTime)
+    i.OS_Fifo_Init                           0x00001534   Section        0  os.o(i.OS_Fifo_Init)
+    i.OS_GetProfilerAndReset                 0x00001570   Section        0  os.o(i.OS_GetProfilerAndReset)
+    i.OS_Init                                0x00001574   Section        0  os.o(i.OS_Init)
+    i.OS_InitSemaphore                       0x0000164c   Section        0  os.o(i.OS_InitSemaphore)
+    i.OS_Launch                              0x00001658   Section        0  os.o(i.OS_Launch)
+    i.OS_ReadCriticalPercentage              0x0000167c   Section        0  os.o(i.OS_ReadCriticalPercentage)
+    i.OS_ReadCriticalTime                    0x000016a4   Section        0  os.o(i.OS_ReadCriticalTime)
+    i.OS_ReadPeriodicTime                    0x000016b0   Section        0  os.o(i.OS_ReadPeriodicTime)
+    i.OS_SelectNextThread                    0x000016bc   Section        0  os.o(i.OS_SelectNextThread)
+    i.OS_Suspend                             0x0000174c   Section        0  os.o(i.OS_Suspend)
+    i.OS_Time                                0x00001764   Section        0  os.o(i.OS_Time)
+    i.OS_TimeDifference                      0x00001774   Section        0  os.o(i.OS_TimeDifference)
+    i.OS_bSignal                             0x00001780   Section        0  os.o(i.OS_bSignal)
+    i.OS_bWait                               0x000017d8   Section        0  os.o(i.OS_bWait)
+    i.OS_timeDisabled                        0x00001834   Section        0  os.o(i.OS_timeDisabled)
+    i.OS_timeEnabled                         0x00001850   Section        0  os.o(i.OS_timeEnabled)
+    i.OutCRLF                                0x00001898   Section        0  uart.o(i.OutCRLF)
+    i.PLL_Init                               0x000018a8   Section        0  pll.o(i.PLL_Init)
+    i.RxFifo_Get                             0x00001924   Section        0  uart.o(i.RxFifo_Get)
+    i.RxFifo_Init                            0x00001960   Section        0  uart.o(i.RxFifo_Init)
+    i.RxFifo_Put                             0x00001984   Section        0  uart.o(i.RxFifo_Put)
+    i.RxFifo_Size                            0x000019c0   Section        0  uart.o(i.RxFifo_Size)
+    i.SSI0_Init                              0x000019d8   Section        0  diskio.o(i.SSI0_Init)
+    i.ST7735_Color565                        0x00001b20   Section        0  st7735.o(i.ST7735_Color565)
+    i.ST7735_DrawCharS                       0x00001b38   Section        0  st7735.o(i.ST7735_DrawCharS)
+    i.ST7735_DrawPixel                       0x00001c34   Section        0  st7735.o(i.ST7735_DrawPixel)
+    i.ST7735_FillRect                        0x00001c80   Section        0  st7735.o(i.ST7735_FillRect)
+    i.ST7735_FillScreen                      0x00001d2c   Section        0  st7735.o(i.ST7735_FillScreen)
+    i.ST7735_InitR                           0x00001d50   Section        0  st7735.o(i.ST7735_InitR)
+    i.ST7735_Message                         0x00001dbc   Section        0  st7735.o(i.ST7735_Message)
+    i.ST7735_OutString                       0x00001df8   Section        0  st7735.o(i.ST7735_OutString)
+    i.ST7735_OutUDec2                        0x00001e50   Section        0  st7735.o(i.ST7735_OutUDec2)
+    i.SetInitialStack                        0x00001ea0   Section        0  os.o(i.SetInitialStack)
+    i.SysTick_Handler                        0x00001ff0   Section        0  os.o(i.SysTick_Handler)
+    i.Timer0A_Handler                        0x00002004   Section        0  timer.o(i.Timer0A_Handler)
+    i.Timer1A_Handler                        0x0000204c   Section        0  timer.o(i.Timer1A_Handler)
+    i.Timer2A_Handler                        0x00002094   Section        0  adc.o(i.Timer2A_Handler)
+    i.Timer2_Init                            0x000020e8   Section        0  timer.o(i.Timer2_Init)
+    i.Timer3A_Handler                        0x00002140   Section        0  timer.o(i.Timer3A_Handler)
+    i.Timer4A_Handler                        0x00002188   Section        0  os.o(i.Timer4A_Handler)
+    i.Timer4A_Init                           0x00002224   Section        0  os.o(i.Timer4A_Init)
+    i.Timer5A_Handler                        0x00002258   Section        0  os.o(i.Timer5A_Handler)
+    i.Timer5_Init                            0x000022f4   Section        0  os.o(i.Timer5_Init)
+    i.TxFifo_Get                             0x00002334   Section        0  uart.o(i.TxFifo_Get)
+    i.TxFifo_Init                            0x00002370   Section        0  uart.o(i.TxFifo_Init)
+    i.TxFifo_Put                             0x00002394   Section        0  uart.o(i.TxFifo_Put)
+    i.TxFifo_Size                            0x000023d0   Section        0  uart.o(i.TxFifo_Size)
+    i.UART0_Handler                          0x000023e8   Section        0  uart.o(i.UART0_Handler)
+    i.UART_InChar                            0x00002440   Section        0  uart.o(i.UART_InChar)
+    i.UART_InString                          0x00002454   Section        0  uart.o(i.UART_InString)
+    i.UART_Init                              0x0000249c   Section        0  uart.o(i.UART_Init)
+    i.UART_OutChar                           0x00002568   Section        0  uart.o(i.UART_OutChar)
+    i.UART_OutString                         0x0000259c   Section        0  uart.o(i.UART_OutString)
+    i.UART_OutUDec                           0x000025b4   Section        0  uart.o(i.UART_OutUDec)
+    i.WTimer0A_Init                          0x000025e0   Section        0  os.o(i.WTimer0A_Init)
+    i.WTimer0B_Init                          0x00002658   Section        0  diskio.o(i.WTimer0B_Init)
+    i.WTimer4A_Init                          0x000026e0   Section        0  os.o(i.WTimer4A_Init)
+    i.WTimer5A_Init                          0x00002748   Section        0  os.o(i.WTimer5A_Init)
+    i.WideTimer0A_Handler                    0x000027a8   Section        0  os.o(i.WideTimer0A_Handler)
+    i.WideTimer0B_Handler                    0x00002818   Section        0  diskio.o(i.WideTimer0B_Handler)
+    i.WideTimer4A_Handler                    0x00002830   Section        0  os.o(i.WideTimer4A_Handler)
+    i.__ARM_fpclassify                       0x000028c0   Section        0  fpclassify.o(i.__ARM_fpclassify)
+    i.__kernel_poly                          0x000028e8   Section        0  poly.o(i.__kernel_poly)
+    i.__mathlib_dbl_underflow                0x00002994   Section        0  dunder.o(i.__mathlib_dbl_underflow)
+    i.__scatterload_copy                     0x000029a4   Section       14  handlers.o(i.__scatterload_copy)
+    i.__scatterload_null                     0x000029b2   Section        2  handlers.o(i.__scatterload_null)
+    i.__scatterload_zeroinit                 0x000029b4   Section       14  handlers.o(i.__scatterload_zeroinit)
+    i.__set_errno                            0x000029c4   Section        0  errno.o(i.__set_errno)
+    i.adcCall                                0x000029d0   Section        0  cmdline.o(i.adcCall)
+    i.addToList                              0x00002c44   Section        0  linkedlist.o(i.addToList)
+    i.addressOf                              0x00002c64   Section        0  loader.o(i.addressOf)
+    addressOf                                0x00002c65   Thumb Code    88  loader.o(i.addressOf)
+    i.blockHeader                            0x00002cbc   Section        0  heap.o(i.blockHeader)
+    blockHeader                              0x00002cbd   Thumb Code    18  heap.o(i.blockHeader)
+    i.blockRoom                              0x00002cce   Section        0  heap.o(i.blockRoom)
+    blockRoom                                0x00002ccf   Thumb Code    18  heap.o(i.blockRoom)
+    i.blockTrailer                           0x00002ce0   Section        0  heap.o(i.blockTrailer)
+    blockTrailer                             0x00002ce1   Thumb Code    18  heap.o(i.blockTrailer)
+    i.blockUnused                            0x00002cf2   Section        0  heap.o(i.blockUnused)
+    blockUnused                              0x00002cf3   Thumb Code     8  heap.o(i.blockUnused)
+    i.blockUsed                              0x00002cfa   Section        0  heap.o(i.blockUsed)
+    blockUsed                                0x00002cfb   Thumb Code    16  heap.o(i.blockUsed)
+    i.check_fs                               0x00002d0c   Section        0  ff.o(i.check_fs)
+    check_fs                                 0x00002d0d   Thumb Code   140  ff.o(i.check_fs)
+    i.chk_chr                                0x00002d9c   Section        0  ff.o(i.chk_chr)
+    chk_chr                                  0x00002d9d   Thumb Code    24  ff.o(i.chk_chr)
+    i.clust2sect                             0x00002db4   Section        0  ff.o(i.clust2sect)
+    i.commandList                            0x00002dce   Section        0  st7735.o(i.commandList)
+    commandList                              0x00002dcf   Thumb Code    86  st7735.o(i.commandList)
+    i.commonInit                             0x00002e24   Section        0  st7735.o(i.commonInit)
+    commonInit                               0x00002e25   Thumb Code   330  st7735.o(i.commonInit)
+    i.copyHardwareToSoftware                 0x00002f9c   Section        0  uart.o(i.copyHardwareToSoftware)
+    copyHardwareToSoftware                   0x00002f9d   Thumb Code    36  uart.o(i.copyHardwareToSoftware)
+    i.copySoftwareToHardware                 0x00002fc4   Section        0  uart.o(i.copySoftwareToHardware)
+    copySoftwareToHardware                   0x00002fc5   Thumb Code    38  uart.o(i.copySoftwareToHardware)
+    i.create_chain                           0x00002ff0   Section        0  ff.o(i.create_chain)
+    create_chain                             0x00002ff1   Thumb Code   214  ff.o(i.create_chain)
+    i.create_name                            0x000030c8   Section        0  ff.o(i.create_name)
+    create_name                              0x000030c9   Thumb Code   418  ff.o(i.create_name)
+    i.deselect                               0x0000327c   Section        0  diskio.o(i.deselect)
+    deselect                                 0x0000327d   Thumb Code    16  diskio.o(i.deselect)
+    i.dir_alloc                              0x00003290   Section        0  ff.o(i.dir_alloc)
+    dir_alloc                                0x00003291   Thumb Code    92  ff.o(i.dir_alloc)
+    i.dir_find                               0x000032ec   Section        0  ff.o(i.dir_find)
+    dir_find                                 0x000032ed   Thumb Code    92  ff.o(i.dir_find)
+    i.dir_next                               0x00003348   Section        0  ff.o(i.dir_next)
+    dir_next                                 0x00003349   Thumb Code   270  ff.o(i.dir_next)
+    i.dir_read                               0x00003456   Section        0  ff.o(i.dir_read)
+    dir_read                                 0x00003457   Thumb Code   112  ff.o(i.dir_read)
+    i.dir_register                           0x000034c6   Section        0  ff.o(i.dir_register)
+    dir_register                             0x000034c7   Thumb Code    58  ff.o(i.dir_register)
+    i.dir_remove                             0x00003500   Section        0  ff.o(i.dir_remove)
+    dir_remove                               0x00003501   Thumb Code    54  ff.o(i.dir_remove)
+    i.dir_sdi                                0x00003536   Section        0  ff.o(i.dir_sdi)
+    dir_sdi                                  0x00003537   Thumb Code   158  ff.o(i.dir_sdi)
+    i.disk_initialize                        0x000035d4   Section        0  diskio.o(i.disk_initialize)
+    i.disk_ioctl                             0x00003730   Section        0  diskio.o(i.disk_ioctl)
+    i.disk_read                              0x00003958   Section        0  diskio.o(i.disk_read)
+    i.disk_status                            0x000039e8   Section        0  diskio.o(i.disk_status)
+    i.disk_timerproc                         0x000039fc   Section        0  diskio.o(i.disk_timerproc)
+    i.disk_write                             0x00003a3c   Section        0  diskio.o(i.disk_write)
+    i.dummy                                  0x00003af0   Section        0  adc.o(i.dummy)
+    i.dummy1                                 0x00003af2   Section        0  os.o(i.dummy1)
+    i.dumpData                               0x00003af6   Section        0  loader.o(i.dumpData)
+    dumpData                                 0x00003af7   Thumb Code     2  loader.o(i.dumpData)
+    i.exec_elf                               0x00003af8   Section        0  loader.o(i.exec_elf)
+    i.f_close                                0x00003be0   Section        0  ff.o(i.f_close)
+    i.f_lseek                                0x00003c00   Section        0  ff.o(i.f_lseek)
+    i.f_mount                                0x00003d80   Section        0  ff.o(i.f_mount)
+    i.f_open                                 0x00003ddc   Section        0  ff.o(i.f_open)
+    i.f_read                                 0x00003f3c   Section        0  ff.o(i.f_read)
+    i.f_sync                                 0x000040dc   Section        0  ff.o(i.f_sync)
+    i.f_unlink                               0x0000418c   Section        0  ff.o(i.f_unlink)
+    i.fileCall                               0x0000424c   Section        0  cmdline.o(i.fileCall)
+    i.fillmessage                            0x00004474   Section        0  st7735.o(i.fillmessage)
+    i.find_volume                            0x000044bc   Section        0  ff.o(i.find_volume)
+    find_volume                              0x000044bd   Thumb Code   890  ff.o(i.find_volume)
+    i.follow_path                            0x00004848   Section        0  ff.o(i.follow_path)
+    follow_path                              0x00004849   Thumb Code   176  ff.o(i.follow_path)
+    i.freeElf                                0x000048f8   Section        0  loader.o(i.freeElf)
+    freeElf                                  0x000048f9   Thumb Code    12  loader.o(i.freeElf)
+    i.freeSection                            0x00004904   Section        0  loader.o(i.freeSection)
+    freeSection                              0x00004905   Thumb Code    16  loader.o(i.freeSection)
+    i.freeSegment                            0x00004914   Section        0  loader.o(i.freeSegment)
+    freeSegment                              0x00004915   Thumb Code    16  loader.o(i.freeSegment)
+    i.get_fat                                0x00004924   Section        0  ff.o(i.get_fat)
+    i.get_ldnumber                           0x00004a16   Section        0  ff.o(i.get_ldnumber)
+    get_ldnumber                             0x00004a17   Thumb Code    74  ff.o(i.get_ldnumber)
+    i.heapCall                               0x00004a60   Section        0  cmdline.o(i.heapCall)
+    i.inHeapRange                            0x00004d04   Section        0  heap.o(i.inHeapRange)
+    inHeapRange                              0x00004d05   Thumb Code    24  heap.o(i.inHeapRange)
+    i.initElf                                0x00004d20   Section        0  loader.o(i.initElf)
+    initElf                                  0x00004d21   Thumb Code   134  loader.o(i.initElf)
+    i.init_spi                               0x00004da8   Section        0  diskio.o(i.init_spi)
+    init_spi                                 0x00004da9   Thumb Code    32  diskio.o(i.init_spi)
+    i.jumpTo                                 0x00004dd0   Section        0  loader.o(i.jumpTo)
+    jumpTo                                   0x00004dd1   Thumb Code    42  loader.o(i.jumpTo)
+    i.lcdCall                                0x00004e18   Section        0  cmdline.o(i.lcdCall)
+    i.ld_clust                               0x00004f38   Section        0  ff.o(i.ld_clust)
+    ld_clust                                 0x00004f39   Thumb Code    32  ff.o(i.ld_clust)
+    i.loadProgram                            0x00004f58   Section        0  loader.o(i.loadProgram)
+    loadProgram                              0x00004f59   Thumb Code   178  loader.o(i.loadProgram)
+    i.loadSecData                            0x00005054   Section        0  loader.o(i.loadSecData)
+    loadSecData                              0x00005055   Thumb Code   128  loader.o(i.loadSecData)
+    i.loadSegData                            0x00005140   Section        0  loader.o(i.loadSegData)
+    loadSegData                              0x00005141   Thumb Code   136  loader.o(i.loadSegData)
+    i.loadSymbols                            0x00005234   Section        0  loader.o(i.loadSymbols)
+    loadSymbols                              0x00005235   Thumb Code   122  loader.o(i.loadSymbols)
+    i.main                                   0x000052fc   Section        0  lab5.o(i.main)
+    i.markBlockUnused                        0x000053d0   Section        0  heap.o(i.markBlockUnused)
+    markBlockUnused                          0x000053d1   Thumb Code    48  heap.o(i.markBlockUnused)
+    i.markBlockUsed                          0x00005400   Section        0  heap.o(i.markBlockUsed)
+    markBlockUsed                            0x00005401   Thumb Code    48  heap.o(i.markBlockUsed)
+    i.mem_cmp                                0x00005430   Section        0  ff.o(i.mem_cmp)
+    mem_cmp                                  0x00005431   Thumb Code    38  ff.o(i.mem_cmp)
+    i.mem_cpy                                0x00005456   Section        0  ff.o(i.mem_cpy)
+    mem_cpy                                  0x00005457   Thumb Code    26  ff.o(i.mem_cpy)
+    i.mem_set                                0x00005470   Section        0  ff.o(i.mem_set)
+    mem_set                                  0x00005471   Thumb Code    20  ff.o(i.mem_set)
+    i.mergeBlockWithBelow                    0x00005484   Section        0  heap.o(i.mergeBlockWithBelow)
+    mergeBlockWithBelow                      0x00005485   Thumb Code    46  heap.o(i.mergeBlockWithBelow)
+    i.move_window                            0x000054b2   Section        0  ff.o(i.move_window)
+    move_window                              0x000054b3   Thumb Code    52  ff.o(i.move_window)
+    i.myAtoi                                 0x000054e6   Section        0  cmdline.o(i.myAtoi)
+    i.nextBlockHeader                        0x0000550a   Section        0  heap.o(i.nextBlockHeader)
+    nextBlockHeader                          0x0000550b   Thumb Code    14  heap.o(i.nextBlockHeader)
+    i.osCall                                 0x00005518   Section        0  cmdline.o(i.osCall)
+    i.parseNumber                            0x00005728   Section        0  cmdline.o(i.parseNumber)
+    i.placeDynamic                           0x0000578c   Section        0  loader.o(i.placeDynamic)
+    placeDynamic                             0x0000578d   Thumb Code   132  loader.o(i.placeDynamic)
+    i.placeInfo                              0x00005810   Section        0  loader.o(i.placeInfo)
+    placeInfo                                0x00005811   Thumb Code   248  loader.o(i.placeInfo)
+    i.pow                                    0x0000595c   Section        0  pow.o(i.pow)
+    i.previousBlockHeader                    0x0000633c   Section        0  heap.o(i.previousBlockHeader)
+    previousBlockHeader                      0x0000633d   Thumb Code    12  heap.o(i.previousBlockHeader)
+    i.pushColor                              0x00006348   Section        0  st7735.o(i.pushColor)
+    pushColor                                0x00006349   Thumb Code    18  st7735.o(i.pushColor)
+    i.put_fat                                0x0000635a   Section        0  ff.o(i.put_fat)
+    i.rcvr_datablock                         0x000064a0   Section        0  diskio.o(i.rcvr_datablock)
+    rcvr_datablock                           0x000064a1   Thumb Code    66  diskio.o(i.rcvr_datablock)
+    i.rcvr_spi                               0x000064e8   Section        0  diskio.o(i.rcvr_spi)
+    rcvr_spi                                 0x000064e9   Thumb Code    40  diskio.o(i.rcvr_spi)
+    i.rcvr_spi_multi                         0x00006514   Section        0  diskio.o(i.rcvr_spi_multi)
+    rcvr_spi_multi                           0x00006515   Thumb Code    24  diskio.o(i.rcvr_spi_multi)
+    i.readSecHeader                          0x0000652c   Section        0  loader.o(i.readSecHeader)
+    readSecHeader                            0x0000652d   Thumb Code    62  loader.o(i.readSecHeader)
+    i.readSection                            0x0000656a   Section        0  loader.o(i.readSection)
+    readSection                              0x0000656b   Thumb Code    58  loader.o(i.readSection)
+    i.readSectionName                        0x000065a4   Section        0  loader.o(i.readSectionName)
+    readSectionName                          0x000065a5   Thumb Code    68  loader.o(i.readSectionName)
+    i.readSegHeader                          0x000065e8   Section        0  loader.o(i.readSegHeader)
+    readSegHeader                            0x000065e9   Thumb Code    58  loader.o(i.readSegHeader)
+    i.readSymbol                             0x00006622   Section        0  loader.o(i.readSymbol)
+    readSymbol                               0x00006623   Thumb Code   114  loader.o(i.readSymbol)
+    i.readSymbolName                         0x00006694   Section        0  loader.o(i.readSymbolName)
+    readSymbolName                           0x00006695   Thumb Code    68  loader.o(i.readSymbolName)
+    i.relJmpCall                             0x000066d8   Section        0  loader.o(i.relJmpCall)
+    relJmpCall                               0x000066d9   Thumb Code   166  loader.o(i.relJmpCall)
+    i.relocate                               0x00006780   Section        0  loader.o(i.relocate)
+    relocate                                 0x00006781   Thumb Code   168  loader.o(i.relocate)
+    i.relocateProgram                        0x00006848   Section        0  loader.o(i.relocateProgram)
+    relocateProgram                          0x00006849   Thumb Code    32  loader.o(i.relocateProgram)
+    i.relocateSection                        0x00006888   Section        0  loader.o(i.relocateSection)
+    relocateSection                          0x00006889   Thumb Code    66  loader.o(i.relocateSection)
+    i.relocateSections                       0x0000690c   Section        0  loader.o(i.relocateSections)
+    relocateSections                         0x0000690d   Thumb Code    48  loader.o(i.relocateSections)
+    i.relocateSymbol                         0x00006954   Section        0  loader.o(i.relocateSymbol)
+    relocateSymbol                           0x00006955   Thumb Code    56  loader.o(i.relocateSymbol)
+    i.removeFromList                         0x0000698c   Section        0  linkedlist.o(i.removeFromList)
+    i.removeThreadPri                        0x000069b0   Section        0  os.o(i.removeThreadPri)
+    i.remove_chain                           0x000069f8   Section        0  ff.o(i.remove_chain)
+    remove_chain                             0x000069f9   Thumb Code   108  ff.o(i.remove_chain)
+    i.sectionOf                              0x00006a64   Section        0  loader.o(i.sectionOf)
+    sectionOf                                0x00006a65   Thumb Code    70  loader.o(i.sectionOf)
+    i.select                                 0x00006aac   Section        0  diskio.o(i.select)
+    select                                   0x00006aad   Thumb Code    44  diskio.o(i.select)
+    i.send_cmd                               0x00006adc   Section        0  diskio.o(i.send_cmd)
+    send_cmd                                 0x00006add   Thumb Code   150  diskio.o(i.send_cmd)
+    i.setAddrWindow                          0x00006b74   Section        0  st7735.o(i.setAddrWindow)
+    setAddrWindow                            0x00006b75   Thumb Code   106  st7735.o(i.setAddrWindow)
+    i.splitAndMarkBlockUsed                  0x00006be8   Section        0  heap.o(i.splitAndMarkBlockUsed)
+    splitAndMarkBlockUsed                    0x00006be9   Thumb Code    76  heap.o(i.splitAndMarkBlockUsed)
+    i.sqrt                                   0x00006c34   Section        0  sqrt.o(i.sqrt)
+    i.st_clust                               0x00006c80   Section        0  ff.o(i.st_clust)
+    st_clust                                 0x00006c81   Thumb Code    16  ff.o(i.st_clust)
+    i.sync_fs                                0x00006c90   Section        0  ff.o(i.sync_fs)
+    sync_fs                                  0x00006c91   Thumb Code   200  ff.o(i.sync_fs)
+    i.sync_window                            0x00006d58   Section        0  ff.o(i.sync_window)
+    sync_window                              0x00006d59   Thumb Code    82  ff.o(i.sync_window)
+    i.validate                               0x00006daa   Section        0  ff.o(i.validate)
+    validate                                 0x00006dab   Thumb Code    54  ff.o(i.validate)
+    i.wait_ready                             0x00006de0   Section        0  diskio.o(i.wait_ready)
+    wait_ready                               0x00006de1   Thumb Code    42  diskio.o(i.wait_ready)
+    i.writecommand                           0x00006e10   Section        0  st7735.o(i.writecommand)
+    writecommand                             0x00006e11   Thumb Code    66  st7735.o(i.writecommand)
+    i.writedata                              0x00006e60   Section        0  st7735.o(i.writedata)
+    writedata                                0x00006e61   Thumb Code    68  st7735.o(i.writedata)
+    i.xchg_spi                               0x00006eb0   Section        0  diskio.o(i.xchg_spi)
+    xchg_spi                                 0x00006eb1   Thumb Code    48  diskio.o(i.xchg_spi)
+    i.xmit_datablock                         0x00006ee4   Section        0  diskio.o(i.xmit_datablock)
+    xmit_datablock                           0x00006ee5   Thumb Code    76  diskio.o(i.xmit_datablock)
+    i.xmit_spi_multi                         0x00006f30   Section        0  diskio.o(i.xmit_spi_multi)
+    xmit_spi_multi                           0x00006f31   Thumb Code    40  diskio.o(i.xmit_spi_multi)
+    .constdata                               0x00006f5c   Section     1506  st7735.o(.constdata)
+    Font                                     0x00006f5c   Data        1275  st7735.o(.constdata)
+    Bcmd                                     0x00007457   Data         103  st7735.o(.constdata)
+    Rcmd1                                    0x000074be   Data          59  st7735.o(.constdata)
+    Rcmd2green                               0x000074f9   Data          13  st7735.o(.constdata)
+    Rcmd2red                                 0x00007506   Data          13  st7735.o(.constdata)
+    Rcmd3                                    0x00007513   Data          43  st7735.o(.constdata)
+    .constdata                               0x00007540   Section       16  cmdline.o(.constdata)
+    symtab                                   0x00007540   Data           8  cmdline.o(.constdata)
+    .constdata                               0x00007550   Section       69  loader.o(.constdata)
+    .constdata                               0x00007598   Section      136  pow.o(.constdata)
+    bp                                       0x00007598   Data          16  pow.o(.constdata)
+    dp_h                                     0x000075a8   Data          16  pow.o(.constdata)
+    dp_l                                     0x000075b8   Data          16  pow.o(.constdata)
+    L                                        0x000075c8   Data          48  pow.o(.constdata)
+    P                                        0x000075f8   Data          40  pow.o(.constdata)
+    .constdata                               0x00007620   Section        8  qnan.o(.constdata)
+    .conststring                             0x00007628   Section       36  cmdline.o(.conststring)
+    .data                                    0x20000000   Section       20  st7735.o(.data)
+    _width                                   0x20000000   Data           2  st7735.o(.data)
+    _height                                  0x20000002   Data           2  st7735.o(.data)
+    ColStart                                 0x20000004   Data           1  st7735.o(.data)
+    RowStart                                 0x20000005   Data           1  st7735.o(.data)
+    Rotation                                 0x20000006   Data           1  st7735.o(.data)
+    TabColor                                 0x20000007   Data           1  st7735.o(.data)
+    .data                                    0x20000014   Section      192  os.o(.data)
+    num_threads                              0x20000014   Data           4  os.o(.data)
+    num_processes                            0x20000024   Data           4  os.o(.data)
+    LastTime                                 0x20000064   Data           4  os.o(.data)
+    LastTime                                 0x20000068   Data           4  os.o(.data)
+    Last                                     0x2000007c   Data           4  os.o(.data)
+    Release                                  0x20000080   Data           4  os.o(.data)
+    .data                                    0x200000d4   Section       28  adc.o(.data)
+    .data                                    0x200000f0   Section      210  cmdline.o(.data)
+    .data                                    0x200001c4   Section       40  timer.o(.data)
+    .data                                    0x200001ec   Section       16  uart.o(.data)
+    .data                                    0x200001fc   Section       17  diskio.o(.data)
+    Stat                                     0x200001fc   Data           1  diskio.o(.data)
+    Timer1                                   0x20000204   Data           4  diskio.o(.data)
+    Timer2                                   0x20000208   Data           4  diskio.o(.data)
+    CardType                                 0x2000020c   Data           1  diskio.o(.data)
+    .data                                    0x20000210   Section        6  ff.o(.data)
+    FatFs                                    0x20000210   Data           4  ff.o(.data)
+    Fsid                                     0x20000214   Data           2  ff.o(.data)
+    .data                                    0x20000218   Section       60  lab5.o(.data)
+    .data                                    0x20000254   Section        4  errno.o(.data)
+    _errno                                   0x20000254   Data           4  errno.o(.data)
+    .bss                                     0x20000258   Section       24  st7735.o(.bss)
+    .bss                                     0x20000270   Section    10476  os.o(.bss)
+    OS_Fifo                                  0x20002944   Data         500  os.o(.bss)
+    .bss                                     0x20002b5c   Section      108  cmdline.o(.bss)
+    g_ppcArgv                                0x20002b90   Data          36  cmdline.o(.bss)
+    .bss                                     0x20002bc8   Section       32  uart.o(.bss)
+    RxFifo                                   0x20002bc8   Data          16  uart.o(.bss)
+    TxFifo                                   0x20002bd8   Data          16  uart.o(.bss)
+    .bss                                     0x20002be8   Section     2192  lab5.o(.bss)
+    g_sFatFs                                 0x20002be8   Data         564  lab5.o(.bss)
+    .bss                                     0x20003478   Section     4096  heap.o(.bss)
+    Heap                                     0x20003478   Data        4096  heap.o(.bss)
+    .bss                                     0x20004478   Section      672  loader.o(.bss)
+    fd                                       0x20004478   Data         548  loader.o(.bss)
+    exec                                     0x2000469c   Data         124  loader.o(.bss)
+    STACK                                    0x20004718   Section     1024  startup.o(STACK)
+    StackMem                                 0x20004718   Data           0  startup.o(STACK)
 
     Global Symbols
 
@@ -1330,188 +1574,292 @@ Image Symbol Table
     _main_init                               0x0000028d   Thumb Code     0  entry9a.o(.ARM.Collect$$$$0000000B)
     __rt_final_cpp                           0x00000295   Thumb Code     0  entry10a.o(.ARM.Collect$$$$0000000D)
     __rt_final_exit                          0x00000295   Thumb Code     0  entry11a.o(.ARM.Collect$$$$0000000F)
-    Delay                                    0x00000299   Thumb Code     6  st7735.o(.emb_text)
-    DisableInterrupts                        0x000002a1   Thumb Code     0  startup.o(.text)
-    EnableInterrupts                         0x000002a5   Thumb Code     0  startup.o(.text)
-    StartCritical                            0x000002a9   Thumb Code     0  startup.o(.text)
-    EndCritical                              0x000002b1   Thumb Code     0  startup.o(.text)
-    WaitForInterrupt                         0x000002b7   Thumb Code     0  startup.o(.text)
-    OS_DisableInterrupts                     0x000002bd   Thumb Code     0  osasm.o(.text)
-    OS_EnableInterrupts                      0x000002cb   Thumb Code     0  osasm.o(.text)
-    PendSV_Handler                           0x000002d9   Thumb Code     0  osasm.o(.text)
-    StartOS                                  0x000002ff   Thumb Code     0  osasm.o(.text)
-    __scatterload                            0x00000331   Thumb Code    28  init.o(.text)
-    __scatterload_rt2                        0x00000331   Thumb Code     0  init.o(.text)
-    __decompress                             0x00000355   Thumb Code     0  __dczerorl.o(.text)
-    __decompress0                            0x00000355   Thumb Code    58  __dczerorl.o(.text)
-    ADC0Seq2_Handler                         0x00000391   Thumb Code    24  adc.o(i.ADC0Seq2_Handler)
-    ADC_In                                   0x000003b5   Thumb Code    60  adc.o(i.ADC_In)
-    CS_Init                                  0x00000401   Thumb Code   132  diskio.o(i.CS_Init)
-    Delay1ms                                 0x00000499   Thumb Code    22  st7735.o(i.Delay1ms)
-    FileSystemTest                           0x000004b1   Thumb Code   552  lab5.o(i.FileSystemTest)
-    GPIOPortF_Handler                        0x0000077d   Thumb Code    82  os.o(i.GPIOPortF_Handler)
-    OS_AddThreadPri                          0x000007ed   Thumb Code    80  os.o(i.OS_AddThreadPri)
-    OS_SelectNextThread                      0x00000845   Thumb Code   128  os.o(i.OS_SelectNextThread)
-    OS_Suspend                               0x000008d5   Thumb Code    18  os.o(i.OS_Suspend)
-    OS_Time                                  0x000008ed   Thumb Code    12  os.o(i.OS_Time)
-    OS_TimeDifference                        0x000008fd   Thumb Code    12  os.o(i.OS_TimeDifference)
-    OS_timeDisabled                          0x00000909   Thumb Code    20  os.o(i.OS_timeDisabled)
-    OS_timeEnabled                           0x00000925   Thumb Code    54  os.o(i.OS_timeEnabled)
-    PLL_Init                                 0x0000096d   Thumb Code   118  pll.o(i.PLL_Init)
-    RxFifo_Put                               0x000009e9   Thumb Code    48  uart.o(i.RxFifo_Put)
-    RxFifo_Size                              0x00000a25   Thumb Code    14  uart.o(i.RxFifo_Size)
-    SDC_CS_Init                              0x00000a3d   Thumb Code   132  st7735.o(i.SDC_CS_Init)
-    SSI0_Init                                0x00000ad5   Thumb Code   296  diskio.o(i.SSI0_Init)
-    ST7735_Color565                          0x00000c1d   Thumb Code    24  st7735.o(i.ST7735_Color565)
-    ST7735_DrawChar                          0x00000c35   Thumb Code   256  st7735.o(i.ST7735_DrawChar)
-    ST7735_DrawCharS                         0x00000d41   Thumb Code   232  st7735.o(i.ST7735_DrawCharS)
-    ST7735_DrawPixel                         0x00000e35   Thumb Code    64  st7735.o(i.ST7735_DrawPixel)
-    ST7735_DrawString                        0x00000e7d   Thumb Code    86  st7735.o(i.ST7735_DrawString)
-    ST7735_FillRect                          0x00000ed5   Thumb Code   164  st7735.o(i.ST7735_FillRect)
-    ST7735_FillScreen                        0x00000f81   Thumb Code    28  st7735.o(i.ST7735_FillScreen)
-    ST7735_InitR                             0x00000fa5   Thumb Code    90  st7735.o(i.ST7735_InitR)
-    ST7735_OutUDec                           0x00001021   Thumb Code   118  st7735.o(i.ST7735_OutUDec)
-    ST7735_SetCursor                         0x000010ad   Thumb Code    22  st7735.o(i.ST7735_SetCursor)
-    ST7735_SetTextColor                      0x000010cd   Thumb Code     6  st7735.o(i.ST7735_SetTextColor)
-    SysTick_Handler                          0x000010d9   Thumb Code    16  os.o(i.SysTick_Handler)
-    Timer0A_Handler                          0x000010ed   Thumb Code    50  timer.o(i.Timer0A_Handler)
-    Timer1A_Handler                          0x00001135   Thumb Code    50  timer.o(i.Timer1A_Handler)
-    Timer2A_Handler                          0x0000117d   Thumb Code    64  adc.o(i.Timer2A_Handler)
-    Timer3A_Handler                          0x000011d1   Thumb Code    50  timer.o(i.Timer3A_Handler)
-    Timer4A_Handler                          0x00001219   Thumb Code   126  os.o(i.Timer4A_Handler)
-    Timer5A_Handler                          0x000012b5   Thumb Code   126  os.o(i.Timer5A_Handler)
-    TxFifo_Get                               0x00001351   Thumb Code    46  uart.o(i.TxFifo_Get)
-    TxFifo_Size                              0x0000138d   Thumb Code    14  uart.o(i.TxFifo_Size)
-    UART0_Handler                            0x000013a5   Thumb Code    82  uart.o(i.UART0_Handler)
-    WTimer0B_Init                            0x000013fd   Thumb Code   112  diskio.o(i.WTimer0B_Init)
-    WideTimer0A_Handler                      0x00001485   Thumb Code    96  os.o(i.WideTimer0A_Handler)
-    WideTimer0B_Handler                      0x000014f5   Thumb Code    20  diskio.o(i.WideTimer0B_Handler)
-    WideTimer4A_Handler                      0x0000150d   Thumb Code   102  os.o(i.WideTimer4A_Handler)
-    __scatterload_copy                       0x0000159d   Thumb Code    14  handlers.o(i.__scatterload_copy)
-    __scatterload_null                       0x000015ab   Thumb Code     2  handlers.o(i.__scatterload_null)
-    __scatterload_zeroinit                   0x000015ad   Thumb Code    14  handlers.o(i.__scatterload_zeroinit)
-    clust2sect                               0x00001665   Thumb Code    26  ff.o(i.clust2sect)
-    disk_initialize                          0x00001e1d   Thumb Code   330  diskio.o(i.disk_initialize)
-    disk_ioctl                               0x00001f79   Thumb Code   544  diskio.o(i.disk_ioctl)
-    disk_read                                0x000021a1   Thumb Code   136  diskio.o(i.disk_read)
-    disk_status                              0x00002231   Thumb Code    14  diskio.o(i.disk_status)
-    disk_timerproc                           0x00002245   Thumb Code    52  diskio.o(i.disk_timerproc)
-    disk_write                               0x00002285   Thumb Code   170  diskio.o(i.disk_write)
-    f_close                                  0x00002339   Thumb Code    32  ff.o(i.f_close)
-    f_lseek                                  0x00002359   Thumb Code   382  ff.o(i.f_lseek)
-    f_mount                                  0x000024d9   Thumb Code    86  ff.o(i.f_mount)
-    f_open                                   0x00002535   Thumb Code   348  ff.o(i.f_open)
-    f_read                                   0x00002695   Thumb Code   414  ff.o(i.f_read)
-    f_sync                                   0x00002835   Thumb Code   170  ff.o(i.f_sync)
-    f_write                                  0x000028e5   Thumb Code   470  ff.o(i.f_write)
-    fillmessage                              0x00002abd   Thumb Code    64  st7735.o(i.fillmessage)
-    get_fat                                  0x00002f41   Thumb Code   242  ff.o(i.get_fat)
-    main                                     0x000030c5   Thumb Code   708  lab5.o(i.main)
-    put_fat                                  0x000034af   Thumb Code   326  ff.o(i.put_fat)
-    removeFromList                           0x00003681   Thumb Code    36  linkedlist.o(i.removeFromList)
-    smallCircle                              0x0000410a   Data          36  st7735.o(.constdata)
-    circle                                   0x0000412e   Data          60  st7735.o(.constdata)
-    dBfs                                     0x0000416a   Data         512  st7735.o(.constdata)
-    inFilename                               0x0000436a   Data           9  lab5.o(.constdata)
-    outFilename                              0x00004373   Data           8  lab5.o(.constdata)
-    Region$$Table$$Base                      0x0000437c   Number         0  anon$$obj.o(Region$$Table)
-    Region$$Table$$Limit                     0x0000439c   Number         0  anon$$obj.o(Region$$Table)
-    StX                                      0x20000000   Data           4  st7735.o(.data)
-    StY                                      0x20000004   Data           4  st7735.o(.data)
-    StTextColor                              0x20000008   Data           2  st7735.o(.data)
-    lastj                                    0x20000010   Data           4  st7735.o(.data)
-    Messageindex                             0x20000018   Data           4  st7735.o(.data)
-    Ymax                                     0x2000001c   Data           4  st7735.o(.data)
-    Ymin                                     0x20000020   Data           4  st7735.o(.data)
-    X                                        0x20000024   Data           4  st7735.o(.data)
-    Yrange                                   0x20000028   Data           4  st7735.o(.data)
-    periodic_threads_count                   0x20000030   Data           1  os.o(.data)
-    runPT                                    0x20000034   Data           4  os.o(.data)
-    nextPT                                   0x20000038   Data           4  os.o(.data)
-    numTasks                                 0x20000040   Data           4  os.o(.data)
-    OS_ms_count                              0x20000044   Data           4  os.o(.data)
-    OS_counter1                              0x20000048   Data           4  os.o(.data)
-    OS_counter2                              0x2000004c   Data           4  os.o(.data)
-    PF0_button                               0x20000050   Data           4  os.o(.data)
-    PF4_button                               0x20000054   Data           4  os.o(.data)
-    pf4_go                                   0x20000058   Data           4  os.o(.data)
-    pf0_go                                   0x2000005c   Data           4  os.o(.data)
-    butt_count                               0x20000060   Data           4  os.o(.data)
-    start                                    0x20000064   Data           4  os.o(.data)
-    fifolimit                                0x20000068   Data           4  os.o(.data)
-    critical_time                            0x2000006c   Data           4  os.o(.data)
-    total_critical_time                      0x20000070   Data           4  os.o(.data)
-    largest_critical_time                    0x20000074   Data           4  os.o(.data)
-    record_count                             0x20000078   Data           4  os.o(.data)
-    Periodic1Task                            0x20000084   Data           4  os.o(.data)
-    Periodic2Task                            0x20000088   Data           4  os.o(.data)
-    SWOneTask                                0x2000008c   Data           4  os.o(.data)
-    SWTwoTask                                0x20000090   Data           4  os.o(.data)
-    Periodic1TaskPeriod                      0x2000009c   Data           4  os.o(.data)
-    Periodic2TaskPeriod                      0x200000a0   Data           4  os.o(.data)
-    MaxJitter                                0x200000a4   Data           4  os.o(.data)
-    MaxJitter2                               0x200000a8   Data           4  os.o(.data)
-    delay                                    0x200000ac   Data           4  os.o(.data)
-    CurrentID                                0x200000b0   Data           2  os.o(.data)
-    time_slice                               0x200000b4   Data           4  os.o(.data)
-    head_sleep                               0x200000b8   Data           4  os.o(.data)
-    tail_sleep                               0x200000bc   Data           4  os.o(.data)
-    head_kill                                0x200000c0   Data           4  os.o(.data)
-    tail_kill                                0x200000c4   Data           4  os.o(.data)
-    head_reAdd                               0x200000c8   Data           4  os.o(.data)
-    tail_reAdd                               0x200000cc   Data           4  os.o(.data)
-    LastPF4                                  0x200000d0   Data           4  os.o(.data)
-    LastPF0                                  0x200000d4   Data           4  os.o(.data)
-    sw1Last                                  0x200000d8   Data           4  os.o(.data)
-    sw2Last                                  0x200000dc   Data           4  os.o(.data)
-    OSPutPt                                  0x200000e0   Data           4  os.o(.data)
-    OSGetPt                                  0x200000e4   Data           4  os.o(.data)
-    MailBox                                  0x200000e8   Data           4  os.o(.data)
-    channel                                  0x200000ec   Data           4  adc.o(.data)
-    sampleCounter                            0x200000f0   Data           4  adc.o(.data)
-    sampleSize                               0x200000f4   Data           4  adc.o(.data)
-    status                                   0x200000f8   Data           1  adc.o(.data)
-    DATA                                     0x200000fc   Data           4  adc.o(.data)
-    ADCPeriodicTask                          0x20000100   Data           4  adc.o(.data)
-    ADCDataConsumer                          0x20000104   Data           4  adc.o(.data)
-    Timer0First                              0x20000108   Data           4  timer.o(.data)
-    Timer0Done                               0x2000010c   Data           4  timer.o(.data)
-    Timer0Pulse                              0x20000110   Data           4  timer.o(.data)
-    Timer1First                              0x20000114   Data           4  timer.o(.data)
-    Timer1Done                               0x20000118   Data           4  timer.o(.data)
-    Timer1Pulse                              0x2000011c   Data           4  timer.o(.data)
-    PeriodicTask2                            0x20000120   Data           4  timer.o(.data)
-    Timer3First                              0x20000124   Data           4  timer.o(.data)
-    Timer3Done                               0x20000128   Data           4  timer.o(.data)
-    Timer3Pulse                              0x2000012c   Data           4  timer.o(.data)
-    RxPutI                                   0x20000130   Data           4  uart.o(.data)
-    RxGetI                                   0x20000134   Data           4  uart.o(.data)
-    TxPutI                                   0x20000138   Data           4  uart.o(.data)
-    TxGetI                                   0x2000013c   Data           4  uart.o(.data)
-    Ddelay                                   0x20000144   Data           4  diskio.o(.data)
-    Idlecount                                0x2000015c   Data           4  lab5.o(.data)
-    NumCreated                               0x20000160   Data           4  lab5.o(.data)
-    MountFresult                             0x20000164   Data           1  lab5.o(.data)
-    Fresult                                  0x20000165   Data           1  lab5.o(.data)
-    Message                                  0x20000168   Data          12  st7735.o(.bss)
-    JitterHistogram                          0x20000174   Data         256  os.o(.bss)
-    JitterHistogram2                         0x20000274   Data         256  os.o(.bss)
-    pri_lists                                0x20000374   Data          32  os.o(.bss)
-    pri_count                                0x20000394   Data          32  os.o(.bss)
-    thread_time                              0x200003b4   Data         400  os.o(.bss)
-    thread_record                            0x20000544   Data         400  os.o(.bss)
-    SW1sem                                   0x200006d4   Data          12  os.o(.bss)
-    SW2sem                                   0x200006e0   Data          12  os.o(.bss)
-    TCBs                                     0x200006ec   Data         480  os.o(.bss)
-    PCBs                                     0x200008cc   Data          60  os.o(.bss)
-    Stacks                                   0x20000908   Data        8000  os.o(.bss)
-    FifoAvailable                            0x20002a3c   Data          12  os.o(.bss)
-    BoxFree                                  0x20002a48   Data          12  os.o(.bss)
-    DataValid                                0x20002a54   Data          12  os.o(.bss)
-    Handle                                   0x20002cb4   Data         548  lab5.o(.bss)
-    Handle2                                  0x20002ed8   Data         548  lab5.o(.bss)
-    buffer                                   0x200030fc   Data         512  lab5.o(.bss)
-    __initial_sp                             0x20003700   Data           0  startup.o(STACK)
+    DisableInterrupts                        0x00000299   Thumb Code     0  startup.o(.text)
+    EnableInterrupts                         0x0000029d   Thumb Code     0  startup.o(.text)
+    StartCritical                            0x000002a1   Thumb Code     0  startup.o(.text)
+    EndCritical                              0x000002a9   Thumb Code     0  startup.o(.text)
+    WaitForInterrupt                         0x000002af   Thumb Code     0  startup.o(.text)
+    OS_DisableInterrupts                     0x000002b5   Thumb Code     0  osasm.o(.text)
+    OS_EnableInterrupts                      0x000002c3   Thumb Code     0  osasm.o(.text)
+    PendSV_Handler                           0x000002d1   Thumb Code     0  osasm.o(.text)
+    StartOS                                  0x000002f7   Thumb Code     0  osasm.o(.text)
+    __aeabi_memcpy                           0x00000329   Thumb Code    36  memcpya.o(.text)
+    __aeabi_memcpy4                          0x00000329   Thumb Code     0  memcpya.o(.text)
+    __aeabi_memcpy8                          0x00000329   Thumb Code     0  memcpya.o(.text)
+    strlen                                   0x0000034d   Thumb Code    14  strlen.o(.text)
+    strcmp                                   0x0000035b   Thumb Code    28  strcmp.o(.text)
+    strncmp                                  0x00000377   Thumb Code    30  strncmp.o(.text)
+    __aeabi_dmul                             0x00000395   Thumb Code   228  dmul.o(.text)
+    __aeabi_i2d                              0x00000479   Thumb Code    34  dflti.o(.text)
+    __aeabi_d2uiz                            0x0000049b   Thumb Code    50  dfixui.o(.text)
+    __aeabi_llsr                             0x000004cd   Thumb Code    32  llushr.o(.text)
+    _ll_ushift_r                             0x000004cd   Thumb Code     0  llushr.o(.text)
+    __I$use$fp                               0x000004ed   Thumb Code     0  iusefp.o(.text)
+    _double_round                            0x000004ed   Thumb Code    26  depilogue.o(.text)
+    _double_epilogue                         0x00000507   Thumb Code   164  depilogue.o(.text)
+    __aeabi_dadd                             0x000005ab   Thumb Code   322  dadd.o(.text)
+    __aeabi_dsub                             0x000006ed   Thumb Code     6  dadd.o(.text)
+    __aeabi_drsub                            0x000006f3   Thumb Code     6  dadd.o(.text)
+    __aeabi_ddiv                             0x000006f9   Thumb Code   222  ddiv.o(.text)
+    __ARM_scalbn                             0x000007d7   Thumb Code    46  dscalb.o(.text)
+    scalbn                                   0x000007d7   Thumb Code     0  dscalb.o(.text)
+    __aeabi_cdrcmple                         0x00000805   Thumb Code    38  cdrcmple.o(.text)
+    __scatterload                            0x0000082d   Thumb Code    28  init.o(.text)
+    __scatterload_rt2                        0x0000082d   Thumb Code     0  init.o(.text)
+    __aeabi_llsl                             0x00000851   Thumb Code    30  llshl.o(.text)
+    _ll_shift_l                              0x00000851   Thumb Code     0  llshl.o(.text)
+    __aeabi_lasr                             0x0000086f   Thumb Code    36  llsshr.o(.text)
+    _ll_sshift_r                             0x0000086f   Thumb Code     0  llsshr.o(.text)
+    _dsqrt                                   0x00000893   Thumb Code   162  dsqrt.o(.text)
+    __decompress                             0x00000935   Thumb Code     0  __dczerorl2.o(.text)
+    __decompress1                            0x00000935   Thumb Code    92  __dczerorl2.o(.text)
+    ADC0Seq2_Handler                         0x00000991   Thumb Code    24  adc.o(i.ADC0Seq2_Handler)
+    ADC0_InitSWTriggerSeq3                   0x000009b5   Thumb Code   984  adcswtrigger.o(i.ADC0_InitSWTriggerSeq3)
+    ADC_Collect_old                          0x00000dbd   Thumb Code    58  adc.o(i.ADC_Collect_old)
+    ADC_In                                   0x00000e09   Thumb Code    60  adc.o(i.ADC_In)
+    ADC_Open                                 0x00000e55   Thumb Code    24  adc.o(i.ADC_Open)
+    ADC_Status                               0x00000e79   Thumb Code     8  adc.o(i.ADC_Status)
+    CS_Init                                  0x00000e85   Thumb Code   132  diskio.o(i.CS_Init)
+    CmdLineProcess                           0x00000f1d   Thumb Code   120  cmdline.o(i.CmdLineProcess)
+    Delay1ms                                 0x00000fb1   Thumb Code    32  st7735.o(i.Delay1ms)
+    EdgeCounter_PF4_Init                     0x00000fd1   Thumb Code   188  edgetriggered.o(i.EdgeCounter_PF4_Init)
+    GPIOPortF_Handler                        0x000010a5   Thumb Code    82  os.o(i.GPIOPortF_Handler)
+    Heap_Free                                0x00001115   Thumb Code   140  heap.o(i.Heap_Free)
+    Heap_Init                                0x000011a5   Thumb Code    16  heap.o(i.Heap_Init)
+    Heap_Malloc                              0x000011bd   Thumb Code    78  heap.o(i.Heap_Malloc)
+    Heap_Stats                               0x00001211   Thumb Code   110  heap.o(i.Heap_Stats)
+    Heap_Test                                0x00001285   Thumb Code    94  heap.o(i.Heap_Test)
+    IdleTask                                 0x000012ed   Thumb Code    14  lab5.o(i.IdleTask)
+    Interpreter                              0x00001301   Thumb Code    30  interpreter.o(i.Interpreter)
+    LOADER_CLEAR                             0x0000133d   Thumb Code    24  loader.o(i.LOADER_CLEAR)
+    LOADER_OPEN_FOR_RD                       0x00001355   Thumb Code    24  loader.o(i.LOADER_OPEN_FOR_RD)
+    LOADER_READ                              0x00001371   Thumb Code    30  loader.o(i.LOADER_READ)
+    LoadProgram                              0x00001391   Thumb Code    28  cmdline.o(i.LoadProgram)
+    OS_AddProcess                            0x000013d5   Thumb Code    10  os.o(i.OS_AddProcess)
+    OS_AddThread                             0x000013e1   Thumb Code   196  os.o(i.OS_AddThread)
+    OS_AddThreadPri                          0x000014c1   Thumb Code    80  os.o(i.OS_AddThreadPri)
+    OS_ClearCriticalTime                     0x00001519   Thumb Code    10  os.o(i.OS_ClearCriticalTime)
+    OS_ClearPeriodicTime                     0x00001529   Thumb Code     8  os.o(i.OS_ClearPeriodicTime)
+    OS_Fifo_Init                             0x00001535   Thumb Code    40  os.o(i.OS_Fifo_Init)
+    OS_GetProfilerAndReset                   0x00001571   Thumb Code     4  os.o(i.OS_GetProfilerAndReset)
+    OS_Init                                  0x00001575   Thumb Code   174  os.o(i.OS_Init)
+    OS_InitSemaphore                         0x0000164d   Thumb Code    10  os.o(i.OS_InitSemaphore)
+    OS_Launch                                0x00001659   Thumb Code    30  os.o(i.OS_Launch)
+    OS_ReadCriticalPercentage                0x0000167d   Thumb Code    36  os.o(i.OS_ReadCriticalPercentage)
+    OS_ReadCriticalTime                      0x000016a5   Thumb Code     6  os.o(i.OS_ReadCriticalTime)
+    OS_ReadPeriodicTime                      0x000016b1   Thumb Code     6  os.o(i.OS_ReadPeriodicTime)
+    OS_SelectNextThread                      0x000016bd   Thumb Code   128  os.o(i.OS_SelectNextThread)
+    OS_Suspend                               0x0000174d   Thumb Code    18  os.o(i.OS_Suspend)
+    OS_Time                                  0x00001765   Thumb Code    12  os.o(i.OS_Time)
+    OS_TimeDifference                        0x00001775   Thumb Code    12  os.o(i.OS_TimeDifference)
+    OS_bSignal                               0x00001781   Thumb Code    80  os.o(i.OS_bSignal)
+    OS_bWait                                 0x000017d9   Thumb Code    80  os.o(i.OS_bWait)
+    OS_timeDisabled                          0x00001835   Thumb Code    20  os.o(i.OS_timeDisabled)
+    OS_timeEnabled                           0x00001851   Thumb Code    54  os.o(i.OS_timeEnabled)
+    OutCRLF                                  0x00001899   Thumb Code    16  uart.o(i.OutCRLF)
+    PLL_Init                                 0x000018a9   Thumb Code   118  pll.o(i.PLL_Init)
+    RxFifo_Get                               0x00001925   Thumb Code    46  uart.o(i.RxFifo_Get)
+    RxFifo_Init                              0x00001961   Thumb Code    26  uart.o(i.RxFifo_Init)
+    RxFifo_Put                               0x00001985   Thumb Code    48  uart.o(i.RxFifo_Put)
+    RxFifo_Size                              0x000019c1   Thumb Code    14  uart.o(i.RxFifo_Size)
+    SSI0_Init                                0x000019d9   Thumb Code   296  diskio.o(i.SSI0_Init)
+    ST7735_Color565                          0x00001b21   Thumb Code    24  st7735.o(i.ST7735_Color565)
+    ST7735_DrawCharS                         0x00001b39   Thumb Code   238  st7735.o(i.ST7735_DrawCharS)
+    ST7735_DrawPixel                         0x00001c35   Thumb Code    68  st7735.o(i.ST7735_DrawPixel)
+    ST7735_FillRect                          0x00001c81   Thumb Code   164  st7735.o(i.ST7735_FillRect)
+    ST7735_FillScreen                        0x00001d2d   Thumb Code    28  st7735.o(i.ST7735_FillScreen)
+    ST7735_InitR                             0x00001d51   Thumb Code    76  st7735.o(i.ST7735_InitR)
+    ST7735_Message                           0x00001dbd   Thumb Code    56  st7735.o(i.ST7735_Message)
+    ST7735_OutString                         0x00001df9   Thumb Code    86  st7735.o(i.ST7735_OutString)
+    ST7735_OutUDec2                          0x00001e51   Thumb Code    72  st7735.o(i.ST7735_OutUDec2)
+    SetInitialStack                          0x00001ea1   Thumb Code   328  os.o(i.SetInitialStack)
+    SysTick_Handler                          0x00001ff1   Thumb Code    16  os.o(i.SysTick_Handler)
+    Timer0A_Handler                          0x00002005   Thumb Code    50  timer.o(i.Timer0A_Handler)
+    Timer1A_Handler                          0x0000204d   Thumb Code    50  timer.o(i.Timer1A_Handler)
+    Timer2A_Handler                          0x00002095   Thumb Code    64  adc.o(i.Timer2A_Handler)
+    Timer2_Init                              0x000020e9   Thumb Code    72  timer.o(i.Timer2_Init)
+    Timer3A_Handler                          0x00002141   Thumb Code    50  timer.o(i.Timer3A_Handler)
+    Timer4A_Handler                          0x00002189   Thumb Code   126  os.o(i.Timer4A_Handler)
+    Timer4A_Init                             0x00002225   Thumb Code    40  os.o(i.Timer4A_Init)
+    Timer5A_Handler                          0x00002259   Thumb Code   126  os.o(i.Timer5A_Handler)
+    Timer5_Init                              0x000022f5   Thumb Code    50  os.o(i.Timer5_Init)
+    TxFifo_Get                               0x00002335   Thumb Code    46  uart.o(i.TxFifo_Get)
+    TxFifo_Init                              0x00002371   Thumb Code    26  uart.o(i.TxFifo_Init)
+    TxFifo_Put                               0x00002395   Thumb Code    48  uart.o(i.TxFifo_Put)
+    TxFifo_Size                              0x000023d1   Thumb Code    14  uart.o(i.TxFifo_Size)
+    UART0_Handler                            0x000023e9   Thumb Code    82  uart.o(i.UART0_Handler)
+    UART_InChar                              0x00002441   Thumb Code    20  uart.o(i.UART_InChar)
+    UART_InString                            0x00002455   Thumb Code    70  uart.o(i.UART_InString)
+    UART_Init                                0x0000249d   Thumb Code   178  uart.o(i.UART_Init)
+    UART_OutChar                             0x00002569   Thumb Code    46  uart.o(i.UART_OutChar)
+    UART_OutString                           0x0000259d   Thumb Code    24  uart.o(i.UART_OutString)
+    UART_OutUDec                             0x000025b5   Thumb Code    42  uart.o(i.UART_OutUDec)
+    WTimer0A_Init                            0x000025e1   Thumb Code    96  os.o(i.WTimer0A_Init)
+    WTimer0B_Init                            0x00002659   Thumb Code   112  diskio.o(i.WTimer0B_Init)
+    WTimer4A_Init                            0x000026e1   Thumb Code    80  os.o(i.WTimer4A_Init)
+    WTimer5A_Init                            0x00002749   Thumb Code    76  os.o(i.WTimer5A_Init)
+    WideTimer0A_Handler                      0x000027a9   Thumb Code    96  os.o(i.WideTimer0A_Handler)
+    WideTimer0B_Handler                      0x00002819   Thumb Code    20  diskio.o(i.WideTimer0B_Handler)
+    WideTimer4A_Handler                      0x00002831   Thumb Code   102  os.o(i.WideTimer4A_Handler)
+    __ARM_fpclassify                         0x000028c1   Thumb Code    40  fpclassify.o(i.__ARM_fpclassify)
+    __kernel_poly                            0x000028e9   Thumb Code   170  poly.o(i.__kernel_poly)
+    __mathlib_dbl_underflow                  0x00002995   Thumb Code    10  dunder.o(i.__mathlib_dbl_underflow)
+    __scatterload_copy                       0x000029a5   Thumb Code    14  handlers.o(i.__scatterload_copy)
+    __scatterload_null                       0x000029b3   Thumb Code     2  handlers.o(i.__scatterload_null)
+    __scatterload_zeroinit                   0x000029b5   Thumb Code    14  handlers.o(i.__scatterload_zeroinit)
+    __set_errno                              0x000029c5   Thumb Code     6  errno.o(i.__set_errno)
+    adcCall                                  0x000029d1   Thumb Code   354  cmdline.o(i.adcCall)
+    addToList                                0x00002c45   Thumb Code    32  linkedlist.o(i.addToList)
+    clust2sect                               0x00002db5   Thumb Code    26  ff.o(i.clust2sect)
+    disk_initialize                          0x000035d5   Thumb Code   330  diskio.o(i.disk_initialize)
+    disk_ioctl                               0x00003731   Thumb Code   544  diskio.o(i.disk_ioctl)
+    disk_read                                0x00003959   Thumb Code   136  diskio.o(i.disk_read)
+    disk_status                              0x000039e9   Thumb Code    14  diskio.o(i.disk_status)
+    disk_timerproc                           0x000039fd   Thumb Code    52  diskio.o(i.disk_timerproc)
+    disk_write                               0x00003a3d   Thumb Code   170  diskio.o(i.disk_write)
+    dummy                                    0x00003af1   Thumb Code     2  adc.o(i.dummy)
+    dummy1                                   0x00003af3   Thumb Code     4  os.o(i.dummy1)
+    exec_elf                                 0x00003af9   Thumb Code   184  loader.o(i.exec_elf)
+    f_close                                  0x00003be1   Thumb Code    32  ff.o(i.f_close)
+    f_lseek                                  0x00003c01   Thumb Code   382  ff.o(i.f_lseek)
+    f_mount                                  0x00003d81   Thumb Code    86  ff.o(i.f_mount)
+    f_open                                   0x00003ddd   Thumb Code   348  ff.o(i.f_open)
+    f_read                                   0x00003f3d   Thumb Code   414  ff.o(i.f_read)
+    f_sync                                   0x000040dd   Thumb Code   170  ff.o(i.f_sync)
+    f_unlink                                 0x0000418d   Thumb Code   190  ff.o(i.f_unlink)
+    fileCall                                 0x0000424d   Thumb Code   294  cmdline.o(i.fileCall)
+    fillmessage                              0x00004475   Thumb Code    64  st7735.o(i.fillmessage)
+    get_fat                                  0x00004925   Thumb Code   242  ff.o(i.get_fat)
+    heapCall                                 0x00004a61   Thumb Code   402  cmdline.o(i.heapCall)
+    lcdCall                                  0x00004e19   Thumb Code   164  cmdline.o(i.lcdCall)
+    main                                     0x000052fd   Thumb Code   152  lab5.o(i.main)
+    myAtoi                                   0x000054e7   Thumb Code    36  cmdline.o(i.myAtoi)
+    osCall                                   0x00005519   Thumb Code   248  cmdline.o(i.osCall)
+    parseNumber                              0x00005729   Thumb Code    62  cmdline.o(i.parseNumber)
+    pow                                      0x0000595d   Thumb Code  2510  pow.o(i.pow)
+    put_fat                                  0x0000635b   Thumb Code   326  ff.o(i.put_fat)
+    removeFromList                           0x0000698d   Thumb Code    36  linkedlist.o(i.removeFromList)
+    removeThreadPri                          0x000069b1   Thumb Code    58  os.o(i.removeThreadPri)
+    sqrt                                     0x00006c35   Thumb Code    76  sqrt.o(i.sqrt)
+    __mathlib_zero                           0x00007620   Data           8  qnan.o(.constdata)
+    Region$$Table$$Base                      0x0000764c   Number         0  anon$$obj.o(Region$$Table)
+    Region$$Table$$Limit                     0x0000766c   Number         0  anon$$obj.o(Region$$Table)
+    Messageindex                             0x20000008   Data           4  st7735.o(.data)
+    Cursor                                   0x2000000c   Data           4  st7735.o(.data)
+    StLine                                   0x20000010   Data           4  st7735.o(.data)
+    periodic_threads_count                   0x20000018   Data           1  os.o(.data)
+    runPT                                    0x2000001c   Data           4  os.o(.data)
+    nextPT                                   0x20000020   Data           4  os.o(.data)
+    numTasks                                 0x20000028   Data           4  os.o(.data)
+    OS_ms_count                              0x2000002c   Data           4  os.o(.data)
+    OS_counter1                              0x20000030   Data           4  os.o(.data)
+    OS_counter2                              0x20000034   Data           4  os.o(.data)
+    PF0_button                               0x20000038   Data           4  os.o(.data)
+    PF4_button                               0x2000003c   Data           4  os.o(.data)
+    pf4_go                                   0x20000040   Data           4  os.o(.data)
+    pf0_go                                   0x20000044   Data           4  os.o(.data)
+    butt_count                               0x20000048   Data           4  os.o(.data)
+    start                                    0x2000004c   Data           4  os.o(.data)
+    fifolimit                                0x20000050   Data           4  os.o(.data)
+    critical_time                            0x20000054   Data           4  os.o(.data)
+    total_critical_time                      0x20000058   Data           4  os.o(.data)
+    largest_critical_time                    0x2000005c   Data           4  os.o(.data)
+    record_count                             0x20000060   Data           4  os.o(.data)
+    Periodic1Task                            0x2000006c   Data           4  os.o(.data)
+    Periodic2Task                            0x20000070   Data           4  os.o(.data)
+    SWOneTask                                0x20000074   Data           4  os.o(.data)
+    SWTwoTask                                0x20000078   Data           4  os.o(.data)
+    Periodic1TaskPeriod                      0x20000084   Data           4  os.o(.data)
+    Periodic2TaskPeriod                      0x20000088   Data           4  os.o(.data)
+    MaxJitter                                0x2000008c   Data           4  os.o(.data)
+    MaxJitter2                               0x20000090   Data           4  os.o(.data)
+    delay                                    0x20000094   Data           4  os.o(.data)
+    CurrentID                                0x20000098   Data           2  os.o(.data)
+    time_slice                               0x2000009c   Data           4  os.o(.data)
+    head_sleep                               0x200000a0   Data           4  os.o(.data)
+    tail_sleep                               0x200000a4   Data           4  os.o(.data)
+    head_kill                                0x200000a8   Data           4  os.o(.data)
+    tail_kill                                0x200000ac   Data           4  os.o(.data)
+    head_reAdd                               0x200000b0   Data           4  os.o(.data)
+    tail_reAdd                               0x200000b4   Data           4  os.o(.data)
+    LastPF4                                  0x200000b8   Data           4  os.o(.data)
+    LastPF0                                  0x200000bc   Data           4  os.o(.data)
+    sw1Last                                  0x200000c0   Data           4  os.o(.data)
+    sw2Last                                  0x200000c4   Data           4  os.o(.data)
+    OSPutPt                                  0x200000c8   Data           4  os.o(.data)
+    OSGetPt                                  0x200000cc   Data           4  os.o(.data)
+    MailBox                                  0x200000d0   Data           4  os.o(.data)
+    channel                                  0x200000d4   Data           4  adc.o(.data)
+    sampleCounter                            0x200000d8   Data           4  adc.o(.data)
+    sampleSize                               0x200000dc   Data           4  adc.o(.data)
+    status                                   0x200000e0   Data           1  adc.o(.data)
+    DATA                                     0x200000e4   Data           4  adc.o(.data)
+    ADCPeriodicTask                          0x200000e8   Data           4  adc.o(.data)
+    ADCDataConsumer                          0x200000ec   Data           4  adc.o(.data)
+    numPtrs                                  0x200000f0   Data           4  cmdline.o(.data)
+    infoADC                                  0x200000f4   Data          25  cmdline.o(.data)
+    infoLCD                                  0x2000010d   Data          25  cmdline.o(.data)
+    infoOS                                   0x20000126   Data          30  cmdline.o(.data)
+    infoFile                                 0x20000144   Data          36  cmdline.o(.data)
+    infoHeap                                 0x20000168   Data          25  cmdline.o(.data)
+    g_psCmdTable                             0x20000184   Data          60  cmdline.o(.data)
+    statusH                                  0x200001c0   Data           2  cmdline.o(.data)
+    Timer0First                              0x200001c4   Data           4  timer.o(.data)
+    Timer0Done                               0x200001c8   Data           4  timer.o(.data)
+    Timer0Pulse                              0x200001cc   Data           4  timer.o(.data)
+    Timer1First                              0x200001d0   Data           4  timer.o(.data)
+    Timer1Done                               0x200001d4   Data           4  timer.o(.data)
+    Timer1Pulse                              0x200001d8   Data           4  timer.o(.data)
+    PeriodicTask2                            0x200001dc   Data           4  timer.o(.data)
+    Timer3First                              0x200001e0   Data           4  timer.o(.data)
+    Timer3Done                               0x200001e4   Data           4  timer.o(.data)
+    Timer3Pulse                              0x200001e8   Data           4  timer.o(.data)
+    RxPutI                                   0x200001ec   Data           4  uart.o(.data)
+    RxGetI                                   0x200001f0   Data           4  uart.o(.data)
+    TxPutI                                   0x200001f4   Data           4  uart.o(.data)
+    TxGetI                                   0x200001f8   Data           4  uart.o(.data)
+    Ddelay                                   0x20000200   Data           4  diskio.o(.data)
+    Idlecount                                0x20000218   Data           4  lab5.o(.data)
+    NumCreated                               0x2000021c   Data           4  lab5.o(.data)
+    MountFresult                             0x20000220   Data           1  lab5.o(.data)
+    Fresult                                  0x20000221   Data           1  lab5.o(.data)
+    statush                                  0x20000222   Data           2  lab5.o(.data)
+    ptr                                      0x20000224   Data           4  lab5.o(.data)
+    p1                                       0x20000228   Data           4  lab5.o(.data)
+    p2                                       0x2000022c   Data           4  lab5.o(.data)
+    p3                                       0x20000230   Data           4  lab5.o(.data)
+    q1                                       0x20000234   Data           4  lab5.o(.data)
+    q2                                       0x20000238   Data           4  lab5.o(.data)
+    q3                                       0x2000023c   Data           4  lab5.o(.data)
+    q4                                       0x20000240   Data           4  lab5.o(.data)
+    q5                                       0x20000244   Data           4  lab5.o(.data)
+    q6                                       0x20000248   Data           4  lab5.o(.data)
+    maxBlockSize                             0x2000024c   Data           2  lab5.o(.data)
+    bigBlock                                 0x20000250   Data           4  lab5.o(.data)
+    LCDFree                                  0x20000258   Data          12  st7735.o(.bss)
+    Message                                  0x20000264   Data          12  st7735.o(.bss)
+    JitterHistogram                          0x20000270   Data         256  os.o(.bss)
+    JitterHistogram2                         0x20000370   Data         256  os.o(.bss)
+    pri_lists                                0x20000470   Data          32  os.o(.bss)
+    pri_count                                0x20000490   Data          32  os.o(.bss)
+    thread_time                              0x200004b0   Data         400  os.o(.bss)
+    thread_record                            0x20000640   Data         400  os.o(.bss)
+    SW1sem                                   0x200007d0   Data          12  os.o(.bss)
+    SW2sem                                   0x200007dc   Data          12  os.o(.bss)
+    TCBs                                     0x200007e8   Data         480  os.o(.bss)
+    PCBs                                     0x200009c8   Data          60  os.o(.bss)
+    Stacks                                   0x20000a04   Data        8000  os.o(.bss)
+    FifoAvailable                            0x20002b38   Data          12  os.o(.bss)
+    BoxFree                                  0x20002b44   Data          12  os.o(.bss)
+    DataValid                                0x20002b50   Data          12  os.o(.bss)
+    heapPtrs                                 0x20002b5c   Data          40  cmdline.o(.bss)
+    ptrSize                                  0x20002b84   Data          10  cmdline.o(.bss)
+    heap_Stats                               0x20002bb4   Data          20  cmdline.o(.bss)
+    Handle                                   0x20002e1c   Data         548  lab5.o(.bss)
+    Handle2                                  0x20003040   Data         548  lab5.o(.bss)
+    buffer                                   0x20003264   Data         512  lab5.o(.bss)
+    stats                                    0x20003464   Data          20  lab5.o(.bss)
+    __initial_sp                             0x20004b18   Data           0  startup.o(STACK)
 
 
 
@@ -1521,176 +1869,311 @@ Memory Map of the image
 
   Image Entry point : 0x0000026d
 
-  Load Region LR_1 (Base: 0x00000000, Size: 0x00004504, Max: 0xffffffff, ABSOLUTE, COMPRESSED[0x000043b0])
+  Load Region LR_1 (Base: 0x00000000, Size: 0x000078c4, Max: 0xffffffff, ABSOLUTE, COMPRESSED[0x00007710])
 
-    Execution Region ER_RO (Base: 0x00000000, Size: 0x0000439c, Max: 0xffffffff, ABSOLUTE)
+    Execution Region ER_RO (Base: 0x00000000, Size: 0x0000766c, Max: 0xffffffff, ABSOLUTE)
 
     Base Addr    Size         Type   Attr      Idx    E Section Name        Object
 
     0x00000000   0x00000284   Code   RO            3  * RESET               startup.o
-    0x00000284   0x00000000   Code   RO         1794  * .ARM.Collect$$$$00000000  mc_w.l(entry.o)
-    0x00000284   0x00000004   Code   RO         1824    .ARM.Collect$$$$00000001  mc_w.l(entry2.o)
-    0x00000288   0x00000004   Code   RO         1827    .ARM.Collect$$$$00000004  mc_w.l(entry5.o)
-    0x0000028c   0x00000000   Code   RO         1829    .ARM.Collect$$$$00000008  mc_w.l(entry7b.o)
-    0x0000028c   0x00000000   Code   RO         1831    .ARM.Collect$$$$0000000A  mc_w.l(entry8b.o)
-    0x0000028c   0x00000008   Code   RO         1832    .ARM.Collect$$$$0000000B  mc_w.l(entry9a.o)
-    0x00000294   0x00000000   Code   RO         1834    .ARM.Collect$$$$0000000D  mc_w.l(entry10a.o)
-    0x00000294   0x00000000   Code   RO         1836    .ARM.Collect$$$$0000000F  mc_w.l(entry11a.o)
-    0x00000294   0x00000004   Code   RO         1825    .ARM.Collect$$$$00002712  mc_w.l(entry2.o)
-    0x00000298   0x00000006   Code   RO           34    .emb_text           st7735.o
-    0x0000029e   0x00000002   PAD
-    0x000002a0   0x0000001c   Code   RO            4    .text               startup.o
-    0x000002bc   0x00000074   Code   RO          758    .text               osasm.o
-    0x00000330   0x00000024   Code   RO         1858    .text               mc_w.l(init.o)
-    0x00000354   0x0000003a   Code   RO         1876    .text               mc_w.l(__dczerorl.o)
-    0x0000038e   0x00000002   PAD
-    0x00000390   0x00000024   Code   RO          761    i.ADC0Seq2_Handler  adc.o
-    0x000003b4   0x0000004c   Code   RO          764    i.ADC_In            adc.o
-    0x00000400   0x00000098   Code   RO         1308    i.CS_Init           diskio.o
-    0x00000498   0x00000016   Code   RO           35    i.Delay1ms          st7735.o
-    0x000004ae   0x00000002   PAD
-    0x000004b0   0x000002cc   Code   RO         1734    i.FileSystemTest    lab5.o
-    0x0000077c   0x00000070   Code   RO          341    i.GPIOPortF_Handler  os.o
-    0x000007ec   0x00000058   Code   RO          348    i.OS_AddThreadPri   os.o
-    0x00000844   0x00000090   Code   RO          370    i.OS_SelectNextThread  os.o
-    0x000008d4   0x00000018   Code   RO          373    i.OS_Suspend        os.o
-    0x000008ec   0x00000010   Code   RO          374    i.OS_Time           os.o
-    0x000008fc   0x0000000c   Code   RO          375    i.OS_TimeDifference  os.o
-    0x00000908   0x0000001c   Code   RO          383    i.OS_timeDisabled   os.o
-    0x00000924   0x00000048   Code   RO          384    i.OS_timeEnabled    os.o
-    0x0000096c   0x0000007c   Code   RO           12    i.PLL_Init          pll.o
-    0x000009e8   0x0000003c   Code   RO         1174    i.RxFifo_Put        uart.o
-    0x00000a24   0x00000018   Code   RO         1175    i.RxFifo_Size       uart.o
-    0x00000a3c   0x00000098   Code   RO           41    i.SDC_CS_Init       st7735.o
-    0x00000ad4   0x00000148   Code   RO         1309    i.SSI0_Init         diskio.o
-    0x00000c1c   0x00000018   Code   RO           42    i.ST7735_Color565   st7735.o
-    0x00000c34   0x0000010c   Code   RO           44    i.ST7735_DrawChar   st7735.o
-    0x00000d40   0x000000f4   Code   RO           45    i.ST7735_DrawCharS  st7735.o
-    0x00000e34   0x00000048   Code   RO           49    i.ST7735_DrawPixel  st7735.o
-    0x00000e7c   0x00000056   Code   RO           51    i.ST7735_DrawString  st7735.o
-    0x00000ed2   0x00000002   PAD
-    0x00000ed4   0x000000ac   Code   RO           52    i.ST7735_FillRect   st7735.o
-    0x00000f80   0x00000024   Code   RO           53    i.ST7735_FillScreen  st7735.o
-    0x00000fa4   0x0000007c   Code   RO           55    i.ST7735_InitR      st7735.o
-    0x00001020   0x0000008c   Code   RO           60    i.ST7735_OutUDec    st7735.o
-    0x000010ac   0x00000020   Code   RO           69    i.ST7735_SetCursor  st7735.o
-    0x000010cc   0x0000000c   Code   RO           71    i.ST7735_SetTextColor  st7735.o
-    0x000010d8   0x00000014   Code   RO          386    i.SysTick_Handler   os.o
-    0x000010ec   0x00000048   Code   RO         1046    i.Timer0A_Handler   timer.o
-    0x00001134   0x00000048   Code   RO         1051    i.Timer1A_Handler   timer.o
-    0x0000117c   0x00000054   Code   RO          767    i.Timer2A_Handler   adc.o
-    0x000011d0   0x00000048   Code   RO         1057    i.Timer3A_Handler   timer.o
-    0x00001218   0x0000009c   Code   RO          387    i.Timer4A_Handler   os.o
-    0x000012b4   0x0000009c   Code   RO          389    i.Timer5A_Handler   os.o
-    0x00001350   0x0000003c   Code   RO         1176    i.TxFifo_Get        uart.o
-    0x0000138c   0x00000018   Code   RO         1179    i.TxFifo_Size       uart.o
-    0x000013a4   0x00000058   Code   RO         1180    i.UART0_Handler     uart.o
-    0x000013fc   0x00000088   Code   RO         1310    i.WTimer0B_Init     diskio.o
-    0x00001484   0x00000070   Code   RO          394    i.WideTimer0A_Handler  os.o
-    0x000014f4   0x00000018   Code   RO         1311    i.WideTimer0B_Handler  diskio.o
-    0x0000150c   0x00000090   Code   RO          395    i.WideTimer4A_Handler  os.o
-    0x0000159c   0x0000000e   Code   RO         1870    i.__scatterload_copy  mc_w.l(handlers.o)
-    0x000015aa   0x00000002   Code   RO         1871    i.__scatterload_null  mc_w.l(handlers.o)
-    0x000015ac   0x0000000e   Code   RO         1872    i.__scatterload_zeroinit  mc_w.l(handlers.o)
-    0x000015ba   0x00000002   PAD
-    0x000015bc   0x00000090   Code   RO         1438    i.check_fs          ff.o
-    0x0000164c   0x00000018   Code   RO         1439    i.chk_chr           ff.o
-    0x00001664   0x0000001a   Code   RO         1440    i.clust2sect        ff.o
-    0x0000167e   0x00000056   Code   RO           73    i.commandList       st7735.o
-    0x000016d4   0x000001b4   Code   RO           74    i.commonInit        st7735.o
-    0x00001888   0x00000028   Code   RO         1190    i.copyHardwareToSoftware  uart.o
-    0x000018b0   0x0000002c   Code   RO         1191    i.copySoftwareToHardware  uart.o
-    0x000018dc   0x000000d6   Code   RO         1441    i.create_chain      ff.o
-    0x000019b2   0x00000002   PAD
-    0x000019b4   0x000001b4   Code   RO         1442    i.create_name       ff.o
-    0x00001b68   0x00000014   Code   RO         1312    i.deselect          diskio.o
-    0x00001b7c   0x0000005c   Code   RO         1443    i.dir_alloc         ff.o
-    0x00001bd8   0x0000005c   Code   RO         1444    i.dir_find          ff.o
-    0x00001c34   0x0000010e   Code   RO         1445    i.dir_next          ff.o
-    0x00001d42   0x0000003a   Code   RO         1447    i.dir_register      ff.o
-    0x00001d7c   0x0000009e   Code   RO         1449    i.dir_sdi           ff.o
-    0x00001e1a   0x00000002   PAD
-    0x00001e1c   0x0000015c   Code   RO         1313    i.disk_initialize   diskio.o
-    0x00001f78   0x00000228   Code   RO         1314    i.disk_ioctl        diskio.o
-    0x000021a0   0x00000090   Code   RO         1315    i.disk_read         diskio.o
-    0x00002230   0x00000014   Code   RO         1316    i.disk_status       diskio.o
-    0x00002244   0x00000040   Code   RO         1317    i.disk_timerproc    diskio.o
-    0x00002284   0x000000b4   Code   RO         1318    i.disk_write        diskio.o
-    0x00002338   0x00000020   Code   RO         1452    i.f_close           ff.o
-    0x00002358   0x0000017e   Code   RO         1457    i.f_lseek           ff.o
-    0x000024d6   0x00000002   PAD
-    0x000024d8   0x0000005c   Code   RO         1460    i.f_mount           ff.o
-    0x00002534   0x00000160   Code   RO         1461    i.f_open            ff.o
-    0x00002694   0x0000019e   Code   RO         1463    i.f_read            ff.o
-    0x00002832   0x00000002   PAD
-    0x00002834   0x000000b0   Code   RO         1468    i.f_sync            ff.o
-    0x000028e4   0x000001d6   Code   RO         1472    i.f_write           ff.o
-    0x00002aba   0x00000002   PAD
-    0x00002abc   0x00000048   Code   RO           77    i.fillmessage       st7735.o
-    0x00002b04   0x0000038c   Code   RO         1473    i.find_volume       ff.o
-    0x00002e90   0x000000b0   Code   RO         1474    i.follow_path       ff.o
-    0x00002f40   0x000000f2   Code   RO         1475    i.get_fat           ff.o
-    0x00003032   0x0000004a   Code   RO         1477    i.get_ldnumber      ff.o
-    0x0000307c   0x00000028   Code   RO         1319    i.init_spi          diskio.o
-    0x000030a4   0x00000020   Code   RO         1478    i.ld_clust          ff.o
-    0x000030c4   0x00000350   Code   RO         1738    i.main              lab5.o
-    0x00003414   0x00000026   Code   RO         1479    i.mem_cmp           ff.o
-    0x0000343a   0x0000001a   Code   RO         1480    i.mem_cpy           ff.o
-    0x00003454   0x00000014   Code   RO         1481    i.mem_set           ff.o
-    0x00003468   0x00000034   Code   RO         1482    i.move_window       ff.o
-    0x0000349c   0x00000012   Code   RO           79    i.pushColor         st7735.o
-    0x000034ae   0x00000146   Code   RO         1483    i.put_fat           ff.o
-    0x000035f4   0x00000048   Code   RO         1320    i.rcvr_datablock    diskio.o
-    0x0000363c   0x0000002c   Code   RO         1321    i.rcvr_spi          diskio.o
-    0x00003668   0x00000018   Code   RO         1322    i.rcvr_spi_multi    diskio.o
-    0x00003680   0x00000024   Code   RO         1009    i.removeFromList    linkedlist.o
-    0x000036a4   0x0000006c   Code   RO         1484    i.remove_chain      ff.o
-    0x00003710   0x00000030   Code   RO         1323    i.select            diskio.o
-    0x00003740   0x00000096   Code   RO         1324    i.send_cmd          diskio.o
-    0x000037d6   0x00000002   PAD
-    0x000037d8   0x00000074   Code   RO           80    i.setAddrWindow     st7735.o
-    0x0000384c   0x00000010   Code   RO         1485    i.st_clust          ff.o
-    0x0000385c   0x000000c8   Code   RO         1486    i.sync_fs           ff.o
-    0x00003924   0x00000052   Code   RO         1487    i.sync_window       ff.o
-    0x00003976   0x00000036   Code   RO         1488    i.validate          ff.o
-    0x000039ac   0x00000030   Code   RO         1325    i.wait_ready        diskio.o
-    0x000039dc   0x00000050   Code   RO           81    i.writecommand      st7735.o
-    0x00003a2c   0x00000050   Code   RO           82    i.writedata         st7735.o
-    0x00003a7c   0x00000034   Code   RO         1326    i.xchg_spi          diskio.o
-    0x00003ab0   0x0000004c   Code   RO         1327    i.xmit_datablock    diskio.o
-    0x00003afc   0x0000002c   Code   RO         1328    i.xmit_spi_multi    diskio.o
-    0x00003b28   0x00000842   Data   RO           84    .constdata          st7735.o
-    0x0000436a   0x00000011   Data   RO         1741    .constdata          lab5.o
-    0x0000437b   0x00000001   PAD
-    0x0000437c   0x00000020   Data   RO         1868    Region$$Table       anon$$obj.o
+    0x00000284   0x00000000   Code   RO         2019  * .ARM.Collect$$$$00000000  mc_w.l(entry.o)
+    0x00000284   0x00000004   Code   RO         2053    .ARM.Collect$$$$00000001  mc_w.l(entry2.o)
+    0x00000288   0x00000004   Code   RO         2056    .ARM.Collect$$$$00000004  mc_w.l(entry5.o)
+    0x0000028c   0x00000000   Code   RO         2058    .ARM.Collect$$$$00000008  mc_w.l(entry7b.o)
+    0x0000028c   0x00000000   Code   RO         2060    .ARM.Collect$$$$0000000A  mc_w.l(entry8b.o)
+    0x0000028c   0x00000008   Code   RO         2061    .ARM.Collect$$$$0000000B  mc_w.l(entry9a.o)
+    0x00000294   0x00000000   Code   RO         2063    .ARM.Collect$$$$0000000D  mc_w.l(entry10a.o)
+    0x00000294   0x00000000   Code   RO         2065    .ARM.Collect$$$$0000000F  mc_w.l(entry11a.o)
+    0x00000294   0x00000004   Code   RO         2054    .ARM.Collect$$$$00002712  mc_w.l(entry2.o)
+    0x00000298   0x0000001c   Code   RO            4    .text               startup.o
+    0x000002b4   0x00000074   Code   RO          639    .text               osasm.o
+    0x00000328   0x00000024   Code   RO         2022    .text               mc_w.l(memcpya.o)
+    0x0000034c   0x0000000e   Code   RO         2024    .text               mc_w.l(strlen.o)
+    0x0000035a   0x0000001c   Code   RO         2026    .text               mc_w.l(strcmp.o)
+    0x00000376   0x0000001e   Code   RO         2028    .text               mc_w.l(strncmp.o)
+    0x00000394   0x000000e4   Code   RO         2032    .text               mf_w.l(dmul.o)
+    0x00000478   0x00000022   Code   RO         2034    .text               mf_w.l(dflti.o)
+    0x0000049a   0x00000032   Code   RO         2036    .text               mf_w.l(dfixui.o)
+    0x000004cc   0x00000020   Code   RO         2067    .text               mc_w.l(llushr.o)
+    0x000004ec   0x00000000   Code   RO         2076    .text               mc_w.l(iusefp.o)
+    0x000004ec   0x000000be   Code   RO         2077    .text               mf_w.l(depilogue.o)
+    0x000005aa   0x0000014e   Code   RO         2079    .text               mf_w.l(dadd.o)
+    0x000006f8   0x000000de   Code   RO         2081    .text               mf_w.l(ddiv.o)
+    0x000007d6   0x0000002e   Code   RO         2083    .text               mf_w.l(dscalb.o)
+    0x00000804   0x00000028   Code   RO         2085    .text               mf_w.l(cdrcmple.o)
+    0x0000082c   0x00000024   Code   RO         2087    .text               mc_w.l(init.o)
+    0x00000850   0x0000001e   Code   RO         2089    .text               mc_w.l(llshl.o)
+    0x0000086e   0x00000024   Code   RO         2091    .text               mc_w.l(llsshr.o)
+    0x00000892   0x000000a2   Code   RO         2093    .text               mf_w.l(dsqrt.o)
+    0x00000934   0x0000005c   Code   RO         2105    .text               mc_w.l(__dczerorl2.o)
+    0x00000990   0x00000024   Code   RO          642    i.ADC0Seq2_Handler  adc.o
+    0x000009b4   0x00000408   Code   RO          730    i.ADC0_InitSWTriggerSeq3  adcswtrigger.o
+    0x00000dbc   0x0000004c   Code   RO          644    i.ADC_Collect_old   adc.o
+    0x00000e08   0x0000004c   Code   RO          645    i.ADC_In            adc.o
+    0x00000e54   0x00000024   Code   RO          646    i.ADC_Open          adc.o
+    0x00000e78   0x0000000c   Code   RO          647    i.ADC_Status        adc.o
+    0x00000e84   0x00000098   Code   RO         1220    i.CS_Init           diskio.o
+    0x00000f1c   0x00000094   Code   RO          812    i.CmdLineProcess    cmdline.o
+    0x00000fb0   0x00000020   Code   RO           34    i.Delay1ms          st7735.o
+    0x00000fd0   0x000000d4   Code   RO          900    i.EdgeCounter_PF4_Init  edgetriggered.o
+    0x000010a4   0x00000070   Code   RO          225    i.GPIOPortF_Handler  os.o
+    0x00001114   0x00000090   Code   RO         1691    i.Heap_Free         heap.o
+    0x000011a4   0x00000018   Code   RO         1692    i.Heap_Init         heap.o
+    0x000011bc   0x00000054   Code   RO         1693    i.Heap_Malloc       heap.o
+    0x00001210   0x00000074   Code   RO         1695    i.Heap_Stats        heap.o
+    0x00001284   0x00000068   Code   RO         1696    i.Heap_Test         heap.o
+    0x000012ec   0x00000014   Code   RO         1635    i.IdleTask          lab5.o
+    0x00001300   0x0000003c   Code   RO          702    i.Interpreter       interpreter.o
+    0x0000133c   0x00000018   Code   RO         1800    i.LOADER_CLEAR      loader.o
+    0x00001354   0x0000001c   Code   RO         1801    i.LOADER_OPEN_FOR_RD  loader.o
+    0x00001370   0x0000001e   Code   RO         1802    i.LOADER_READ       loader.o
+    0x0000138e   0x00000002   PAD
+    0x00001390   0x00000044   Code   RO          813    i.LoadProgram       cmdline.o
+    0x000013d4   0x0000000a   Code   RO          228    i.OS_AddProcess     os.o
+    0x000013de   0x00000002   PAD
+    0x000013e0   0x000000e0   Code   RO          231    i.OS_AddThread      os.o
+    0x000014c0   0x00000058   Code   RO          232    i.OS_AddThreadPri   os.o
+    0x00001518   0x00000010   Code   RO          233    i.OS_ClearCriticalTime  os.o
+    0x00001528   0x0000000c   Code   RO          235    i.OS_ClearPeriodicTime  os.o
+    0x00001534   0x0000003c   Code   RO          238    i.OS_Fifo_Init      os.o
+    0x00001570   0x00000004   Code   RO          241    i.OS_GetProfilerAndReset  os.o
+    0x00001574   0x000000d8   Code   RO          243    i.OS_Init           os.o
+    0x0000164c   0x0000000a   Code   RO          244    i.OS_InitSemaphore  os.o
+    0x00001656   0x00000002   PAD
+    0x00001658   0x00000024   Code   RO          246    i.OS_Launch         os.o
+    0x0000167c   0x00000028   Code   RO          251    i.OS_ReadCriticalPercentage  os.o
+    0x000016a4   0x0000000c   Code   RO          252    i.OS_ReadCriticalTime  os.o
+    0x000016b0   0x0000000c   Code   RO          253    i.OS_ReadPeriodicTime  os.o
+    0x000016bc   0x00000090   Code   RO          254    i.OS_SelectNextThread  os.o
+    0x0000174c   0x00000018   Code   RO          257    i.OS_Suspend        os.o
+    0x00001764   0x00000010   Code   RO          258    i.OS_Time           os.o
+    0x00001774   0x0000000c   Code   RO          259    i.OS_TimeDifference  os.o
+    0x00001780   0x00000058   Code   RO          262    i.OS_bSignal        os.o
+    0x000017d8   0x0000005c   Code   RO          263    i.OS_bWait          os.o
+    0x00001834   0x0000001c   Code   RO          267    i.OS_timeDisabled   os.o
+    0x00001850   0x00000048   Code   RO          268    i.OS_timeEnabled    os.o
+    0x00001898   0x00000010   Code   RO         1083    i.OutCRLF           uart.o
+    0x000018a8   0x0000007c   Code   RO           12    i.PLL_Init          pll.o
+    0x00001924   0x0000003c   Code   RO         1084    i.RxFifo_Get        uart.o
+    0x00001960   0x00000024   Code   RO         1085    i.RxFifo_Init       uart.o
+    0x00001984   0x0000003c   Code   RO         1086    i.RxFifo_Put        uart.o
+    0x000019c0   0x00000018   Code   RO         1087    i.RxFifo_Size       uart.o
+    0x000019d8   0x00000148   Code   RO         1221    i.SSI0_Init         diskio.o
+    0x00001b20   0x00000018   Code   RO           36    i.ST7735_Color565   st7735.o
+    0x00001b38   0x000000fc   Code   RO           39    i.ST7735_DrawCharS  st7735.o
+    0x00001c34   0x0000004c   Code   RO           42    i.ST7735_DrawPixel  st7735.o
+    0x00001c80   0x000000ac   Code   RO           43    i.ST7735_FillRect   st7735.o
+    0x00001d2c   0x00000024   Code   RO           44    i.ST7735_FillScreen  st7735.o
+    0x00001d50   0x0000006c   Code   RO           46    i.ST7735_InitR      st7735.o
+    0x00001dbc   0x0000003c   Code   RO           48    i.ST7735_Message    st7735.o
+    0x00001df8   0x00000056   Code   RO           49    i.ST7735_OutString  st7735.o
+    0x00001e4e   0x00000002   PAD
+    0x00001e50   0x00000050   Code   RO           51    i.ST7735_OutUDec2   st7735.o
+    0x00001ea0   0x00000150   Code   RO          269    i.SetInitialStack   os.o
+    0x00001ff0   0x00000014   Code   RO          270    i.SysTick_Handler   os.o
+    0x00002004   0x00000048   Code   RO          958    i.Timer0A_Handler   timer.o
+    0x0000204c   0x00000048   Code   RO          963    i.Timer1A_Handler   timer.o
+    0x00002094   0x00000054   Code   RO          648    i.Timer2A_Handler   adc.o
+    0x000020e8   0x00000058   Code   RO          968    i.Timer2_Init       timer.o
+    0x00002140   0x00000048   Code   RO          969    i.Timer3A_Handler   timer.o
+    0x00002188   0x0000009c   Code   RO          271    i.Timer4A_Handler   os.o
+    0x00002224   0x00000034   Code   RO          272    i.Timer4A_Init      os.o
+    0x00002258   0x0000009c   Code   RO          273    i.Timer5A_Handler   os.o
+    0x000022f4   0x00000040   Code   RO          274    i.Timer5_Init       os.o
+    0x00002334   0x0000003c   Code   RO         1088    i.TxFifo_Get        uart.o
+    0x00002370   0x00000024   Code   RO         1089    i.TxFifo_Init       uart.o
+    0x00002394   0x0000003c   Code   RO         1090    i.TxFifo_Put        uart.o
+    0x000023d0   0x00000018   Code   RO         1091    i.TxFifo_Size       uart.o
+    0x000023e8   0x00000058   Code   RO         1092    i.UART0_Handler     uart.o
+    0x00002440   0x00000014   Code   RO         1093    i.UART_InChar       uart.o
+    0x00002454   0x00000046   Code   RO         1094    i.UART_InString     uart.o
+    0x0000249a   0x00000002   PAD
+    0x0000249c   0x000000cc   Code   RO         1097    i.UART_Init         uart.o
+    0x00002568   0x00000034   Code   RO         1098    i.UART_OutChar      uart.o
+    0x0000259c   0x00000018   Code   RO         1099    i.UART_OutString    uart.o
+    0x000025b4   0x0000002a   Code   RO         1100    i.UART_OutUDec      uart.o
+    0x000025de   0x00000002   PAD
+    0x000025e0   0x00000078   Code   RO          275    i.WTimer0A_Init     os.o
+    0x00002658   0x00000088   Code   RO         1222    i.WTimer0B_Init     diskio.o
+    0x000026e0   0x00000068   Code   RO          276    i.WTimer4A_Init     os.o
+    0x00002748   0x00000060   Code   RO          277    i.WTimer5A_Init     os.o
+    0x000027a8   0x00000070   Code   RO          278    i.WideTimer0A_Handler  os.o
+    0x00002818   0x00000018   Code   RO         1223    i.WideTimer0B_Handler  diskio.o
+    0x00002830   0x00000090   Code   RO          279    i.WideTimer4A_Handler  os.o
+    0x000028c0   0x00000028   Code   RO         2040    i.__ARM_fpclassify  m_ws.l(fpclassify.o)
+    0x000028e8   0x000000aa   Code   RO         2042    i.__kernel_poly     m_ws.l(poly.o)
+    0x00002992   0x00000002   PAD
+    0x00002994   0x00000010   Code   RO         2038    i.__mathlib_dbl_underflow  m_ws.l(dunder.o)
+    0x000029a4   0x0000000e   Code   RO         2099    i.__scatterload_copy  mc_w.l(handlers.o)
+    0x000029b2   0x00000002   Code   RO         2100    i.__scatterload_null  mc_w.l(handlers.o)
+    0x000029b4   0x0000000e   Code   RO         2101    i.__scatterload_zeroinit  mc_w.l(handlers.o)
+    0x000029c2   0x00000002   PAD
+    0x000029c4   0x0000000c   Code   RO         2071    i.__set_errno       mc_w.l(errno.o)
+    0x000029d0   0x00000274   Code   RO          814    i.adcCall           cmdline.o
+    0x00002c44   0x00000020   Code   RO          918    i.addToList         linkedlist.o
+    0x00002c64   0x00000058   Code   RO         1804    i.addressOf         loader.o
+    0x00002cbc   0x00000012   Code   RO         1697    i.blockHeader       heap.o
+    0x00002cce   0x00000012   Code   RO         1698    i.blockRoom         heap.o
+    0x00002ce0   0x00000012   Code   RO         1699    i.blockTrailer      heap.o
+    0x00002cf2   0x00000008   Code   RO         1700    i.blockUnused       heap.o
+    0x00002cfa   0x00000010   Code   RO         1701    i.blockUsed         heap.o
+    0x00002d0a   0x00000002   PAD
+    0x00002d0c   0x00000090   Code   RO         1344    i.check_fs          ff.o
+    0x00002d9c   0x00000018   Code   RO         1345    i.chk_chr           ff.o
+    0x00002db4   0x0000001a   Code   RO         1346    i.clust2sect        ff.o
+    0x00002dce   0x00000056   Code   RO           55    i.commandList       st7735.o
+    0x00002e24   0x00000178   Code   RO           56    i.commonInit        st7735.o
+    0x00002f9c   0x00000028   Code   RO         1102    i.copyHardwareToSoftware  uart.o
+    0x00002fc4   0x0000002c   Code   RO         1103    i.copySoftwareToHardware  uart.o
+    0x00002ff0   0x000000d6   Code   RO         1347    i.create_chain      ff.o
+    0x000030c6   0x00000002   PAD
+    0x000030c8   0x000001b4   Code   RO         1348    i.create_name       ff.o
+    0x0000327c   0x00000014   Code   RO         1224    i.deselect          diskio.o
+    0x00003290   0x0000005c   Code   RO         1349    i.dir_alloc         ff.o
+    0x000032ec   0x0000005c   Code   RO         1350    i.dir_find          ff.o
+    0x00003348   0x0000010e   Code   RO         1351    i.dir_next          ff.o
+    0x00003456   0x00000070   Code   RO         1352    i.dir_read          ff.o
+    0x000034c6   0x0000003a   Code   RO         1353    i.dir_register      ff.o
+    0x00003500   0x00000036   Code   RO         1354    i.dir_remove        ff.o
+    0x00003536   0x0000009e   Code   RO         1355    i.dir_sdi           ff.o
+    0x000035d4   0x0000015c   Code   RO         1225    i.disk_initialize   diskio.o
+    0x00003730   0x00000228   Code   RO         1226    i.disk_ioctl        diskio.o
+    0x00003958   0x00000090   Code   RO         1227    i.disk_read         diskio.o
+    0x000039e8   0x00000014   Code   RO         1228    i.disk_status       diskio.o
+    0x000039fc   0x00000040   Code   RO         1229    i.disk_timerproc    diskio.o
+    0x00003a3c   0x000000b4   Code   RO         1230    i.disk_write        diskio.o
+    0x00003af0   0x00000002   Code   RO          649    i.dummy             adc.o
+    0x00003af2   0x00000004   Code   RO          281    i.dummy1            os.o
+    0x00003af6   0x00000002   Code   RO         1805    i.dumpData          loader.o
+    0x00003af8   0x000000e8   Code   RO         1806    i.exec_elf          loader.o
+    0x00003be0   0x00000020   Code   RO         1358    i.f_close           ff.o
+    0x00003c00   0x0000017e   Code   RO         1363    i.f_lseek           ff.o
+    0x00003d7e   0x00000002   PAD
+    0x00003d80   0x0000005c   Code   RO         1366    i.f_mount           ff.o
+    0x00003ddc   0x00000160   Code   RO         1367    i.f_open            ff.o
+    0x00003f3c   0x0000019e   Code   RO         1369    i.f_read            ff.o
+    0x000040da   0x00000002   PAD
+    0x000040dc   0x000000b0   Code   RO         1374    i.f_sync            ff.o
+    0x0000418c   0x000000be   Code   RO         1376    i.f_unlink          ff.o
+    0x0000424a   0x00000002   PAD
+    0x0000424c   0x00000228   Code   RO          815    i.fileCall          cmdline.o
+    0x00004474   0x00000048   Code   RO           57    i.fillmessage       st7735.o
+    0x000044bc   0x0000038c   Code   RO         1379    i.find_volume       ff.o
+    0x00004848   0x000000b0   Code   RO         1380    i.follow_path       ff.o
+    0x000048f8   0x0000000c   Code   RO         1807    i.freeElf           loader.o
+    0x00004904   0x00000010   Code   RO         1808    i.freeSection       loader.o
+    0x00004914   0x00000010   Code   RO         1809    i.freeSegment       loader.o
+    0x00004924   0x000000f2   Code   RO         1381    i.get_fat           ff.o
+    0x00004a16   0x0000004a   Code   RO         1383    i.get_ldnumber      ff.o
+    0x00004a60   0x000002a4   Code   RO          816    i.heapCall          cmdline.o
+    0x00004d04   0x0000001c   Code   RO         1702    i.inHeapRange       heap.o
+    0x00004d20   0x00000086   Code   RO         1810    i.initElf           loader.o
+    0x00004da6   0x00000002   PAD
+    0x00004da8   0x00000028   Code   RO         1231    i.init_spi          diskio.o
+    0x00004dd0   0x00000048   Code   RO         1811    i.jumpTo            loader.o
+    0x00004e18   0x00000120   Code   RO          817    i.lcdCall           cmdline.o
+    0x00004f38   0x00000020   Code   RO         1384    i.ld_clust          ff.o
+    0x00004f58   0x000000fc   Code   RO         1812    i.loadProgram       loader.o
+    0x00005054   0x000000ec   Code   RO         1813    i.loadSecData       loader.o
+    0x00005140   0x000000f4   Code   RO         1814    i.loadSegData       loader.o
+    0x00005234   0x000000c8   Code   RO         1815    i.loadSymbols       loader.o
+    0x000052fc   0x000000d4   Code   RO         1639    i.main              lab5.o
+    0x000053d0   0x00000030   Code   RO         1703    i.markBlockUnused   heap.o
+    0x00005400   0x00000030   Code   RO         1704    i.markBlockUsed     heap.o
+    0x00005430   0x00000026   Code   RO         1385    i.mem_cmp           ff.o
+    0x00005456   0x0000001a   Code   RO         1386    i.mem_cpy           ff.o
+    0x00005470   0x00000014   Code   RO         1387    i.mem_set           ff.o
+    0x00005484   0x0000002e   Code   RO         1705    i.mergeBlockWithBelow  heap.o
+    0x000054b2   0x00000034   Code   RO         1388    i.move_window       ff.o
+    0x000054e6   0x00000024   Code   RO          818    i.myAtoi            cmdline.o
+    0x0000550a   0x0000000e   Code   RO         1706    i.nextBlockHeader   heap.o
+    0x00005518   0x00000210   Code   RO          819    i.osCall            cmdline.o
+    0x00005728   0x00000064   Code   RO          820    i.parseNumber       cmdline.o
+    0x0000578c   0x00000084   Code   RO         1816    i.placeDynamic      loader.o
+    0x00005810   0x0000014c   Code   RO         1817    i.placeInfo         loader.o
+    0x0000595c   0x000009e0   Code   RO         2010    i.pow               m_ws.l(pow.o)
+    0x0000633c   0x0000000c   Code   RO         1707    i.previousBlockHeader  heap.o
+    0x00006348   0x00000012   Code   RO           58    i.pushColor         st7735.o
+    0x0000635a   0x00000146   Code   RO         1389    i.put_fat           ff.o
+    0x000064a0   0x00000048   Code   RO         1232    i.rcvr_datablock    diskio.o
+    0x000064e8   0x0000002c   Code   RO         1233    i.rcvr_spi          diskio.o
+    0x00006514   0x00000018   Code   RO         1234    i.rcvr_spi_multi    diskio.o
+    0x0000652c   0x0000003e   Code   RO         1818    i.readSecHeader     loader.o
+    0x0000656a   0x0000003a   Code   RO         1819    i.readSection       loader.o
+    0x000065a4   0x00000044   Code   RO         1820    i.readSectionName   loader.o
+    0x000065e8   0x0000003a   Code   RO         1821    i.readSegHeader     loader.o
+    0x00006622   0x00000072   Code   RO         1823    i.readSymbol        loader.o
+    0x00006694   0x00000044   Code   RO         1824    i.readSymbolName    loader.o
+    0x000066d8   0x000000a6   Code   RO         1825    i.relJmpCall        loader.o
+    0x0000677e   0x00000002   PAD
+    0x00006780   0x000000c8   Code   RO         1826    i.relocate          loader.o
+    0x00006848   0x00000040   Code   RO         1827    i.relocateProgram   loader.o
+    0x00006888   0x00000084   Code   RO         1828    i.relocateSection   loader.o
+    0x0000690c   0x00000048   Code   RO         1829    i.relocateSections  loader.o
+    0x00006954   0x00000038   Code   RO         1830    i.relocateSymbol    loader.o
+    0x0000698c   0x00000024   Code   RO          921    i.removeFromList    linkedlist.o
+    0x000069b0   0x00000048   Code   RO          286    i.removeThreadPri   os.o
+    0x000069f8   0x0000006c   Code   RO         1390    i.remove_chain      ff.o
+    0x00006a64   0x00000046   Code   RO         1831    i.sectionOf         loader.o
+    0x00006aaa   0x00000002   PAD
+    0x00006aac   0x00000030   Code   RO         1235    i.select            diskio.o
+    0x00006adc   0x00000096   Code   RO         1236    i.send_cmd          diskio.o
+    0x00006b72   0x00000002   PAD
+    0x00006b74   0x00000074   Code   RO           59    i.setAddrWindow     st7735.o
+    0x00006be8   0x0000004c   Code   RO         1708    i.splitAndMarkBlockUsed  heap.o
+    0x00006c34   0x0000004c   Code   RO         2046    i.sqrt              m_ws.l(sqrt.o)
+    0x00006c80   0x00000010   Code   RO         1391    i.st_clust          ff.o
+    0x00006c90   0x000000c8   Code   RO         1392    i.sync_fs           ff.o
+    0x00006d58   0x00000052   Code   RO         1393    i.sync_window       ff.o
+    0x00006daa   0x00000036   Code   RO         1394    i.validate          ff.o
+    0x00006de0   0x00000030   Code   RO         1237    i.wait_ready        diskio.o
+    0x00006e10   0x00000050   Code   RO           60    i.writecommand      st7735.o
+    0x00006e60   0x00000050   Code   RO           61    i.writedata         st7735.o
+    0x00006eb0   0x00000034   Code   RO         1238    i.xchg_spi          diskio.o
+    0x00006ee4   0x0000004c   Code   RO         1239    i.xmit_datablock    diskio.o
+    0x00006f30   0x0000002c   Code   RO         1240    i.xmit_spi_multi    diskio.o
+    0x00006f5c   0x000005e2   Data   RO           63    .constdata          st7735.o
+    0x0000753e   0x00000002   PAD
+    0x00007540   0x00000010   Data   RO          822    .constdata          cmdline.o
+    0x00007550   0x00000045   Data   RO         1835    .constdata          loader.o
+    0x00007595   0x00000003   PAD
+    0x00007598   0x00000088   Data   RO         2011    .constdata          m_ws.l(pow.o)
+    0x00007620   0x00000008   Data   RO         2044    .constdata          m_ws.l(qnan.o)
+    0x00007628   0x00000024   Data   RO          823    .conststring        cmdline.o
+    0x0000764c   0x00000020   Data   RO         2097    Region$$Table       anon$$obj.o
 
 
-    Execution Region ER_RW (Base: 0x20000000, Size: 0x00000168, Max: 0xffffffff, ABSOLUTE, COMPRESSED[0x00000014])
+    Execution Region ER_RW (Base: 0x20000000, Size: 0x00000258, Max: 0xffffffff, ABSOLUTE, COMPRESSED[0x000000a4])
 
     Base Addr    Size         Type   Attr      Idx    E Section Name        Object
 
-    0x20000000   0x0000002c   Data   RW           85    .data               st7735.o
-    0x2000002c   0x000000c0   Data   RW          406    .data               os.o
-    0x200000ec   0x0000001c   Data   RW          769    .data               adc.o
-    0x20000108   0x00000028   Data   RW         1062    .data               timer.o
-    0x20000130   0x00000010   Data   RW         1193    .data               uart.o
-    0x20000140   0x00000011   Data   RW         1329    .data               diskio.o
-    0x20000151   0x00000003   PAD
-    0x20000154   0x00000006   Data   RW         1490    .data               ff.o
-    0x2000015a   0x00000002   PAD
-    0x2000015c   0x0000000a   Data   RW         1742    .data               lab5.o
+    0x20000000   0x00000014   Data   RW           64    .data               st7735.o
+    0x20000014   0x000000c0   Data   RW          290    .data               os.o
+    0x200000d4   0x0000001c   Data   RW          650    .data               adc.o
+    0x200000f0   0x000000d2   Data   RW          824    .data               cmdline.o
+    0x200001c2   0x00000002   PAD
+    0x200001c4   0x00000028   Data   RW          974    .data               timer.o
+    0x200001ec   0x00000010   Data   RW         1105    .data               uart.o
+    0x200001fc   0x00000011   Data   RW         1241    .data               diskio.o
+    0x2000020d   0x00000003   PAD
+    0x20000210   0x00000006   Data   RW         1396    .data               ff.o
+    0x20000216   0x00000002   PAD
+    0x20000218   0x0000003c   Data   RW         1643    .data               lab5.o
+    0x20000254   0x00000004   Data   RW         2072    .data               mc_w.l(errno.o)
 
 
-    Execution Region ER_ZI (Base: 0x20000168, Size: 0x00003598, Max: 0xffffffff, ABSOLUTE)
+    Execution Region ER_ZI (Base: 0x20000258, Size: 0x000048c0, Max: 0xffffffff, ABSOLUTE)
 
     Base Addr    Size         Type   Attr      Idx    E Section Name        Object
 
-    0x20000168   0x0000000c   Zero   RW           83    .bss                st7735.o
-    0x20000174   0x000028ec   Zero   RW          404    .bss                os.o
-    0x20002a60   0x00000020   Zero   RW         1192    .bss                uart.o
-    0x20002a80   0x0000087c   Zero   RW         1740    .bss                lab5.o
-    0x200032fc   0x00000004   PAD
-    0x20003300   0x00000400   Zero   RW            1    STACK               startup.o
+    0x20000258   0x00000018   Zero   RW           62    .bss                st7735.o
+    0x20000270   0x000028ec   Zero   RW          288    .bss                os.o
+    0x20002b5c   0x0000006c   Zero   RW          821    .bss                cmdline.o
+    0x20002bc8   0x00000020   Zero   RW         1104    .bss                uart.o
+    0x20002be8   0x00000890   Zero   RW         1641    .bss                lab5.o
+    0x20003478   0x00001000   Zero   RW         1709    .bss                heap.o
+    0x20004478   0x000002a0   Zero   RW         1834    .bss                loader.o
+    0x20004718   0x00000400   Zero   RW            1    STACK               startup.o
 
 
 ==============================================================================
@@ -1700,29 +2183,41 @@ Image component sizes
 
       Code (inc. data)   RO Data    RW Data    ZI Data      Debug   Object Name
 
-       196         48          0         28          0       2121   adc.o
-      2566        182          0         17          0      13772   diskio.o
-      5786         56          0          6          0      27004   ff.o
-      1564        304         17         10       2172       5033   lab5.o
-        36          0          0          0          0        849   linkedlist.o
-      1084        212          0        192      10476      10820   os.o
+       322         82          0         28          0       3951   adc.o
+      1032         72          0          0          0        865   adcswtrigger.o
+      3024       1316         52        210        108      11885   cmdline.o
+      2566        182          0         17          0      12552   diskio.o
+       212         24          0          0          0        475   edgetriggered.o
+      5672         56          0          6          0      25073   ff.o
+       822         38          0          0       4096       9127   heap.o
+        60         30          0          0          0        446   interpreter.o
+       232         66          0         60       2192       4658   lab5.o
+        68          0          0          0          0       1353   linkedlist.o
+      3238        688         69          0        672      28708   loader.o
+      2764        470          0        192      10476      20212   os.o
        116         10          0          0          0        232   osasm.o
        124          6          0          0          0       4639   pll.o
-      2278        238       2114         44         12      16992   st7735.o
+      1754        172       1506         20         24      14625   st7735.o
        672        622          0          0       1024        916   startup.o
-       216         66          0         40          0       2411   timer.o
-       340         62          0         16         32       4156   uart.o
+       304         82          0         40          0       2841   timer.o
+       960        140          0         16         32       9021   uart.o
 
     ----------------------------------------------------------------------
-     14996       1806       2164        360      13720      88945   Object Totals
+     23972       4056       1664        596      18624     151579   Object Totals
          0          0         32          0          0          0   (incl. Generated)
-        18          0          1          7          4          0   (incl. Padding)
+        30          0          5          7          0          0   (incl. Padding)
 
     ----------------------------------------------------------------------
 
       Code (inc. data)   RO Data    RW Data    ZI Data      Debug   Library Member Name
 
-        58          0          0          0          0          0   __dczerorl.o
+        16          6          0          0          0         68   dunder.o
+        40          0          0          0          0         68   fpclassify.o
+       170          0          0          0          0         96   poly.o
+      2528        190        136          0          0        332   pow.o
+         0          0          8          0          0          0   qnan.o
+        76          0          0          0          0         84   sqrt.o
+        92          0          0          0          0          0   __dczerorl2.o
          0          0          0          0          0          0   entry.o
          0          0          0          0          0          0   entry10a.o
          0          0          0          0          0          0   entry11a.o
@@ -1731,21 +2226,41 @@ Image component sizes
          0          0          0          0          0          0   entry7b.o
          0          0          0          0          0          0   entry8b.o
          8          4          0          0          0          0   entry9a.o
+        12          6          0          4          0         68   errno.o
         30          0          0          0          0          0   handlers.o
         36          8          0          0          0         68   init.o
+         0          0          0          0          0          0   iusefp.o
+        30          0          0          0          0         68   llshl.o
+        36          0          0          0          0         68   llsshr.o
+        32          0          0          0          0         68   llushr.o
+        36          0          0          0          0         68   memcpya.o
+        28          0          0          0          0         76   strcmp.o
+        14          0          0          0          0         68   strlen.o
+        30          0          0          0          0         80   strncmp.o
+        40          2          0          0          0         68   cdrcmple.o
+       334          0          0          0          0        148   dadd.o
+       222          0          0          0          0        100   ddiv.o
+       190          0          0          0          0        176   depilogue.o
+        50          0          0          0          0         76   dfixui.o
+        34          0          0          0          0         76   dflti.o
+       228          0          0          0          0         96   dmul.o
+        46          0          0          0          0         80   dscalb.o
+       162          0          0          0          0        100   dsqrt.o
 
     ----------------------------------------------------------------------
-       148         16          0          0          0         68   Library Totals
+      4536        220        144          4          0       2200   Library Totals
          4          0          0          0          0          0   (incl. Padding)
 
     ----------------------------------------------------------------------
 
       Code (inc. data)   RO Data    RW Data    ZI Data      Debug   Library Name
 
-       144         16          0          0          0         68   mc_w.l
+      2830        196        144          0          0        648   m_ws.l
+       396         22          0          4          0        632   mc_w.l
+      1306          2          0          0          0        920   mf_w.l
 
     ----------------------------------------------------------------------
-       148         16          0          0          0         68   Library Totals
+      4536        220        144          4          0       2200   Library Totals
 
     ----------------------------------------------------------------------
 
@@ -1754,15 +2269,15 @@ Image component sizes
 
       Code (inc. data)   RO Data    RW Data    ZI Data      Debug   
 
-     15144       1822       2164        360      13720      83709   Grand Totals
-     15144       1822       2164         20      13720      83709   ELF Image Totals (compressed)
-     15144       1822       2164         20          0          0   ROM Totals
+     28508       4276       1808        600      18624     142599   Grand Totals
+     28508       4276       1808        164      18624     142599   ELF Image Totals (compressed)
+     28508       4276       1808        164          0          0   ROM Totals
 
 ==============================================================================
 
-    Total RO  Size (Code + RO Data)                17308 (  16.90kB)
-    Total RW  Size (RW Data + ZI Data)             14080 (  13.75kB)
-    Total ROM Size (Code + RO Data + RW Data)      17328 (  16.92kB)
+    Total RO  Size (Code + RO Data)                30316 (  29.61kB)
+    Total RW  Size (RW Data + ZI Data)             19224 (  18.77kB)
+    Total ROM Size (Code + RO Data + RW Data)      30480 (  29.77kB)
 
 ==============================================================================
 

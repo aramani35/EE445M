@@ -10,28 +10,25 @@ Project File Date:  04/02/2019
 Build target 'Lab4'
 compiling Lab5.c...
 linking...
-Program Size: Code=15144 RO-data=2164 RW-data=360 ZI-data=13720  
+Program Size: Code=28508 RO-data=1808 RW-data=600 ZI-data=18624  
 ".\Lab4.axf" - 0 Error(s), 0 Warning(s).
 Load "C:\\Users\\Abhishek\\Documents\\ValvanoWareTM4C123\\EE445M Labs\\Lab 5\\Lab4.axf" 
 Connecting: Mode=JTAG, Speed=1000000Hz
 Erase Done.
 Programming Done.
 Verify OK.
-uint32_t num_processes = 0;
-OS.c(770): warning:  #177-D: function "DebouncePF4" was declared but never referenced
-  void static DebouncePF4(void) {
-OS.c(778): warning:  #177-D: function "DebouncePF0" was declared but never referenced
+</pre>
+</body>
+</html>
+779): warning:  #177-D: function "DebouncePF0" was declared but never referenced
   void static DebouncePF0(void) {
-OS.c: 4 warnings, 0 errors
+OS.c: 3 warnings, 0 errors
 assembling osasm.s...
 compiling ADC.c...
 compiling Interpreter.c...
 compiling ADCSWTrigger.c...
 compiling board.c...
 compiling cmdline.c...
-cmdline.c(250): warning:  #223-D: function "ST7735_Message" declared implicitly
-        ST7735_Message(screenNum, lineNum, message, 0);
-cmdline.c: 1 warning, 0 errors
 compiling EdgeTriggered.c...
 EdgeTriggered.c(41): warning:  #177-D: variable "delayf" was declared but never referenced
       int delayf = 0;
@@ -40,76 +37,67 @@ compiling LinkedList.c...
 compiling Timer.c...
 compiling UART.c...
 compiling diskio.c...
-diskio.c(716): warning:  #1-D: last line of file ends without a newline
-  }
-diskio.c: 1 warning, 0 errors
 compiling ff.c...
 compiling Lab5.c...
+compiling heap.c...
+compiling loader.c...
+loader.c(671): warning:  #111-D: statement is unreachable
+    return -1;
+loader.c(147): warning:  #177-D: function "swabo" was declared but never referenced
+  static uint32_t swabo(uint32_t hl) {
+loader.c(249): warning:  #177-D: function "readSegment" was declared but never referenced
+  static int readSegment(ELFExec_t *e, int n, Elf32_Phdr *h, size_t nlen) {
+loader.c(273): warning:  #177-D: function "typeStr" was declared but never referenced
+  static const char *typeStr(int symt) {
+loader.c: 4 warnings, 0 errors
 linking...
-Program Size: Code=13816 RO-data=2148 RW-data=360 ZI-data=13720  
-".\Lab4.axf" - 0 Error(s), 7 Warning(s).
+Program Size: Code=28508 RO-data=1808 RW-data=600 ZI-data=18624  
+".\Lab4.axf" - 0 Error(s), 8 Warning(s).
 Load "C:\\Users\\Abhishek\\Documents\\ValvanoWareTM4C123\\EE445M Labs\\Lab 5\\Lab4.axf" 
 Connecting: Mode=JTAG, Speed=1000000Hz
 Erase Done.
 Programming Done.
 Verify OK.
- created
-oid ST7735_DrawFastVLine(int16_t x, int16_t y, int16_t h, uint16_t color);
-ST7735.h(138): error:  #20: identifier "uint16_t" is undefined
-  void ST7735_DrawFastVLine(int16_t x, int16_t y, int16_t h, uint16_t color);
-ST7735.h(150): error:  #20: identifier "int16_t" is undefined
-  void ST7735_DrawFastHLine(int16_t x, int16_t y, int16_t w, uint16_t color);
-ST7735.h(150): error:  #20: identifier "int16_t" is undefined
-  void ST7735_DrawFastHLine(int16_t x, int16_t y, int16_t w, uint16_t color);
-ST7735.h(150): error:  #20: identifier "int16_t" is undefined
-  void ST7735_DrawFastHLine(int16_t x, int16_t y, int16_t w, uint16_t color);
-ST7735.h(150): error:  #20: identifier "uint16_t" is undefined
-  void ST7735_DrawFastHLine(int16_t x, int16_t y, int16_t w, uint16_t color);
-ST7735.h(158): error:  #20: identifier "uint16_t" is undefined
-  void ST7735_FillScreen(uint16_t color);
-ST7735.h(170): error:  #20: identifier "int16_t" is undefined
-  void ST7735_FillRect(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color);
-ST7735.h(170): error:  #20: identifier "int16_t" is undefined
-  void ST7735_FillRect(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color);
-ST7735.h(170): error:  #20: identifier "int16_t" is undefined
-  void ST7735_FillRect(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color);
-ST7735.h(170): error:  #20: identifier "int16_t" is undefined
-  void ST7735_FillRect(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color);
-ST7735.h(170): error:  #20: identifier "uint16_t" is undefined
-  void ST7735_FillRect(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color);
-ST7735.h(181): error:  #20: identifier "int16_t" is undefined
-  void ST7735_DrawSmallCircle(int16_t x, int16_t y, uint16_t color);
-ST7735.h(181): error:  #20: identifier "int16_t" is undefined
-  void ST7735_DrawSmallCircle(int16_t x, int16_t y, uint16_t color);
-ST7735.h(181): error:  #20: identifier "uint16_t" is undefined
-  void ST7735_DrawSmallCircle(int16_t x, int16_t y, uint16_t color);
-ST7735.h(190): error:  #20: identifier "int16_t" is undefined
-  void ST7735_DrawCircle(int16_t x, int16_t y, uint16_t color);
-ST7735.h(190): error:  #20: identifier "int16_t" is undefined
-  void ST7735_DrawCircle(int16_t x, int16_t y, uint16_t color);
-ST7735.h(190): error:  #20: identifier "uint16_t" is undefined
-  void ST7735_DrawCircle(int16_t x, int16_t y, uint16_t color);
-ST7735.h(198): error:  #20: identifier "uint16_t" is undefined
-  uint16_t ST7735_Color565(uint8_t r, uint8_t g, uint8_t b);
-ST7735.h(198): error:  #20: identifier "uint8_t" is undefined
-  uint16_t ST7735_Color565(uint8_t r, uint8_t g, uint8_t b);
-ST7735.h(198): error:  #20: identifier "uint8_t" is undefined
-  uint16_t ST7735_Color565(uint8_t r, uint8_t g, uint8_t b);
-ST7735.h(198): error:  #20: identifier "uint8_t" is undefined
-  uint16_t ST7735_Color565(uint8_t r, uint8_t g, uint8_t b);
-ST7735.h(205): error:  #20: identifier "uint16_t" is undefined
-  uint16_t ST7735_SwapColor(uint16_t x) ;
-ST7735.h(205): error:  #20: identifier "uint16_t" is undefined
-  uint16_t ST7735_SwapColor(uint16_t x) ;
-ST7735.h(227): error:  #20: identifier "int16_t" is undefined
-  void ST7735_DrawBitmap(int16_t x, int16_t y, const uint16_t *image, int16_t w, int16_t h);
-Interpreter.c: 0 warnings, 30 errors
-compiling ADCSWTrigger.c...
-compiling board.c...
-compiling cmdline.c...
-cmdline.c(250): warning:  #223-D: function "ST7735_Message" declared implicitly
-        ST7735_Message(screenNum, lineNum, message, 0);
-cmdline.c: 1 warning, 0 errors
+23\\EE445M Labs\\Lab 5\\Lab4.axf" 
+Connecting: Mode=JTAG, Speed=1000000Hz
+Erase Done.
+Programming Done.
+Verify OK.
+23-D: function "ST7735_SetTextColor" declared implicitly
+        ST7735_SetTextColor(ST7735_Color565(255, 255, 255));
+Lab5.c(346): warning:  #223-D: function "ST7735_SetTextColor" declared implicitly
+        ST7735_SetTextColor(ST7735_Color565(255, 0, 0));
+Lab5.c(353): warning:  #223-D: function "ST7735_DrawString" declared implicitly
+      ST7735_DrawString(0, 14, "Error          (  )", ST7735_Color565(255, 0, 0));
+Lab5.c(356): warning:  #223-D: function "ST7735_SetTextColor" declared implicitly
+      ST7735_SetTextColor(ST7735_Color565(255, 0, 0));
+Lab5.c: 16 warnings, 0 errors
+linking...
+.\Lab4.axf: Error: L6218E: Undefined symbol ST7735_DrawString (referred from lab5.o).
+.\Lab4.axf: Error: L6218E: Undefined symbol ST7735_SetTextColor (referred from lab5.o).
+Not enough information to list image symbols.
+Finished: 1 information, 0 warning and 2 error messages.
+".\Lab4.axf" - 2 Error(s), 16 Warning(s).
+Target not created
+35_SetTextColor" declared implicitly
+        ST7735_SetTextColor(ST7735_Color565(255, 255, 255));
+Lab5.c(346): warning:  #223-D: function "ST7735_SetTextColor" declared implicitly
+        ST7735_SetTextColor(ST7735_Color565(255, 0, 0));
+Lab5.c(353): warning:  #223-D: function "ST7735_DrawString" declared implicitly
+      ST7735_DrawString(0, 14, "Error          (  )", ST7735_Color565(255, 0, 0));
+Lab5.c(356): warning:  #223-D: function "ST7735_SetTextColor" declared implicitly
+      ST7735_SetTextColor(ST7735_Color565(255, 0, 0));
+Lab5.c: 18 warnings, 0 errors
+linking...
+.\Lab4.axf: Error: L6218E: Undefined symbol ST7735_DrawString (referred from lab5.o).
+.\Lab4.axf: Error: L6218E: Undefined symbol ST7735_SetTextColor (referred from lab5.o).
+Not enough information to list image symbols.
+Finished: 1 information, 0 warning and 2 error messages.
+".\Lab4.axf" - 2 Error(s), 22 Warning(s).
+Target not created
+cmdline.c(636): error:  #20: identifier "heapCall" is undefined
+        { "heap", heapCall, infoHeap },
+cmdline.c: 10 warnings, 17 errors
 compiling EdgeTriggered.c...
 EdgeTriggered.c(41): warning:  #177-D: variable "delayf" was declared but never referenced
       int delayf = 0;
@@ -118,10 +106,8 @@ compiling LinkedList.c...
 compiling Timer.c...
 compiling UART.c...
 compiling diskio.c...
-diskio.c(716): warning:  #1-D: last line of file ends without a newline
-  }
-diskio.c: 1 warning, 0 errors
 compiling ff.c...
 compiling Lab5.c...
-".\Lab4.axf" - 32 Error(s), 7 Warning(s).
+compiling heap.c...
+".\Lab4.axf" - 17 Error(s), 14 Warning(s).
 Target not created

@@ -38,6 +38,10 @@
 #include "ST7735.h"
 #include "OS.h"
 #include "UART.h"
+#include "diskio.h"
+#include "ff.h"
+#include "heap.h"
+#include "loader.h"
 
 //*****************************************************************************
 //
@@ -47,6 +51,8 @@
 #ifndef CMDLINE_MAX_ARGS
 #define CMDLINE_MAX_ARGS        8
 #endif
+
+
 
 //*****************************************************************************
 //
@@ -392,12 +398,24 @@ int osCall(int numArgs, char* args[]) {
 }
 
 
+extern int exec_elf(const char *path, const ELFEnv_t *env);
+
+static const ELFSymbol_t symtab[] = {
+{ "ST7735_Message", ST7735_Message }
+};
+void LoadProgram() {
+	ELFEnv_t env = { symtab, 1 };
+	if (!exec_elf("Proc.axf", &env)) { 
+		UART_OutString("Load Proc.axf worked!");
+	}
+}
+
 int fileCall(int numArgs, char* args[]) {
 	// first arg is always fsys, so we can ignore
 	// second arg is command ["format", "cat", "rm"]
 	// third arg, if present, is file name
 	
-	int status = 0; // used to check status of command
+	FRESULT status; // used to check status of command
 	
 	OutCRLF();
 	
@@ -408,59 +426,70 @@ int fileCall(int numArgs, char* args[]) {
 	
 	if (numArgs == 2) {
 		
-		if (!strcmp(args[1], "format")) {
-			// status = eFile_Init();
-			if (status == 0)
-				UART_OutString("Initializing file system succeeded");
-			else
-				UART_OutString("Error. Can't init fsys");
-			
-			OutCRLF();
-			UART_OutString("Formatting SD Card");
-			OutCRLF();
-			// status = eFile_Format();
-			if (status == 0)
-				UART_OutString("Formatting succeeded");
-			else if (status == 1)
-				UART_OutString("Formatting failed");
-			
-			OutCRLF();
+//		if (!strcmp(args[1], "format")) {
+//			// status = eFile_Init();
+//			status = 
+//			if (status == 0)
+//				UART_OutString("Initializing file system succeeded");
+//			else
+//				UART_OutString("Error. Can't init fsys");
+//			
+//			OutCRLF();
+//			UART_OutString("Formatting SD Card");
+//			OutCRLF();
+//			// status = eFile_Format();
+//			if (status == 0)
+//				UART_OutString("Formatting succeeded");
+//			else if (status == 1)
+//				UART_OutString("Formatting failed");
+//			
+//			OutCRLF();
 		}
-		
-		else if (!strcmp(args[1], "init")) {
-			// status = eFile_Init();
-			if (status == 0)
-				UART_OutString("Initializing file system succeeded");
-			else
-				UART_OutString("Error. Can't init fsys");
-			
-			OutCRLF();
-		}
-	}
 	
-	else if (numArgs == 3) {
+	if (numArgs == 3) {
 		if (!strcmp(args[1], "cat")) {
-			if (!strcmp(args[2], "dir")) {
-				UART_OutString("Printing directory");
-				OutCRLF();
-				// status = eFile_Directory(UART_OutChar);
-				OutCRLF();
-				
-				if (status == 1)
-					UART_OutString("Printing directory failed");
-			}
+//			if (!strcmp(args[2], "dir")) {
+//				UART_OutString("Printing directory");
+//				OutCRLF();
+//				// status = eFile_Directory(UART_OutChar);
+//				
+//				
+//				OutCRLF();
+//				
+//				if (status == 1)
+//					UART_OutString("Printing directory failed");
+//			}
 			
-			else {
+			if(1) {
 				UART_OutString("Printing file with name ");
 				UART_OutString(args[2]);
 				OutCRLF();
-				// status = eFile_PrintFile(args[2], UART_OutChar);
 				
-				if (status == 1) {
-					UART_OutString("Printing file failed");
+				FIL file_Handle;
+				char data;
+				UINT bytesRead;
+				
+				status = f_open(&file_Handle, args[2], FA_READ);
+				
+				if (status != 0) {
+					UART_OutString("Opening file failed");
+					OutCRLF();
+					UART_OutString("Error code: ");
+					UART_OutUDec(status);
+					OutCRLF();
+					UART_OutString("File name: ");
+					UART_OutString(args[2]);
 					OutCRLF();
 				}
 				
+				do {
+					status = f_read(&file_Handle, &data, 1, &bytesRead);
+					if (bytesRead) {
+						UART_OutChar(data);
+					}
+				} while (status == FR_OK && bytesRead);
+				
+				f_close(&file_Handle);
 				OutCRLF();
 			}
 		}
@@ -470,28 +499,151 @@ int fileCall(int numArgs, char* args[]) {
 			UART_OutString(args[2]);
 			OutCRLF();
 			
-			// status = eFile_Delete(args[2]);
+			status = f_unlink(args[2]);
 			
-			if (status == 1) {
-				UART_OutString("File deletion failed");
+			if (status != 0) {
+				UART_OutString("Error: File deletion failed");
 			}
+			else {
+				UART_OutString("File deletion succeeded");
+			}
+			
+			OutCRLF();
+		}
+		
+		else if (!strcmp(args[1], "mk")) {
+			UART_OutString("Making file with name ");
+			UART_OutString(args[2]);
+			OutCRLF();
+			
+			FIL file_Handle;
+			
+			status = f_open(&file_Handle, args[2], FA_CREATE_NEW);
+			f_close(&file_Handle);
+		}
+		
+		else if (!strcmp(args[1], "load")) {
+			LoadProgram();
 		}
 	}
 	
 	return 1;
 }
 
+int32_t* heapPtrs[10] 	= { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+uint8_t ptrSize[10] 	= { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+int numPtrs = 0;
+int16_t statusH;
+heap_stats_t heap_Stats;
+
+int myAtoi(char *str) { 
+    int res = 0; // Initialize result 
+   
+    // Iterate through all characters of input string and 
+    // update result 
+    for (int i = 0; str[i] != '\0'; ++i) 
+        res = res*10 + str[i] - '0'; 
+   
+    // return result. 
+    return res; 
+} 
+
+int heapCall(int numArgs, char* args[]) {
+	statusH = Heap_Test();
+	heap_Stats = Heap_Stats();
+	
+	if (numArgs == 2) {
+		if (!strcmp(args[1], "info")) {
+			UART_OutString("Allocate a specified number of bytes");
+			OutCRLF();
+			UART_OutString("There are ");
+			UART_OutUDec(10 - numPtrs);
+			UART_OutString(" free heap ptrs in the interpreter.");
+			OutCRLF();
+			
+			if (numPtrs == 10) return 0;
+			
+			UART_OutString("The currently allocated ptrs are: ");
+			OutCRLF();
+			for(int i = 0; i < 10; i++) {
+				if (heapPtrs[i] != 0) {
+					UART_OutString("    Ptr number ");
+					UART_OutUDec(i);
+					UART_OutString(" of size ");
+					UART_OutUDec(ptrSize[i] * sizeof(int32_t));
+					UART_OutString(" bytes");
+					OutCRLF();
+				}
+			}
+		}
+		
+	}
+	
+	else if (numArgs == 3) {
+		if (!strcmp(args[1], "free")) {
+			int num = myAtoi(args[2]);
+			
+			if (heapPtrs[num] != 0) {
+				UART_OutString("Freeing position ");
+				UART_OutUDec(num);
+				OutCRLF();
+				Heap_Free(heapPtrs[num]);
+				heapPtrs[numArgs] = 0;
+				ptrSize[num] = 0;
+				
+				statusH = Heap_Test();
+				heap_Stats = Heap_Stats();
+			}
+		}
+		
+		else if (!strcmp(args[1], "malloc")) {
+			
+			OutCRLF();
+			
+			int num = myAtoi(args[2]);			
+			if (num < 1) {
+				UART_OutString("Invalid size.");
+				return 1;
+			}
+			
+			int i;
+			for (i = 0; i < 10; i++) {
+				if (heapPtrs[i] == 0)
+					break;
+			}
+			
+			heapPtrs[i] = (int32_t*) Heap_Malloc(num * sizeof(BYTE));
+			ptrSize[i] = num;
+			
+			statusH = Heap_Test();
+			heap_Stats = Heap_Stats();
+			
+			UART_OutString("Allocated ");
+			UART_OutUDec(num);
+			UART_OutString(" bytes to position ");
+			UART_OutUDec(i);
+			OutCRLF();
+		}
+		
+		
+	}
+	
+	return 0;
+}
+
 // Used for UART commands
 char infoADC[] = "Send commands to the ADC";
 char infoLCD[] = "Send commands to the LCD";
-char infoOS[] = "Look up timer info";
+char infoOS[] = "Look up OS info for debugging";
 char infoFile[] = "Commands relating to file directory";
+char infoHeap[] = "Comands relating to heap";
 
 tCmdLineEntry g_psCmdTable[] = {
     { "lcd", lcdCall, infoADC },
     { "adc", adcCall, infoLCD },
 	{ "os", osCall, infoOS },
 	{ "fsys", fileCall, infoFile },
+	{ "heap", heapCall, infoHeap },
 };
 
 //*****************************************************************************

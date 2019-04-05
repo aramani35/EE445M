@@ -32,6 +32,7 @@ struct TCB {
     struct TCB *prev;
 	unsigned used;
 	int16_t id;
+	int16_t process_id;
 	uint16_t sleepCT;
     uint8_t sleep_state;
 	uint8_t priority;
@@ -46,7 +47,7 @@ struct PCB{
 	uint16_t pid;
 	uint8_t num_threads;
 };
-typedef struct PCB pcbType;
+typedef struct PCB PCBtype;
 
 
 // feel free to change the type of semaphore, there are lots of good solutions

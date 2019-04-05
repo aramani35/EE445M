@@ -9,3 +9,9 @@
 .\cmdline.o: OS.h
 .\cmdline.o: ..\../inc/tm4c123gh6pm.h
 .\cmdline.o: UART.h
+.\cmdline.o: diskio.h
+.\cmdline.o: integer.h
+.\cmdline.o: ff.h
+.\cmdline.o: ffconf.h
+.\cmdline.o: heap.h
+.\cmdline.o: loader.h

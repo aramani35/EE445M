@@ -61,6 +61,8 @@ DRESULT disk_read(BYTE drv, BYTE *buff, DWORD sector, UINT count);
 /*-----------------------------------------------------------------------*/
 /* Write sector(s)                                                       */
 /*-----------------------------------------------------------------------*/
+void CS_Init(void);
+
 
 #if _USE_WRITE
 //Inputs:  drv    Physical drive number (0)

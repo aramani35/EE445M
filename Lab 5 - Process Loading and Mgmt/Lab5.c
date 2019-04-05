@@ -44,6 +44,7 @@
 #include "UART.h"
 #include "diskio.h"
 #include "ff.h"
+#include "heap.h"
   
 unsigned long NumCreated;   // number of foreground threads created
 
@@ -75,41 +76,81 @@ extern void Interpreter(void);
 // 4) delete file
 // execute   eFile_Init();  after periodic interrupts have started
 
+static FATFS g_sFatFs;
+FIL Handle,Handle2;
+FRESULT MountFresult;
+FRESULT Fresult;
+
+void dummy(void) {}
+	
+void dummy1(void) {}
+
+void dummy2(void) {}	
+	
+void addProcessTest(void) {
+    OS_Init();
+    EnableInterrupts();
+    unsigned char tbuffer[100];
+    for (int i = 0; i < 100; i++){
+        tbuffer[i] = i;
+    }
+    
+    OS_AddProcess(IdleTask, &tbuffer, &tbuffer,128, 4);
+    OS_AddThread(dummy,128,4);
+    OS_AddThread(dummy1,128,4);
+    
+    OS_AddProcess(IdleTask, &tbuffer, &tbuffer,128, 4);
+    OS_AddThread(dummy2,128,4);
+    OS_Launch(TIME_2MS);
+    
+}
+
 //*******************lab 5 main **********
-int realmain(void){        // lab 5 realmain
+int main(void){        // lab 5 realmain
   OS_Init();           // initialize, disable interrupts
-  
+  ST7735_FillScreen(0);                 // set screen to black
+
 //********initialize communication channels
   OS_Fifo_Init(256);    
-
+	
+	
+  MountFresult = f_mount(&g_sFatFs, "", 0);
+  if(MountFresult){
+	ST7735_OutString(0, 0, "f_mount error", ST7735_Color565(0,0,255));
+    while(1) {}
+  }
+  
+  else {
+	  ST7735_OutString(0, 0, "f_mount success", ST7735_Color565(0,0,255));
+  }
+	
   NumCreated = 0 ;
 // create initial foreground threads
   NumCreated += OS_AddThread(&Interpreter,128,2); 
   NumCreated += OS_AddThread(&IdleTask,128,7);  // runs when nothing useful to do
  
+	
+  Heap_Init();
+  
   OS_Launch(TIMESLICE); // doesn't return, interrupts enabled in here
   return 0;             // this never executes
 }
 
 void EnableInterrupts(void);
 
-static FATFS g_sFatFs;
-FIL Handle,Handle2;
-FRESULT MountFresult;
-FRESULT Fresult;
 unsigned char buffer[512];
 #define MAXBLOCKS 100
 // Describe the error with text on the LCD and then stall.  If
 // the error was caused by a mistake in configuring SSI0, then
 // the LCD will probably not work.
 void diskError(char *errtype, int32_t code, int32_t block){
-//  ST7735_DrawString(0, 0, "Error:", ST7735_Color565(255, 0, 0));
-//  ST7735_DrawString(7, 0, errtype, ST7735_Color565(255, 0, 0));
-//  ST7735_DrawString(0, 1, "Code:", ST7735_Color565(255, 0, 0));
+//  ST7735_OutString(0, 0, "Error:", ST7735_Color565(255, 0, 0));
+//  ST7735_OutString(7, 0, errtype, ST7735_Color565(255, 0, 0));
+//  ST7735_OutString(0, 1, "Code:", ST7735_Color565(255, 0, 0));
 //  ST7735_SetCursor(6, 1);
-//  ST7735_SetTextColor(ST7735_Color565(255, 0, 0));
+//  // ST7735_SetTextColor(ST7735_Color565(255, 0, 0));
 //  ST7735_OutUDec(code);
-//  ST7735_DrawString(0, 2, "Block:", ST7735_Color565(255, 0, 0));
+//  ST7735_OutString(0, 2, "Block:", ST7735_Color565(255, 0, 0));
 //  ST7735_SetCursor(7, 2);
 //  ST7735_OutUDec(block);
   while(1){};
@@ -140,10 +181,10 @@ void SimpleUnformattedTest(void){ DSTATUS result; uint16_t block; int i; uint32_
       }
     }
   }
-//  ST7735_DrawString(0, 0, "Test done", ST7735_Color565(0, 255, 0));
-//  ST7735_DrawString(0, 1, "Mismatches:", ST7735_Color565(0, 255, 0));
+//  ST7735_OutString(0, 0, "Test done", ST7735_Color565(0, 255, 0));
+//  ST7735_OutString(0, 1, "Mismatches:", ST7735_Color565(0, 255, 0));
 //  ST7735_SetCursor(12, 1);
-//  ST7735_SetTextColor(ST7735_Color565(0, 255, 0));
+//  // ST7735_SetTextColor(ST7735_Color565(0, 255, 0));
 //  ST7735_OutUDec(errors);
 }
 #define FILETESTSIZE 10000
@@ -157,7 +198,8 @@ void FileSystemTest(void){
   n = 1;    // seed
   Fresult = f_open(&Handle2, "testFile.txt", FA_CREATE_ALWAYS|FA_WRITE);
   if(Fresult){
-    ST7735_DrawString(0, 0, "testFile error", ST7735_Color565(0, 0, 255));
+    ST7735_OutString(0, 0, "testFile error", ST7735_Color565(0, 0, 255));
+	ST7735_OutUDec(Fresult);
     while(1){};
   } else{
     for(i=0; i<FILETESTSIZE; i++){
@@ -165,20 +207,20 @@ void FileSystemTest(void){
       c = ((n>>24)%10)+'0'; // random digit 0 to 9
       Fresult = f_write(&Handle2, &c, 1, &successfulwrites);
       if((successfulwrites != 1) || (Fresult != FR_OK)){
-        ST7735_DrawString(0, 0, "f_write error", ST7735_Color565(0, 0, 255));
+        ST7735_OutString(0, 0, "f_write error", ST7735_Color565(0, 0, 255));
         while(1){};
       }
     }
     Fresult = f_close(&Handle2);
     if(Fresult){
-      ST7735_DrawString(0, 0, "file2 f_close error", ST7735_Color565(0, 0, 255));
+      ST7735_OutString(0, 0, "file2 f_close error", ST7735_Color565(0, 0, 255));
       while(1){};
     }
   }
   n = 1;  // reseed, start over to get the same sequence
   Fresult = f_open(&Handle, "testFile.txt", FA_READ);
   if(Fresult == FR_OK){
-    ST7735_DrawString(0, 0, "Opened testFile.txt", ST7735_Color565(0, 0, 255));
+    ST7735_OutString(0, 0, "Opened testFile.txt", ST7735_Color565(0, 0, 255));
     for(i=0; i<FILETESTSIZE; i++){
       n = (16807*n)%2147483647; // pseudo random sequence
       d = ((n>>24)%10)+'0'; // expected random digit 0 to 9
@@ -194,23 +236,23 @@ void FileSystemTest(void){
           y = 10;                         // the screen is full
         }
       } else{
-        ST7735_DrawString(0, 0, "f_read error", ST7735_Color565(0, 0, 255));
+        ST7735_OutString(0, 0, "f_read error", ST7735_Color565(0, 0, 255));
         while(1){};
       }
 
     }
   } else{
-    ST7735_DrawString(0, 0, "Error testFile.txt (  )", ST7735_Color565(255, 0, 0));
+    ST7735_OutString(0, 0, "Error testFile.txt (  )", ST7735_Color565(255, 0, 0));
     ST7735_SetCursor(20, 0);
-    ST7735_SetTextColor(ST7735_Color565(255, 0, 0));
+    // ST7735_SetTextColor(ST7735_Color565(255, 0, 0));
     ST7735_OutUDec((uint32_t)Fresult);
     while(1){};
   }
-  ST7735_DrawString(0, 0, "file test passed    ", ST7735_Color565(255, 255, 255));
+  ST7735_OutString(0, 0, "file test passed    ", ST7735_Color565(255, 255, 255));
   Fresult = f_close(&Handle);
 /*  Fresult = f_open(&Handle,"out.txt", FA_CREATE_ALWAYS|FA_WRITE);
   if(Fresult == FR_OK){
-    ST7735_DrawString(0, 0, "Opened out.txt", ST7735_Color565(0, 0, 255));
+    ST7735_OutString(0, 0, "Opened out.txt", ST7735_Color565(0, 0, 255));
     c = 'A';
     x = 0;
     y = 10;
@@ -230,9 +272,9 @@ void FileSystemTest(void){
       ST7735_DrawChar(x, y, c, ST7735_Color565(255, 255, 0), 0, 1);
     }
   } else{
-    ST7735_DrawString(0, 0, "Error out.txt (  )", ST7735_Color565(255, 0, 0));
+    ST7735_OutString(0, 0, "Error out.txt (  )", ST7735_Color565(255, 0, 0));
     ST7735_SetCursor(15, 0);
-    ST7735_SetTextColor(ST7735_Color565(255, 0, 0));
+    // ST7735_SetTextColor(ST7735_Color565(255, 0, 0));
     ST7735_OutUDec((uint32_t)Fresult);
   }*/
 }
@@ -240,7 +282,7 @@ void FileSystemTest(void){
 const char inFilename[] = "test.txt";   // 8 characters or fewer
 const char outFilename[] = "out.txt";   // 8 characters or fewer
 
-int main(void){
+int sdctestmain (void){
   UINT successfulreads, successfulwrites;
   uint8_t c, x, y;
   PLL_Init(Bus80MHz);    // 80 MHz
@@ -250,21 +292,21 @@ int main(void){
 //  SimpleUnformattedTest();              // comment this out if continuing to the advanced file system tests
   MountFresult = f_mount(&g_sFatFs, "", 0);
   if(MountFresult){
-    ST7735_DrawString(0, 0, "f_mount error", ST7735_Color565(0, 0, 255));
+    ST7735_OutString(0, 0, "f_mount error", ST7735_Color565(0, 0, 255));
     while(1){};
   }
   FileSystemTest();                     // comment this out if file system works
   // open the file to be read
 //  Fresult = f_open(&Handle, "Proc.axf", FA_READ);
 //  if(Fresult != FR_OK){
-//    ST7735_DrawString(0, 0, "Proc.axf f_open error", ST7735_Color565(0, 0, 255));
+//    ST7735_OutString(0, 0, "Proc.axf f_open error", ST7735_Color565(0, 0, 255));
 //    while(1){
 //    }
 //  }
   Fresult = f_open(&Handle, inFilename, FA_READ);
   if(Fresult == FR_OK){
-    ST7735_DrawString(0, 0, "Opened ", ST7735_Color565(0, 255, 0));
-    ST7735_DrawString(7, 0, (char *)inFilename, ST7735_Color565(0, 255, 0));
+    ST7735_OutString(0, 0, "Opened ", ST7735_Color565(0, 255, 0));
+    ST7735_OutString(7, 0, (char *)inFilename, ST7735_Color565(0, 255, 0));
     // get a character in 'c' and the number of successful reads in 'successfulreads'
     Fresult = f_read(&Handle, &c, 1, &successfulreads);
     x = 0;                              // start in the first column
@@ -290,10 +332,10 @@ int main(void){
     Fresult = f_close(&Handle);
   } else{
     // print the error code
-    ST7735_DrawString(0, 0, "Error          (  )", ST7735_Color565(255, 0, 0));
-    ST7735_DrawString(6, 0, (char *)inFilename, ST7735_Color565(255, 0, 0));
+    ST7735_OutString(0, 0, "Error          (  )", ST7735_Color565(255, 0, 0));
+    ST7735_OutString(6, 0, (char *)inFilename, ST7735_Color565(255, 0, 0));
     ST7735_SetCursor(16, 0);
-    ST7735_SetTextColor(ST7735_Color565(255, 0, 0));
+    // ST7735_SetTextColor(ST7735_Color565(255, 0, 0));
     ST7735_OutUDec((uint32_t)Fresult);
   }
 
@@ -305,8 +347,8 @@ int main(void){
   // FA_OPEN_EXISTING - Opens a file, only if it exists.  If the file does not exist, the function fails.
   Fresult = f_open(&Handle, outFilename, FA_WRITE|FA_OPEN_ALWAYS);
   if(Fresult == FR_OK){
-    ST7735_DrawString(0, 14, "Opened ", ST7735_Color565(0, 255, 0));
-    ST7735_DrawString(7, 14, (char *)outFilename, ST7735_Color565(0, 255, 0));
+    ST7735_OutString(0, 14, "Opened ", ST7735_Color565(0, 255, 0));
+    ST7735_OutString(7, 14, (char *)outFilename, ST7735_Color565(0, 255, 0));
     // jump to the end of the file
     Fresult = f_lseek(&Handle, Handle.fsize);
     // write a message and get the number of successful writes in 'successfulwrites'
@@ -314,9 +356,9 @@ int main(void){
     if(Fresult == FR_OK){
       // print the number of successful writes
       // expect: third parameter of f_write()
-      ST7735_DrawString(0, 15, "Writes:    @", ST7735_Color565(0, 255, 0));
+      ST7735_OutString(0, 15, "Writes:    @", ST7735_Color565(0, 255, 0));
       ST7735_SetCursor(8, 15);
-      ST7735_SetTextColor(ST7735_Color565(255, 255, 255));
+      // ST7735_SetTextColor(ST7735_Color565(255, 255, 255));
       ST7735_OutUDec((uint32_t)successfulwrites);
       ST7735_SetCursor(13, 15);
       // print the byte offset from the start of the file where the writes started
@@ -324,20 +366,121 @@ int main(void){
       ST7735_OutUDec((uint32_t)(Handle.fptr - successfulwrites));
     } else{
       // print the error code
-      ST7735_DrawString(0, 15, "f_write() error (  )", ST7735_Color565(255, 0, 0));
+      ST7735_OutString(0, 15, "f_write() error (  )", ST7735_Color565(255, 0, 0));
       ST7735_SetCursor(17, 15);
-      ST7735_SetTextColor(ST7735_Color565(255, 0, 0));
+      // ST7735_SetTextColor(ST7735_Color565(255, 0, 0));
       ST7735_OutUDec((uint32_t)Fresult);
     }
     // close the file
     Fresult = f_close(&Handle);
   } else{
     // print the error code
-    ST7735_DrawString(0, 14, "Error          (  )", ST7735_Color565(255, 0, 0));
-    ST7735_DrawString(6, 14, (char *)outFilename, ST7735_Color565(255, 0, 0));
+    ST7735_OutString(0, 14, "Error          (  )", ST7735_Color565(255, 0, 0));
+    ST7735_OutString(6, 14, (char *)outFilename, ST7735_Color565(255, 0, 0));
     ST7735_SetCursor(16, 14);
-    ST7735_SetTextColor(ST7735_Color565(255, 0, 0));
+    // ST7735_SetTextColor(ST7735_Color565(255, 0, 0));
     ST7735_OutUDec((uint32_t)Fresult);
   }
   while(1){};
 }
+
+// global so easier to see with the debugger
+// Proper style would be to make these variables local to main.
+int16_t statush; 
+int16_t* ptr;
+int16_t* p1;
+int16_t* p2;
+int16_t* p3;
+uint8_t* q1;
+uint8_t* q2;
+uint8_t* q3;
+uint8_t* q4;
+uint8_t* q5;
+uint8_t* q6;
+int16_t maxBlockSize;
+uint8_t* bigBlock;
+heap_stats_t stats;
+
+int heaptestmain(void){
+  int16_t i;
+
+  statush = Heap_Init();
+
+  ptr = Heap_Malloc(sizeof(int16_t));
+  *ptr = 0x1111;
+  statush = Heap_Test();
+
+  statush = Heap_Free(ptr);
+  statush = Heap_Test();
+
+  ptr = Heap_Malloc(1);
+  statush = Heap_Test();
+
+  statush = Heap_Free(ptr);
+  statush = Heap_Test();
+
+  p1 = (int16_t*) Heap_Malloc(1 * sizeof(int16_t));
+  p2 = (int16_t*) Heap_Malloc(2 * sizeof(int16_t));
+  p3 = (int16_t*) Heap_Malloc(3 * sizeof(int16_t));
+  p1[0] = 0xAAAA;
+  p2[0] = 0xBBBB;
+  p2[1] = 0xBBBB;
+  p3[0] = 0xCCCC;
+  p3[1] = 0xCCCC;
+  p3[2] = 0xCCCC;
+  statush = Heap_Test();
+  stats = Heap_Stats();
+
+  statush = Heap_Free(p1);
+  statush = Heap_Free(p3);
+  statush = Heap_Test();
+
+  statush = Heap_Free(p2);
+  statush = Heap_Test();
+  stats = Heap_Stats();
+
+  for(i = 0; i <= HEAP_SIZE_WORDS; i++){
+    ptr = Heap_Malloc(sizeof(int16_t));
+  }
+  statush = Heap_Test();
+  stats = Heap_Stats();
+
+  statush = Heap_Init();
+  q1 = Heap_Malloc(1);
+  q2 = Heap_Malloc(2);
+  q3 = Heap_Malloc(3);
+  q4 = Heap_Malloc(4);
+  q5 = Heap_Malloc(5);
+  statush = Heap_Test();
+
+  *q1 = 0xDD;
+  q6 = Heap_Realloc(q1, 6);
+  statush = Heap_Test();
+  stats = Heap_Stats();
+
+  //q1 should point to freed space
+  statush = Heap_Free(q1);
+  statush = Heap_Test();
+
+  for(i = 0; i < 6; i++){
+    q6[i] = 0xEE;
+  }
+  q1 = Heap_Realloc(q6, 2);
+  statush = Heap_Test();
+
+  statush = Heap_Init();
+  maxBlockSize = HEAP_SIZE_BYTES - 2 * sizeof(int16_t);
+  bigBlock = Heap_Malloc(maxBlockSize);
+  for(i = 0; i < maxBlockSize; i++){
+    bigBlock[i] = 0xFF;
+  }
+  statush = Heap_Test();
+  stats = Heap_Stats();
+  statush = Heap_Free(bigBlock);
+  bigBlock = Heap_Calloc(maxBlockSize);
+  statush = Heap_Test();
+  stats = Heap_Stats();
+  for(;;){
+  } 
+}
+

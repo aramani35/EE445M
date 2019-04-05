@@ -362,7 +362,7 @@
               <MiscControls></MiscControls>
               <Define>rvmdk PART_LM4F120H5QR</Define>
               <Undefine></Undefine>
-              <IncludePath>..;..\..\..</IncludePath>
+              <IncludePath>..;..\..\..;..\..</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -569,6 +569,21 @@
               <FileName>Lab5.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\Lab5.c</FilePath>
+            </File>
+            <File>
+              <FileName>heap.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\heap.c</FilePath>
+            </File>
+            <File>
+              <FileName>heap.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\heap.h</FilePath>
+            </File>
+            <File>
+              <FileName>loader.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\loader.c</FilePath>
             </File>
           </Files>
         </Group>
