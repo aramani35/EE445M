@@ -337,4 +337,7 @@ int OS_GetProfilerAndReset(void);
 int OS_AddProcess(void(*entry)(void), void *text, void *data, 
                   unsigned long stackSize, unsigned long priority);
 
+int OS_AddThreadFirstProcess(void(*task)(void), 
+   unsigned long stackSize, unsigned long priority, int processID);
+
 
