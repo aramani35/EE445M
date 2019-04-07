@@ -76,6 +76,8 @@ TCBtype *runPT = 0;
 TCBtype *nextPT = 0;
 TCBtype TCBs[NUMTHREADS];
 PCBtype PCBs[NUMPROCESSES];
+PCBtype PCBs2[NUMPROCESSES];
+
 
 static uint32_t num_processes = 0;
 
@@ -234,24 +236,21 @@ void OS_Init(void){
 	Last = 1;
     Release = 1;
     OS_DisableInterrupts();
-    UART_Init();              // initialize UART
     MaxJitter = 0;
     MaxJitter2 = 0;
-    //PLL_Init(Bus80MHz);
     PLL_Init(Bus80MHz);
     UART_Init();              // initialize UART
-    ST7735_InitR(INITR_REDTAB);//Output_Init();
-	ST7735_FillScreen(0);                 // set screen to black
+    Output_Init();
     WTimer0A_Init(); // sleep
     OS_InitSemaphore(&SW1sem, 0);
     OS_InitSemaphore(&SW2sem, 0);
     EdgeCounter_PF4_Init();
+	Board_Init();
     Timer4A_Init();
     Timer5_Init();
     WTimer4A_Init();
    	WTimer5A_Init();
-//    eFile_Init();
-//    eFile_Format();
+
     NVIC_ST_CTRL_R = 0;                     // disable SysTick during setup
     NVIC_ST_CURRENT_R = 0;                  // any write to current clears it
     NVIC_SYS_PRI3_R =(NVIC_SYS_PRI3_R&0x00FFFFFF)|0xE0000000; // SysTick priority 6
@@ -259,13 +258,21 @@ void OS_Init(void){
 
 	for (int i = 0; i < NUMTHREADS; i++){   // initialize all the threads as free
 		TCBs[i].used = 1;
+		TCBs[i].process_id = 0;
 	} 
     
     for (int i = 0; i < NUMPROCESSES; i++){   // initialize all the threads as free
+		if (i == 0) {
+			PCBs[i].pid = 0;
+			PCBs2[i].pid = 0;
+			continue;
+		}
+		
 		PCBs[i].pid = -1;
+		PCBs2[i].pid = -1;
 	} 
-    start = 1;
-    OS_AddThread(&dummy1, 128, 7);
+     start = 1;
+    // OS_AddThread(&dummy1, 128, 7);
 //    OS_AddThread(&SW1Task,128, 1);
 //    OS_AddThread(&SW2Task,128, 1);
 
@@ -515,28 +522,47 @@ int OS_AddThreadPri(TCBtype *threadPT, uint32_t priority) {
 	return 1;
 }
 
-PCBtype* getProcess(int processID){
-	for(int i = 0; i < NUMPROCESSES; i++){
+PCBtype* getProcess(int processID) {
+	if (processID == 0) {
+		return 0;
+	}
+	
+	for(int i = 1; i < NUMPROCESSES; i++){
 			if(PCBs[i].pid == processID)
 				return(&PCBs[i]);
 		}
 	return 0;
 }
 
+
 int OS_AddProcess(void(*entry)(void), void *text, void *data, unsigned long stackSize, unsigned long priority){
+//	UART_OutString("Adding Process with pri: ");
+//	UART_OutUDec(priority);
+//	OutCRLF();
+	
     long status = StartCritical();
+	// OS_DisableInterrupts();
+	
+//	UART_OutString("APS");
+//	UART_OutUDec(priority);
+//	OutCRLF();
+	
+	ST7735_OutString(0, 3, "APS", ST7735_WHITE);
+	
     PCBtype *newProcess;
     
     // Loop to find free process
     int index;
 	for(index = 1; index < NUMPROCESSES; index++){
-		if(PCBs[index].pid == 0){
+		if(PCBs[index].pid == -1){
 			break;
 		}
 	}
     // No room
     if(index == NUMPROCESSES){
 		EndCritical(status);
+		// OS_EnableInterrupts();
+		
 		return 0;
 	}
     
@@ -549,8 +575,16 @@ int OS_AddProcess(void(*entry)(void), void *text, void *data, unsigned long stac
     
     // Add new process thread
     OS_AddThreadFirstProcess(entry, stackSize, priority, newProcess->pid);
+	
+//	UART_OutString("Finished adding process");
+//	OutCRLF();
+	
+	ST7735_OutString(0, 4, "APS D", ST7735_WHITE);
+	
     EndCritical(status);
+	// OS_EnableInterrupts();
 
+	
     return 1;
 }
 
@@ -634,7 +668,7 @@ long status = StartCritical();
 int OS_AddThreadFirstProcess(void(*task)(void), 
    unsigned long stackSize, unsigned long priority, int processID){
 
-long status = StartCritical();
+//long status = StartCritical();
 	TCBtype *thread;
 	int numThread;
 	for(numThread = 0; numThread < NUMTHREADS; numThread++){
@@ -642,8 +676,9 @@ long status = StartCritical();
 			break;
 		}
 	}
+	
 	if(numThread == NUMTHREADS){
-		EndCritical(status);
+//		EndCritical(status);
 		return 0;
 	}
 	thread = &TCBs[numThread];
@@ -662,7 +697,6 @@ long status = StartCritical();
     }
     else {
         OS_AddThreadPri(thread, priority);
-        thread->process_id = runPT->process_id;
         //linkThread(runPT, thread, num_threads); // RR
     }
     
@@ -675,12 +709,18 @@ long status = StartCritical();
     num_threads++;
 	Stacks[numThread][STACKSIZE-2] = (int32_t)(task); //  set PC for Task
 	CurrentID+=1;
-	EndCritical(status);
+	
+	ST7735_OutString(0, 5, "NT=", ST7735_WHITE);
+	ST7735_SetCursor(10, 5);
+	ST7735_OutUDec(num_threads);
+	
+	ST7735_OutString(0, 6, "New TN=", ST7735_WHITE);
+	ST7735_SetCursor(10, 6);
+	ST7735_OutUDec(numThread);
+	
+//	EndCritical(status);
 	return 1;
 }
-
-
-
 
 void ContextSwitch(void){
 	NVIC_INT_CTRL_R = NVIC_INT_CTRL_PEND_SV;//NVIC_PENDSVSET; // lowest priority
@@ -1041,6 +1081,11 @@ void OS_Sleep(unsigned long sleepTime){
 // output: none
 void OS_Kill(void){
     long status = StartCritical();
+	
+	ST7735_OutString(0, 7, "KT; NT=", ST7735_WHITE);
+	ST7735_SetCursor(10, 7);
+	ST7735_OutUDec(num_threads);
+	
     runPT->used = 1;                  // set thread to free/not busy
     num_threads--;
 	#ifdef ROUNDROBIN
@@ -1050,17 +1095,23 @@ void OS_Kill(void){
     
     PCBtype *parentPCB = getProcess(runPT->process_id);
 	parentPCB->num_threads--;
-	if(parentPCB->num_threads == 0){
+	if(parentPCB->num_threads == 0) {
 		Heap_Free(parentPCB->data);
 		Heap_Free(parentPCB->code);
-		parentPCB->pid = 0;
+		parentPCB->pid = -1;
 	}
-	runPT->process_id = 0; //set id to dead
+
+	runPT->process_id = -1; //set id to dead
     
 	removeThreadPri(runPT->priority);
 	#endif
     addToList(runPT, &head_kill, &tail_kill);
     OS_Suspend();
+	
+	ST7735_OutString(0, 8, "KT done; NT=", ST7735_WHITE);
+	ST7735_SetCursor(10, 8);
+	ST7735_OutUDec(num_threads);
+	
 	EndCritical(status);
 }
 

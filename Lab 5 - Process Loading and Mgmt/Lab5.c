@@ -81,13 +81,13 @@ FIL Handle,Handle2;
 FRESULT MountFresult;
 FRESULT Fresult;
 
-void dummy(void) {}
+void pdummy(void) { while(1); }
 	
-void dummy1(void) {}
+void pdummy1(void) { while(1); }
 
-void dummy2(void) {}	
+void pdummy2(void) { while(1); }	
 	
-void addProcessTest(void) {
+int AddProcessTest(void) {
     OS_Init();
     EnableInterrupts();
     unsigned char tbuffer[100];
@@ -96,13 +96,14 @@ void addProcessTest(void) {
     }
     
     OS_AddProcess(IdleTask, &tbuffer, &tbuffer,128, 4);
-    OS_AddThread(dummy,128,4);
-    OS_AddThread(dummy1,128,4);
+    OS_AddThread(pdummy,128,4);
+    OS_AddThread(pdummy1,128,4);
     
     OS_AddProcess(IdleTask, &tbuffer, &tbuffer,128, 4);
-    OS_AddThread(dummy2,128,4);
+    OS_AddThread(pdummy2,128,4);
     OS_Launch(TIME_2MS);
     
+	return 0;
 }
 
 //*******************lab 5 main **********
@@ -113,6 +114,8 @@ int main(void){        // lab 5 realmain
 //********initialize communication channels
   OS_Fifo_Init(256);    
 	
+  
+  Heap_Init();
 	
   MountFresult = f_mount(&g_sFatFs, "", 0);
   if(MountFresult){

@@ -1,4 +1,4 @@
-// UART.c
+// UART2.c
 // Runs on LM4F120/TM4C123
 // Use UART0 to implement bidirectional data transfer to and from a
 // computer running HyperTerminal.  This time, interrupts and FIFOs
@@ -8,12 +8,13 @@
 // Modified by EE345L students Charlie Gough && Matt Hawk
 // Modified by EE345M students Agustinus Darmawan && Mingjie Qiu
 
-/* This example accompanies the book
+/* This example accompanies the books
    "Embedded Systems: Real Time Interfacing to Arm Cortex M Microcontrollers",
-   ISBN: 978-1463590154, Jonathan Valvano, copyright (c) 2015
-   Program 5.11 Section 5.6, Program 3.10
+   ISBN: 978-1463590154, Jonathan Valvano, copyright (c) 2017
+   "Embedded Systems: Real-Time Operating Systems for ARM Cortex-M Microcontrollers",
+   ISBN: 978-1466468863, Jonathan Valvano, copyright (c) 2017
 
- Copyright 2015 by Jonathan W. Valvano, valvano@mail.utexas.edu
+ Copyright 2017 by Jonathan W. Valvano, valvano@mail.utexas.edu
     You may use, edit, run or distribute this file
     as long as the above copyright notice remains
  THIS SOFTWARE IS PROVIDED "AS IS".  NO WARRANTIES, WHETHER EXPRESS, IMPLIED
@@ -25,16 +26,31 @@
  http://users.ece.utexas.edu/~valvano/
  */
 
+
 // U0Rx (VCP receive) connected to PA0
 // U0Tx (VCP transmit) connected to PA1
-#include <stdint.h>
 #include "../inc/tm4c123gh6pm.h"
-
-#include "FIFO.h"
 #include "UART.h"
+#include <string.h> 
+#include "OS.h"
 
 #define NVIC_EN0_INT5           0x00000020  // Interrupt 5 enable
-
+//#define NVIC_EN0_R              (*((volatile unsigned long *)0xE000E100))  // IRQ 0 to 31 Set Enable Register
+//#define NVIC_PRI1_R             (*((volatile unsigned long *)0xE000E404))  // IRQ 4 to 7 Priority Register
+//#define GPIO_PORTA_AFSEL_R      (*((volatile unsigned long *)0x40004420))
+//#define GPIO_PORTA_DEN_R        (*((volatile unsigned long *)0x4000451C))
+//#define GPIO_PORTA_AMSEL_R      (*((volatile unsigned long *)0x40004528))
+//#define GPIO_PORTA_PCTL_R       (*((volatile unsigned long *)0x4000452C))
+//#define UART0_DR_R              (*((volatile unsigned long *)0x4000C000))
+//#define UART0_FR_R              (*((volatile unsigned long *)0x4000C018))
+//#define UART0_IBRD_R            (*((volatile unsigned long *)0x4000C024))
+//#define UART0_FBRD_R            (*((volatile unsigned long *)0x4000C028))
+//#define UART0_LCRH_R            (*((volatile unsigned long *)0x4000C02C))
+//#define UART0_CTL_R             (*((volatile unsigned long *)0x4000C030))
+//#define UART0_IFLS_R            (*((volatile unsigned long *)0x4000C034))
+//#define UART0_IM_R              (*((volatile unsigned long *)0x4000C038))
+//#define UART0_RIS_R             (*((volatile unsigned long *)0x4000C03C))
+//#define UART0_ICR_R             (*((volatile unsigned long *)0x4000C044))
 #define UART_FR_RXFF            0x00000040  // UART Receive FIFO Full
 #define UART_FR_TXFF            0x00000020  // UART Transmit FIFO Full
 #define UART_FR_RXFE            0x00000010  // UART Receive FIFO Empty
@@ -56,31 +72,114 @@
 #define UART_ICR_RTIC           0x00000040  // Receive Time-Out Interrupt Clear
 #define UART_ICR_TXIC           0x00000020  // Transmit Interrupt Clear
 #define UART_ICR_RXIC           0x00000010  // Receive Interrupt Clear
-
-
+//#define SYSCTL_RCGC1_R          (*((volatile unsigned long *)0x400FE104))
+//#define SYSCTL_RCGC2_R          (*((volatile unsigned long *)0x400FE108))
+#define SYSCTL_RCGC1_UART0      0x00000001  // UART0 Clock Gating Control
+#define SYSCTL_RCGC2_GPIOA      0x00000001  // port A Clock Gating Control
 
 void DisableInterrupts(void); // Disable interrupts
 void EnableInterrupts(void);  // Enable interrupts
 long StartCritical (void);    // previous I bit, disable interrupts
 void EndCritical(long sr);    // restore I bit to previous value
 void WaitForInterrupt(void);  // low power mode
-#define FIFOSIZE   16         // size of the FIFOs (must be power of 2)
-#define FIFOSUCCESS 1         // return value on success
-#define FIFOFAIL    0         // return value on failure
-                              // create index implementation FIFO (see FIFO.h)
-AddIndexFifo(Rx, FIFOSIZE, char, FIFOSUCCESS, FIFOFAIL)
-AddIndexFifo(Tx, FIFOSIZE, char, FIFOSUCCESS, FIFOFAIL)
+
+// Two-pointer implementation of the FIFO
+// can hold 0 to FIFOSIZE-1 elements
+#define TXFIFOSIZE 32     // can be any size
+#define FIFOSUCCESS 1
+#define FIFOFAIL    0
+
+typedef char dataType;
+dataType volatile *TxPutPt;  // put next
+dataType volatile *TxGetPt;  // get next
+dataType TxFifo[TXFIFOSIZE];
+Sema4Type TxRoomLeft;   // Semaphore counting empty spaces in TxFifo
+void TxFifo_Init(void){ // this is critical
+  // should make atomic
+  TxPutPt = TxGetPt = &TxFifo[0]; // Empty
+  OS_InitSemaphore(&TxRoomLeft, TXFIFOSIZE-1);  // Initially lots of spaces 
+  // end of critical section
+}
+
+
+void TxFifo_Put(dataType data){
+  OS_Wait(&TxRoomLeft);      // If the buffer is full, spin/block
+  *(TxPutPt) = data;   // Put
+  TxPutPt = TxPutPt+1;
+  if(TxPutPt ==&TxFifo[TXFIFOSIZE]){
+    TxPutPt = &TxFifo[0];      // wrap
+  }
+}
+int TxFifo_Get(dataType *datapt){
+  if(TxPutPt == TxGetPt ){
+    return(FIFOFAIL);// Empty if PutPt=GetPt
+  }
+  else{
+    *datapt = *(TxGetPt++);
+    if(TxGetPt==&TxFifo[TXFIFOSIZE]){
+       TxGetPt = &TxFifo[0]; // wrap
+    }
+    OS_Signal(&TxRoomLeft); // increment if data removed
+    return(FIFOSUCCESS);
+  }
+}
+unsigned int TxFifo_Size(void){
+  return(((unsigned int)TxPutPt - (unsigned int)TxGetPt)& TXFIFOSIZE-1) ;
+}
+
+#define RXFIFOSIZE 16     // can be any size
+
+dataType volatile *RxPutPt;  // put next
+dataType volatile *RxGetPt;  // get next
+dataType static RxFifo[RXFIFOSIZE];
+Sema4Type RxFifoAvailable;   // Semaphore counting data in RxFifo
+
+void RxFifo_Init(void){ // this is critical
+  // should make atomic
+  RxPutPt = RxGetPt = &RxFifo[0]; // Empty
+  OS_InitSemaphore(&RxFifoAvailable, 0);  // Initially empty 
+  // end of critical section
+}
+int RxFifo_Put(dataType data){
+dataType volatile *nextPutPt;
+  nextPutPt = RxPutPt+1;
+  if(nextPutPt ==&RxFifo[RXFIFOSIZE]){
+    nextPutPt = &RxFifo[0];      // wrap
+  }
+  if(nextPutPt == RxGetPt){
+    return(FIFOFAIL);  // Failed, fifo full
+  }
+  else{
+    *(RxPutPt) = data;   // Put
+    RxPutPt = nextPutPt; // Success, update
+    OS_Signal(&RxFifoAvailable); // increment only if data actually stored
+    return(FIFOSUCCESS);
+  }
+}
+dataType RxFifo_Get(void){ dataType data;
+  OS_Wait(&RxFifoAvailable);
+  data = *(RxGetPt++);
+  if(RxGetPt==&RxFifo[RXFIFOSIZE]){
+     RxGetPt = &RxFifo[0]; // wrap
+  }
+  return data;
+} 
+unsigned int RxFifo_Size(void){
+  return(((unsigned int)RxPutPt - (unsigned int)RxGetPt)& RXFIFOSIZE-1) ;
+
+//  return RxFifoAvailable.Value;
+}
 
 // Initialize UART0
 // Baud rate is 115200 bits/sec
 void UART_Init(void){
-  SYSCTL_RCGCUART_R |= 0x01;            // activate UART0
-  SYSCTL_RCGCGPIO_R |= 0x01;            // activate port A
+  SYSCTL_RCGCUART_R |= 0x01; // activate UART0
+  SYSCTL_RCGCGPIO_R |= 0x01; // activate port A
   RxFifo_Init();                        // initialize empty FIFOs
   TxFifo_Init();
   UART0_CTL_R &= ~UART_CTL_UARTEN;      // disable UART
-  UART0_IBRD_R = 43;                    // IBRD = int(50,000,000 / (16 * 115,200)) = int(27.1267)
-  UART0_FBRD_R = 26;                     // FBRD = int(0.1267 * 64 + 0.5) = 8
+  UART0_IBRD_R = 43;                    // IBRD = int(80,000,000 / (16 * 115200)) = int(43.402778)
+  UART0_FBRD_R = 26;                    // FBRD = round(0.402778 * 64) = 26
                                         // 8 bit word length (no parity bits, one stop bit, FIFOs)
   UART0_LCRH_R = (UART_LCRH_WLEN_8|UART_LCRH_FEN);
   UART0_IFLS_R &= ~0x3F;                // clear TX and RX interrupt FIFO level fields
@@ -89,7 +188,7 @@ void UART_Init(void){
   UART0_IFLS_R += (UART_IFLS_TX1_8|UART_IFLS_RX1_8);
                                         // enable TX and RX FIFO interrupts and RX time-out interrupt
   UART0_IM_R |= (UART_IM_RXIM|UART_IM_TXIM|UART_IM_RTIM);
-  UART0_CTL_R |= 0x301;                 // enable UART
+  UART0_CTL_R |= UART_CTL_UARTEN;       // enable UART
   GPIO_PORTA_AFSEL_R |= 0x03;           // enable alt funct on PA1-0
   GPIO_PORTA_DEN_R |= 0x03;             // enable digital I/O on PA1-0
                                         // configure PA1-0 as UART
@@ -104,7 +203,7 @@ void UART_Init(void){
 // stop when hardware RX FIFO is empty or software RX FIFO is full
 void static copyHardwareToSoftware(void){
   char letter;
-  while(((UART0_FR_R&UART_FR_RXFE) == 0) && (RxFifo_Size() < (FIFOSIZE - 1))){
+  while(((UART0_FR_R&UART_FR_RXFE) == 0) && (RxFifo_Size() < (RXFIFOSIZE - 1))){
     letter = UART0_DR_R;
     RxFifo_Put(letter);
   }
@@ -122,13 +221,13 @@ void static copySoftwareToHardware(void){
 // spin if RxFifo is empty
 char UART_InChar(void){
   char letter;
-  while(RxFifo_Get(&letter) == FIFOFAIL){};
+  letter = RxFifo_Get(); // block or spin if empty
   return(letter);
 }
 // output ASCII character to UART
 // spin if TxFifo is full
 void UART_OutChar(char data){
-  while(TxFifo_Put(data) == FIFOFAIL){};
+  TxFifo_Put(data);
   UART0_IM_R &= ~UART_IM_TXIM;          // disable TX FIFO interrupt
   copySoftwareToHardware();
   UART0_IM_R |= UART_IM_TXIM;           // enable TX FIFO interrupt
@@ -177,8 +276,8 @@ void UART_OutString(char *pt){
 // Output: 32-bit unsigned number
 // If you enter a number above 4294967295, it will return an incorrect value
 // Backspace will remove last digit typed
-uint32_t UART_InUDec(void){
-uint32_t number=0, length=0;
+unsigned long UART_InUDec(void){
+unsigned long number=0, length=0;
 char character;
   character = UART_InChar();
   while(character != CR){ // accepts until <enter> is typed
@@ -206,7 +305,7 @@ char character;
 // Input: 32-bit number to be transferred
 // Output: none
 // Variable format 1-10 digits with no space before or after
-void UART_OutUDec(uint32_t n){
+void UART_OutUDec(unsigned long n){
 // This function uses recursion to convert decimal number
 //   of unspecified length as an ASCII string
   if(n >= 10){
@@ -216,6 +315,95 @@ void UART_OutUDec(uint32_t n){
   UART_OutChar(n+'0'); /* n is between 0 and 9 */
 }
 
+//-----------------------UART_OutUDec3-----------------------
+// Output a 32-bit number in unsigned decimal format
+// Input: 32-bit number to be transferred
+// Output: none
+// Fixed format 3 digits with space after
+void UART_OutUDec3(unsigned long n){
+  if(n>999){
+    UART_OutString("***");
+  }else if(n >= 100){
+    UART_OutChar(n/100+'0'); 
+    n = n%100;
+    UART_OutChar(n/10+'0'); 
+    n = n%10;
+    UART_OutChar(n+'0'); 
+  }else if(n >= 10){
+    UART_OutChar(' '); 
+    UART_OutChar(n/10+'0'); 
+    n = n%10;
+    UART_OutChar(n+'0'); 
+  }else{
+    UART_OutChar(' '); 
+    UART_OutChar(' '); 
+    UART_OutChar(n+'0'); 
+  }
+  UART_OutChar(' ');
+}
+//-----------------------UART_OutUDec5-----------------------
+// Output a 32-bit number in unsigned decimal format
+// Input: 32-bit number to be transferred
+// Output: none
+// Fixed format 5 digits with space after
+void UART_OutUDec5(unsigned long n){
+  if(n>99999){
+    UART_OutString("*****");
+  }else if(n >= 10000){
+    UART_OutChar(n/10000+'0'); 
+    n = n%10000;
+    UART_OutChar(n/1000+'0'); 
+    n = n%1000;
+    UART_OutChar(n/100+'0'); 
+    n = n%100;
+    UART_OutChar(n/10+'0'); 
+    n = n%10;
+    UART_OutChar(n+'0'); 
+  }else if(n >= 1000){
+    UART_OutChar(' '); 
+    UART_OutChar(n/1000+'0'); 
+    n = n%1000;
+    UART_OutChar(n/100+'0'); 
+    n = n%100;
+    UART_OutChar(n/10+'0'); 
+    n = n%10;
+    UART_OutChar(n+'0'); 
+  }else if(n >= 100){
+    UART_OutChar(' '); 
+    UART_OutChar(' '); 
+    UART_OutChar(n/100+'0'); 
+    n = n%100;
+    UART_OutChar(n/10+'0'); 
+    n = n%10;
+    UART_OutChar(n+'0'); 
+  }else if(n >= 10){
+    UART_OutChar(' '); 
+    UART_OutChar(' '); 
+    UART_OutChar(' '); 
+    UART_OutChar(n/10+'0'); 
+    n = n%10;
+    UART_OutChar(n+'0'); 
+  }else{
+    UART_OutChar(' '); 
+    UART_OutChar(' '); 
+    UART_OutChar(' '); 
+    UART_OutChar(' '); 
+    UART_OutChar(n+'0'); 
+  }
+  UART_OutChar(' ');
+}
+//-----------------------UART_OutSDec-----------------------
+// Output a 32-bit number in signed decimal format
+// Input: 32-bit number to be transferred
+// Output: none
+// Variable format 1-10 digits with no space before or after
+void UART_OutSDec(long n){
+  if(n<0){
+    UART_OutChar('-');
+    n = -n;
+  }
+  UART_OutUDec((unsigned long)n);
+}
 //---------------------UART_InUHex----------------------------------------
 // Accepts ASCII input in unsigned hexadecimal (base 16) format
 // Input: none
@@ -226,8 +414,8 @@ void UART_OutUDec(uint32_t n){
 //     value range is 0 to FFFFFFFF
 // If you enter a number above FFFFFFFF, it will return an incorrect value
 // Backspace will remove last digit typed
-uint32_t UART_InUHex(void){
-uint32_t number=0, digit, length=0;
+unsigned long UART_InUHex(void){
+unsigned long number=0, digit, length=0;
 char character;
   character = UART_InChar();
   while(character != CR){
@@ -263,7 +451,7 @@ char character;
 // Input: 32-bit number to be transferred
 // Output: none
 // Variable format 1 to 8 digits with no space before or after
-void UART_OutUHex(uint32_t number){
+void UART_OutUHex(unsigned long number){
 // This function uses recursion to convert the number of
 //   unspecified length as an ASCII string
   if(number >= 0x10){
@@ -292,7 +480,7 @@ void UART_OutUHex(uint32_t number){
 // Input: pointer to empty buffer, size of buffer
 // Output: Null terminated string
 // -- Modified by Agustinus Darmawan + Mingjie Qiu --
-void UART_InString(char *bufPt, uint16_t max) {
+void UART_InString(char *bufPt, unsigned short max) {
 int length=0;
 char character;
   character = UART_InChar();
@@ -315,11 +503,85 @@ char character;
   *bufPt = 0;
 }
 
-//---------------------OutCRLF---------------------
-// Output a CR,LF to UART to go to a new line
-// Input: none
+
+
+/****************Fixed_Fix2Str***************
+ converts fixed point number to ASCII string
+ format signed 16-bit with resolution 0.01
+ range -327.67 to +327.67
+ Input: signed 16-bit integer part of fixed point number
+         -32768 means invalid fixed-point number
+ Output: null-terminated string exactly 8 characters plus null
+ Examples
+  12345 to " 123.45"  
+ -22100 to "-221.00"
+   -102 to "  -1.02" 
+     31 to "   0.31" 
+ -32768 to " ***.**"    
+ */ 
+void Fixed_Fix2Str(long const num,char *string){
+  short n;
+  if((num>99999)||(num<-99990)){
+    strcpy((char *)string," ***.**");
+    return;
+  }
+  if(num<0){
+    n = -num;
+    string[0] = '-';
+  } else{
+    n = num;
+    string[0] = ' ';
+  }
+  if(n>9999){
+    string[1] = '0'+n/10000;
+    n = n%10000;
+    string[2] = '0'+n/1000;
+  } else{
+    if(n>999){
+      if(num<0){
+        string[0] = ' ';
+        string[1] = '-';
+      } else {
+        string[1] = ' ';
+      }
+      string[2] = '0'+n/1000;
+    } else{
+      if(num<0){
+        string[0] = ' ';
+        string[1] = ' ';
+        string[2] = '-';
+      } else {
+        string[1] = ' ';
+        string[2] = ' ';
+      }
+    }
+  }
+  n = n%1000;
+  string[3] = '0'+n/100;
+  n = n%100;
+  string[4] = '.';
+  string[5] = '0'+n/10;
+  n = n%10;
+  string[6] = '0'+n;
+  string[7] = 0;
+}
+//--------------------------UART_Fix2----------------------------
+// Output a 32-bit number in 0.01 fixed-point format
+// Input: 32-bit number to be transferred -99999 to +99999
 // Output: none
-void OutCRLF(void){
-  UART_OutChar(CR);
-  UART_OutChar(LF);
+// Fixed format 
+//  12345 to " 123.45"  
+// -22100 to "-221.00"
+//   -102 to "  -1.02" 
+//     31 to "   0.31" 
+// error     " ***.**"   
+void UART_Fix2(long number){
+  char message[10];
+  Fixed_Fix2Str(number,message);
+  UART_OutString(message);
+}
+
+void OutCRLF(void) {
+	UART_OutChar(CR);
+	UART_OutChar(LF);
 }

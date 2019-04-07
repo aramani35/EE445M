@@ -44,7 +44,7 @@ typedef struct TCB TCBtype;
 struct PCB{
 	int32_t *data;
 	int32_t *code;
-	uint16_t pid;
+	int16_t pid;
 	uint8_t num_threads;
 };
 typedef struct PCB PCBtype;

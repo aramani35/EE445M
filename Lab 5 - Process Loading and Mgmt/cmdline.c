@@ -403,11 +403,16 @@ extern int exec_elf(const char *path, const ELFEnv_t *env);
 static const ELFSymbol_t symtab[] = {
 { "ST7735_Message", ST7735_Message }
 };
+
 void LoadProgram() {
 	ELFEnv_t env = { symtab, 1 };
 	if (!exec_elf("Proc.axf", &env)) { 
 		UART_OutString("Load Proc.axf worked!");
 	}
+	
+	else UART_OutString("Loading Proc.axf failed");
+	
+	OutCRLF();
 }
 
 int fileCall(int numArgs, char* args[]) {

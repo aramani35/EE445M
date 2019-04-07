@@ -30,6 +30,11 @@
 
         EXTERN  runPT            ; currently running thread
 		EXTERN  nextPT
+		EXTERN OS_AddThread
+		EXTERN OS_Kill
+		EXTERN OS_Sleep
+		EXTERN OS_Time
+		EXTERN OS_Id
         EXPORT  OS_DisableInterrupts
         EXPORT  OS_EnableInterrupts
         EXPORT  StartOS
@@ -153,7 +158,7 @@ StartOS
     BX      LR                 ; start first thread
 
 SVC_Handler
-	PUSH {LR}
+	; PUSH {LR}
 	LDR R12,[SP,#24] 			; Return address
 	LDRH R12,[R12,#-2] 			; SVC instruction is 2 bytes
 	BIC R12,#0xFF00 			; Extract trap numbers (ID) in R12
@@ -162,7 +167,7 @@ SVC_Handler
 	PUSH {LR}					; check BEQ for return value link
 	LDR LR, =Return
 	CMP R12, #0
-	BEQ OS_AddThread
+	BEQ OS_Id
 	CMP R12, #1
 	BEQ OS_Kill
 	CMP R12, #2
@@ -170,9 +175,9 @@ SVC_Handler
 	CMP R12, #3
 	BEQ OS_Time
 	CMP R12, #4
-	BEQ OS_Id
-	POP {LR}
-	BX	LR
+	BEQ OS_AddThread
+	; POP {LR}
+	; BX	LR
 	
 Return 	
 	POP {LR}
