@@ -1,0 +1,10 @@
+.\cmdline.o: cmdline.c
+.\cmdline.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
+.\cmdline.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdbool.h
+.\cmdline.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
+.\cmdline.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\math.h
+.\cmdline.o: cmdline.h
+.\cmdline.o: ADC.h
+.\cmdline.o: ST7735.h
+.\cmdline.o: OS.h
+.\cmdline.o: UART.h

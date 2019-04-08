@@ -1,0 +1,13 @@
+.\sensorboardtestmain.o: SensorBoardTestMain.c
+.\sensorboardtestmain.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
+.\sensorboardtestmain.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
+.\sensorboardtestmain.o: ST7735.h
+.\sensorboardtestmain.o: PLL.h
+.\sensorboardtestmain.o: board.h
+.\sensorboardtestmain.o: Timer.h
+.\sensorboardtestmain.o: ADCSWTrigger.h
+.\sensorboardtestmain.o: ADC.h
+.\sensorboardtestmain.o: UART.h
+.\sensorboardtestmain.o: OS.h
+.\sensorboardtestmain.o: cmdline.h
+.\sensorboardtestmain.o: ..\..\..\inc/tm4c123gh6pm.h

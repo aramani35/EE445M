@@ -1,0 +1,15 @@
+.\loader.o: loader.c
+.\loader.o: loader.h
+.\loader.o: elf.h
+.\loader.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
+.\loader.o: loader_config.h
+.\loader.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
+.\loader.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdlib.h
+.\loader.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
+.\loader.o: ff.h
+.\loader.o: integer.h
+.\loader.o: ffconf.h
+.\loader.o: heap.h
+.\loader.o: UART2.h
+.\loader.o: os.h
+.\loader.o: ..\../inc/tm4c123gh6pm.h

@@ -1,0 +1,14 @@
+.\sdcfile.o: SDCFile.c
+.\sdcfile.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
+.\sdcfile.o: diskio.h
+.\sdcfile.o: integer.h
+.\sdcfile.o: ff.h
+.\sdcfile.o: ffconf.h
+.\sdcfile.o: PLL.h
+.\sdcfile.o: ST7735.h
+.\sdcfile.o: ..\../inc/tm4c123gh6pm.h
+.\sdcfile.o: OS.h
+.\sdcfile.o: loader.h
+.\sdcfile.o: elf.h
+.\sdcfile.o: heap.h
+.\sdcfile.o: UART2.h
