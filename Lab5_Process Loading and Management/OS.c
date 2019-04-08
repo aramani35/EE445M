@@ -1959,6 +1959,7 @@ PCBtype* getProcess(int processID){
 int OS_AddProcess(void(*entry)(void), void *text, void *data, unsigned long stackSize, unsigned long priority){
     long status = StartCritical();
     PCBtype *newProcess;
+    //ST7735_OutString(0, 3, "APS", ST7735_WHITE);
     
     // Loop to find free process
     int index;
@@ -1982,6 +1983,7 @@ int OS_AddProcess(void(*entry)(void), void *text, void *data, unsigned long stac
     
     // Add new process thread
     OS_AddThreadFirstProcess(entry, stackSize, priority, newProcess->pid);	
+    //ST7735_OutString(0, 4, "APS D", ST7735_WHITE);
     EndCritical(status);
     return 0;
 }
