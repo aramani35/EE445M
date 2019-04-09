@@ -44,9 +44,10 @@ ARM Macro Assembler    Page 1
    27 00000006 00 00           ALIGN
    28 00000008                 END
               00000000 
-Command Line: --debug --xref --cpu=Cortex-M4 --apcs=interwork//ropi/rwpi --depe
-nd=.\display.d -o.\display.o -IC:\Keil\ARM\RV31\INC -IC:\Keil\ARM\CMSIS\Include
- -IC:\Keil\ARM\Inc\Luminary --list=.\display.lst Display.s
+Command Line: --debug --xref --diag_suppress=9931 --cpu=Cortex-M4 --apcs=interw
+ork//ropi/rwpi --depend=.\display.d -o.\display.o -IC:\Keil_v5\ARM\RV31\INC -IC
+:\Keil_v5\ARM\CMSIS\Include -IC:\Keil_v5\ARM\INC\Luminary --predefine="__UVISIO
+N_VERSION SETA 526" --list=.\display.lst Display.s
 
 
 
@@ -85,4 +86,4 @@ Symbol: ST7735_Message
       At line 23 in file Display.s
 Comment: ST7735_Message used once
 1 symbol
-335 symbols in table
+336 symbols in table

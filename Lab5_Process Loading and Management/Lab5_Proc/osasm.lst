@@ -49,9 +49,10 @@ ARM Macro Assembler    Page 1
    38 00000014         
    39 00000014                 ALIGN
    40 00000014                 END
-Command Line: --debug --xref --cpu=Cortex-M4 --apcs=interwork//ropi/rwpi --depe
-nd=.\osasm.d -o.\osasm.o -IC:\Keil\ARM\RV31\INC -IC:\Keil\ARM\CMSIS\Include -IC
-:\Keil\ARM\Inc\Luminary --list=.\osasm.lst osasm.s
+Command Line: --debug --xref --diag_suppress=9931 --cpu=Cortex-M4 --apcs=interw
+ork//ropi/rwpi --depend=.\osasm.d -o.\osasm.o -IC:\Keil_v5\ARM\RV31\INC -IC:\Ke
+il_v5\ARM\CMSIS\Include -IC:\Keil_v5\ARM\INC\Luminary --predefine="__UVISION_VE
+RSION SETA 526" --list=.\osasm.lst osasm.s
 
 
 
@@ -107,4 +108,4 @@ Symbol: OS_Time
       At line 15 in file osasm.s
 Comment: OS_Time used once
 6 symbols
-336 symbols in table
+337 symbols in table

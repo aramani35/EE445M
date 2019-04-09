@@ -1651,8 +1651,8 @@ void ST7735_OutUDec2(unsigned long n, unsigned long l){
 //        pt      pointer to a null terminated string to be printed
 //        value   signed integer to be printed
 void ST7735_Message (unsigned long d, unsigned long l, char *pt, long value){
-  unsigned long sl = 8*d+l;
   OS_bWait(&LCDFree);
+  unsigned long sl = 8*d+l;
   ST7735_OutString(0,sl,pt,ST7735_YELLOW);
   ST7735_OutUDec2(value,sl);
   OS_bSignal(&LCDFree);

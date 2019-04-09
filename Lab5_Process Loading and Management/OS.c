@@ -1473,8 +1473,8 @@ void (*SWTwoTask)(void);        // SW2 task to execute
 
 //#define TIMESLICE
 #define OSFIFOSIZE  	250
-#define NUMTHREADS  	10           // maximum number of threads
-#define NUMPROCESSES 	10
+#define NUMTHREADS  	15           // maximum number of threads
+#define NUMPROCESSES 	5
 #define STACKSIZE   	100         // number of 32-bit words in stack
 #define PF1                     (*((volatile uint32_t *)0x40025008))
 #define PF4                     (*((volatile uint32_t *)0x40025040))

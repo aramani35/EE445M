@@ -223,9 +223,10 @@ ARM Macro Assembler    Page 4
   146 00000008         ;*******************************************************
                        ***********************
   147 00000008                 END
-Command Line: --debug --xref --cpu=Cortex-M4 --apcs=interwork//ropi/rwpi --depe
-nd=.\startup.d -o.\startup.o -IC:\Keil\ARM\RV31\INC -IC:\Keil\ARM\CMSIS\Include
- -IC:\Keil\ARM\Inc\Luminary --list=.\startup.lst startup.s
+Command Line: --debug --xref --diag_suppress=9931 --cpu=Cortex-M4 --apcs=interw
+ork//ropi/rwpi --depend=.\startup.d -o.\startup.o -IC:\Keil_v5\ARM\RV31\INC -IC
+:\Keil_v5\ARM\CMSIS\Include -IC:\Keil_v5\ARM\INC\Luminary --predefine="__UVISIO
+N_VERSION SETA 526" --list=.\startup.lst startup.s
 
 
 
@@ -303,4 +304,4 @@ Symbol: __use_two_region_memory
       None
 Comment: __use_two_region_memory unused
 2 symbols
-339 symbols in table
+340 symbols in table

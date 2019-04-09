@@ -130,6 +130,7 @@ unsigned long Idlecount=0;
 void IdleTask(void){ 
 	for(;;) {
 		Idlecount ++;
+        PD3 ^= 0x08;
 	}
 }
 

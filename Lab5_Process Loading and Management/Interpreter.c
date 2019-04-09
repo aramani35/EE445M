@@ -46,6 +46,11 @@ void LoadProgram() {
 	if (!exec_elf("Proc.axf", &env)) {
 		UART_OutString("Load Successful");
 	}
+    else {
+        UART_OutString("Load Unsuccessful");
+    }
+    int i = 0;
+    while (i < 10000){ i++;}
 	//OS_bSignal (&Debug);
 }
 
